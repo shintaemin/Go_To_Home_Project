@@ -10,8 +10,8 @@ using UnityEngine;
 */
 #endregion
 
-[CreateAssetMenu(menuName = "DataSO/Player_Data", fileName = "Player_Data_SO")]
-public class Player_Data : ScriptableObject
+[CreateAssetMenu(menuName = "DataSO/Player_Data_SO", fileName = "Player_Data_SO")]
+public class Player_DataSO : ScriptableObject
 {
 	#region ¿ŒΩ∫∆Â≈Õ
 	[SerializeField] private string _name = "Daddy";

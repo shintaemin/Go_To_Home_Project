@@ -15,7 +15,7 @@ public class Player_DataManager : MonoBehaviour
 	public static Player_DataManager Instance { get; private set; }
 
 	#region 인스펙터
-	[SerializeField] private Player_Data _dataSO;
+	[SerializeField] private Player_DataSO _dataSO;
     #endregion
 
     private void Awake()
@@ -40,6 +40,6 @@ public class Player_DataManager : MonoBehaviour
 
 
     #region 외부 호출 함수
-    public Player_Data GetDataSO => _dataSO;
+    public Player_DataSO GetDataSO => _dataSO;
 	#endregion
 }
