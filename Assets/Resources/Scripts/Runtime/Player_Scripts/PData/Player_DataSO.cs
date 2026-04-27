@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 #region 플레이어 데이터
@@ -20,6 +18,7 @@ public class Player_DataSO : ScriptableObject
 	#endregion
 
 	#region 외부 호출 함수
+	public string GetName => _name;
 	public float GetSpeed => _moveSpeed;
 	#endregion
 }

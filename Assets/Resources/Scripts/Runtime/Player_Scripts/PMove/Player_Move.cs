@@ -1,12 +1,29 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
-public class Player_MoveScripts : MonoBehaviour
+#region 플레이어 이동
+/*
+ ▶ 할일
+  - 입력에따른 플레이어 이동 로직
+  - 캐릭터 컨트롤러를 활용한 간단한 중력 구현
+  - 웅크리기, 달리기등 에따른 속도 변화를 주기 위한 Multiplier 변수를 두고 속도를 제어
+  - Data가 없는 경우나 인풋매니저가 없는 경우에 따라 의존성을 낮게 유지하려 노력하기
+
+ ※ 현재 구조로 생각한 이유 ※
+  Rigidbody 를 통한 물리 연산 및 예외처리를 직접 하기 보다 효율적이라 판단 했음
+
+  01. 땅에 닿았는지 확인 유무 - 별도로 RayCast 로직을 구현하는 대신 캐릭터컨트롤러의 IsGrounde 변수 하나로 해결
+  02. 물리 충돌 - 별도로 땅인지 오브젝트인지 검사하지않고 캐릭터 컨트롤러 자체에 물리충돌을 사용
+  03. 예외 처리 - 물리연산에 경우 대부분의 상황에서 직접 연산하고 예외처리를 해야하지만 현재 물리학에 역량에 있어 구현이 오래걸릴것으로 판단
+*/
+#endregion
+
+
+public class Player_Move : MonoBehaviour
 {
-	#region 인스펙터
-	[Header("캐릭터 컨트롤러")]
-	[SerializeField] private CharacterController _controller;
+    #region 인스펙터
+    [Header("캐릭터 컨트롤러")]
+    [SerializeField] private CharacterController _controller;
+    [SerializeField] private PlayerInputManager _im;
     [SerializeField] private float _runMultiplier = 1.5f;
     [SerializeField] private float _crouchMultiplier = 0.3f;
     [SerializeField] private float _moveSpeed;
@@ -20,7 +37,7 @@ public class Player_MoveScripts : MonoBehaviour
     #endregion
 
     #region 내부변수
-    private const float _gravity = -9.81f;
+    private const float _gravity = -9.81f; // 중력 대표값
     private Vector3 _verticalVec; // 중력 적용 벡터 변수
     #endregion
 
@@ -49,18 +66,27 @@ public class Player_MoveScripts : MonoBehaviour
             _moveSpeed = _defaultSpeed;
             Debug.LogWarning($"[Player_MoveScripts] : Player_DataManager 를 찾지 못함 기본값 사용 속도 : {_moveSpeed}");
         }
+
+        if (_im == null)
+        {
+            if (PlayerInputManager.Instance != null)
+            {
+                _im = PlayerInputManager.Instance;
+            }
+            else
+            {
+                Debug.LogWarning($"[Player_MoveScript] : 플레이어 인풋 매니저가 없음");
+            }
+        }
     }
 
     private void Update()
     {
-        #region 테스트용 인풋
-        float x = Input.GetAxisRaw("Horizontal");
-        float z = Input.GetAxisRaw("Vertical");
-        bool run = Input.GetKey(KeyCode.LeftShift);
-        bool crouch = Input.GetKey(KeyCode.C);
-        #endregion
+        Vector2 move = _im != null ? _im.GetMoveInput : new Vector3(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical"));
+        bool run = _im != null ? _im.GetRunInput : Input.GetKey(KeyCode.LeftShift);
+        bool crouch = _im != null ? _im.GetCrouchInput : Input.GetKey(KeyCode.Space);
 
-        Vector3 dir = new Vector3(x, 0, z);
+        Vector3 dir = new Vector3(move.x, 0, move.y);
 
         SetRun(run);
         SetCrouch(crouch);
@@ -78,9 +104,9 @@ public class Player_MoveScripts : MonoBehaviour
 
         float speed = _moveSpeed * (_isRun ? _runMultiplier : _isCrouch ? _crouchMultiplier : 1) * Time.deltaTime;
 
-        Vector3 current = moveDir + vertical;
+        Vector3 current = (moveDir * speed) + (vertical * Time.deltaTime);
 
-        _controller.Move(current * speed);
+        _controller.Move(current);
     }
 
     private Vector3 GravityUpdate(Vector3 dir)

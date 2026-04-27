@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 #region 마우스포인터 바라보기
@@ -14,7 +12,7 @@ public class Player_LoockMousePointer : MonoBehaviour
     #region 인스펙터
     [Header("")]
     [SerializeField] private Camera _cam;
-
+    [SerializeField] private PlayerInputManager _im;
     #endregion
 
     private void Awake()
@@ -25,6 +23,21 @@ public class Player_LoockMousePointer : MonoBehaviour
         }
     }
 
+    private void Start()
+    {
+        if (_im == null)
+        {
+            if (PlayerInputManager.Instance != null)
+            {
+                _im = PlayerInputManager.Instance;
+            }
+            else
+            {
+                Debug.LogWarning($"[Player_LoockMousePointer] : 플레이어 인풋 매니저가 없음");
+            }
+        }
+    }
+
     private void Update()
     {
         LookMousePoint();
@@ -32,7 +45,7 @@ public class Player_LoockMousePointer : MonoBehaviour
 
     private void LookMousePoint()
     {
-        Ray ray = _cam.ScreenPointToRay(Input.mousePosition);
+        Ray ray = _cam.ScreenPointToRay(_im.GetMousePos);
 
         if (Physics.Raycast(ray, out RaycastHit hit, 100f))
         {
