@@ -17,13 +17,11 @@ public class Player_Anim : MonoBehaviour
     [Header("파라미터")]
 	[SerializeField] private string _speedParam = "fSpeed";
 	[SerializeField] private string _attackParam = "tAttack";
-	[SerializeField] private string _comboParam = "iCombo";
 	#endregion
 
 	#region 내부 변수
 	private int _hashSpeed;
 	private int _hashAttack;
-	private int _hashCombo;
     #endregion
 
     private void Awake()
@@ -39,7 +37,6 @@ public class Player_Anim : MonoBehaviour
 
         _hashSpeed = Animator.StringToHash(_speedParam);
         _hashAttack = Animator.StringToHash(_attackParam);
-		_hashCombo = Animator.StringToHash(_comboParam);
     }
     private void Start()
     {
@@ -60,15 +57,9 @@ public class Player_Anim : MonoBehaviour
     }
 
 	#region 외부 호출 함수
-	public void SetComboInteger(int combo)
-    {
-		Debug.Log($"[{this.name}] : 콤보입력 : {combo}");
-        _anim.SetInteger(_hashCombo, combo);
-    }
 	public void SetTreggerAttack()
 	{
 		_anim.SetTrigger(_hashAttack);
 	}
-	public float GetAnimLength => _anim.GetCurrentAnimatorStateInfo(0).length;
 	#endregion
 }

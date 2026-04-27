@@ -4,6 +4,9 @@ using UnityEngine;
 /*
  ▶ 할일
   - 마우스 포인터 위치 방향을 정면으로 한다.
+  - 뉴인풋 매니저 캐싱하고 매프레임 없데이트 되는 값을 확인하기
+  - 매프레임 Instance 하지않고 미리 캐싱
+  - 카메라에서 마우스 위치를 레이로 발사하고 높이를 플레이어 높이로 고정하여 마우스위치를 뒤집어짐 없이 바라보게하기
 */
 #endregion
 
@@ -47,6 +50,7 @@ public class Player_LoockMousePointer : MonoBehaviour
     {
         Ray ray = _cam.ScreenPointToRay(_im.GetMousePos);
 
+        // 충돌체가 있다면 무조건 바라보기 (추후 레이어가 추가될 수 있음)
         if (Physics.Raycast(ray, out RaycastHit hit, 100f))
         {
             if (hit.collider != null)
