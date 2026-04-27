@@ -138,7 +138,7 @@ PrefabInstance:
     - target: {fileID: 1481999025287222067, guid: ed4b7eb6080d7504da19d900be229dee,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0.1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1481999025287222067, guid: ed4b7eb6080d7504da19d900be229dee,
         type: 3}
@@ -256,7 +256,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _controller: {fileID: 17981709}
+  _runMultiplier: 1.5
+  _crouchMultiplier: 0.3
   _moveSpeed: 5
+  _speedParam: 0
+  _isCrouch: 0
+  _isRun: 0
+  _paramChangedSpeed: 15
   _defaultSpeed: 5
 --- !u!95 &17981711 stripped
 Animator:

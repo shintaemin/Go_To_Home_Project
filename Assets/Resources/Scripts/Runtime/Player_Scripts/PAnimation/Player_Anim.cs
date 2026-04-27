@@ -23,6 +23,8 @@ public class Player_Anim : MonoBehaviour
 	#region 내부 변수
 	private Player_MoveScripts _moveScript;
 	private float _nextLogTime; // 테스팅 로그 출력 시간 지정
+
+	private int _hashSpeed;
     #endregion
 
     private void Awake()
@@ -35,5 +37,13 @@ public class Player_Anim : MonoBehaviour
 				return;
 			}
 		}
+
+        _hashSpeed = Animator.StringToHash(_speedParam);
+    }
+
+    private void Update()
+    {
+		float speed = _moveScript.GetSpeedParam;
+        _anim.SetFloat(_hashSpeed, speed);
     }
 }
