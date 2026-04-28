@@ -971,7 +971,7 @@ AudioSource:
   SpatializePostEffects: 0
   Priority: 128
   DopplerLevel: 1
-  MinDistance: 2
+  MinDistance: 1
   MaxDistance: 500
   Pan2D: 0
   rolloffMode: 0
@@ -1065,6 +1065,7 @@ MonoBehaviour:
   _walkRange: 5
   _runRange: 10
   _attackRange: 15
+  _log: 0
 --- !u!1 &19487832 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 100000, guid: d4cfcf659200d7548b90a5580c3ab18f,
@@ -51200,7 +51201,6 @@ MonoBehaviour:
   _decalObj: {fileID: 869924719}
   _decal: {fileID: 869924721}
   _smooth: 3
-  _active: 0
 --- !u!1 &1387947839 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 100000, guid: 2d5fb229ae2945742b900a405a5e7a0b,
