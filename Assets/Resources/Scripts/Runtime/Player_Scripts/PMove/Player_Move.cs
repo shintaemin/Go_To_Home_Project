@@ -17,13 +17,13 @@ using UnityEngine;
 */
 #endregion
 
-
 public class Player_Move : MonoBehaviour
 {
     #region 인스펙터
     [Header("캐릭터 컨트롤러")]
     [SerializeField] private CharacterController _controller;
     [SerializeField] private PlayerInputManager _im;
+    [SerializeField] private EMovementState _state;
     [SerializeField] private float _runMultiplier = 1.5f;
     [SerializeField] private float _crouchMultiplier = 0.3f;
     [SerializeField] private float _moveSpeed;
@@ -39,6 +39,7 @@ public class Player_Move : MonoBehaviour
     #region 내부변수
     private const float _gravity = -9.81f; // 중력 대표값
     private Vector3 _verticalVec; // 중력 적용 벡터 변수
+    private Player_State _pState;
     #endregion
 
     private void Awake()
@@ -47,8 +48,17 @@ public class Player_Move : MonoBehaviour
         {
             if (!TryGetComponent<CharacterController>(out _controller))
             {
-                Debug.LogWarning($"[Player_MoveScripts] : 캐릭터 컨트롤러 캐싱 실패 <인스펙터 확인>");
+                Debug.LogWarning($"[{this.name}] : 캐릭터 컨트롤러 캐싱 실패 <인스펙터 확인>");
                 enabled = false;
+                return;
+            }
+        }
+
+        if (_pState == null)
+        {
+            if (!TryGetComponent<Player_State>(out _pState))
+            {
+                Debug.LogWarning($"[{this.name}] : 플레이어 사운드 캐싱 실패 <인스펙터 확인>");
                 return;
             }
         }
@@ -64,7 +74,7 @@ public class Player_Move : MonoBehaviour
         else
         {
             _moveSpeed = _defaultSpeed;
-            Debug.LogWarning($"[Player_MoveScripts] : Player_DataManager 를 찾지 못함 기본값 사용 속도 : {_moveSpeed}");
+            Debug.LogWarning($"[{this.name}] : Player_DataManager 를 찾지 못함 기본값 사용 속도 : {_moveSpeed}");
         }
 
         if (_im == null)
@@ -75,7 +85,7 @@ public class Player_Move : MonoBehaviour
             }
             else
             {
-                Debug.LogWarning($"[Player_MoveScript] : 플레이어 인풋 매니저가 없음");
+                Debug.LogWarning($"[{this.name}] : 플레이어 인풋 매니저가 없음");
             }
         }
     }
@@ -132,19 +142,51 @@ public class Player_Move : MonoBehaviour
     // 애니메이션에서 읽을 _speedParam 업데이트
     private void SpeedParamUpdate(Vector3 dir)
     {
+        EMovementState state;
+        float param;
+
         if (dir.magnitude < 0.001f)
         {
-            _speedParam = 0; // 이동방향이 없다면 0 고정 - idle 상태 유지를 위함
-            return;
+            state = EMovementState.Idle;
+            param = 0f;
+        }
+        else if (_isCrouch)
+        {
+            state = EMovementState.Crouch;
+            param = 0.33f;
+        }
+        else if (_isRun)
+        {
+            state = EMovementState.Run;
+            param = 1.0f;
+        }
+        else
+        {
+            state = EMovementState.Walk;
+            param = 0.66f;
         }
 
-        float startParam = _speedParam; // 시작속도
-        float endParam = _isRun ? 1.0f : _isCrouch ? 0.33f : 0.66f; // 목표속도 (달리기, 웅크리기 에 해당하는 목표값 지정)
-        _speedParam = Mathf.Lerp(startParam, endParam, _paramChangedSpeed * Time.deltaTime); // 보간처리
+        SetMoveState(state);
+
+        _speedParam = Mathf.Lerp(_speedParam, param, _paramChangedSpeed * Time.deltaTime);
     }
+
+    
 
     #region 외부 호출 함수
     public float GetSpeedParam => _speedParam;
+
+    public void SetMoveState(EMovementState state)
+    {
+        if (_state == state) { return; }
+
+        _state = state;
+
+        if (_pState != null)
+        {
+            _pState.SetMovementState(_state);
+        }
+    }
 
     public void SetCrouch(bool use) => _isCrouch = use;
     public void SetRun(bool use) => _isRun = use;

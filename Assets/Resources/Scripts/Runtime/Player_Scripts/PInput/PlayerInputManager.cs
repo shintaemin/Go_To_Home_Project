@@ -245,14 +245,13 @@ public class PlayerInputManager : MonoBehaviour
     {
         switch(state)
         {
-            case EInputState.Playing:
-                CanMoveInput = true; CanRotateInput = true;
+            case EInputState.Playing: CanMoveInput = true; CanRotateInput = true;
                 break;
-            case EInputState.UIOpen:
-                CanMoveInput = false; CanRotateInput = false;
+            case EInputState.UIOpen: CanMoveInput = false; CanRotateInput = false;
                 break;
-            case EInputState.Attack:
-                CanMoveInput = false; CanRotateInput = true;
+            case EInputState.Attack: CanMoveInput = false; CanRotateInput = true;
+                break;
+            case EInputState.AllLock: CanMoveInput = false; CanRotateInput = false;
                 break;
         }
     }

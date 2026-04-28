@@ -1,3 +1,4 @@
+using TMPro;
 using UnityEngine;
 
 #region 플레이어 애니메이션
