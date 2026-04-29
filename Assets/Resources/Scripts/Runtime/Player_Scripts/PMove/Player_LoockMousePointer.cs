@@ -16,6 +16,8 @@ public class Player_LoockMousePointer : MonoBehaviour
     [Header("")]
     [SerializeField] private Camera _cam;
     [SerializeField] private PlayerInputManager _im;
+    [SerializeField] private LayerMask _layer;
+    [SerializeField] private Vector2 _target;
     #endregion
 
     private void Awake()
@@ -48,10 +50,10 @@ public class Player_LoockMousePointer : MonoBehaviour
 
     private void LookMousePoint()
     {
-        Ray ray = _cam.ScreenPointToRay(_im.GetMousePos);
+        Ray ray = _cam.ScreenPointToRay(_target);
 
         // 충돌체가 있다면 무조건 바라보기 (추후 레이어가 추가될 수 있음)
-        if (Physics.Raycast(ray, out RaycastHit hit, 100f))
+        if (Physics.Raycast(ray, out RaycastHit hit, 100f, _layer))
         {
             if (hit.collider != null)
             {
@@ -61,4 +63,11 @@ public class Player_LoockMousePointer : MonoBehaviour
             }
         }
     }
+
+    #region 외부 호출 함수
+    public void SetTarget(Vector2 point)
+    {
+        _target = point;
+    }
+    #endregion
 }

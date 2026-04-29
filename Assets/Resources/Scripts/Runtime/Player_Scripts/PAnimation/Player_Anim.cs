@@ -13,16 +13,20 @@ public class Player_Anim : MonoBehaviour
 	#region 인스펙터
 	[Header("애니메이터")]
 	[SerializeField] private Animator _anim;
-	[SerializeField] private Player_Move _move;
+	[SerializeField] private float _speed;
 
     [Header("파라미터")]
 	[SerializeField] private string _speedParam = "fSpeed";
 	[SerializeField] private string _attackParam = "tAttack";
+
+	[Header("옵션")]
+	[SerializeField] private float _paramUpdatespeed = 1.0f;
 	#endregion
 
 	#region 내부 변수
 	private int _hashSpeed;
 	private int _hashAttack;
+	private float _targerSpeed;
     #endregion
 
     private void Awake()
@@ -39,25 +43,28 @@ public class Player_Anim : MonoBehaviour
         _hashSpeed = Animator.StringToHash(_speedParam);
         _hashAttack = Animator.StringToHash(_attackParam);
     }
-    private void Start()
-    {
-		if (_move == null)
-		{
-			if (!TryGetComponent<Player_Move>(out _move))
-			{
-				Debug.LogWarning($"[Player_Anim] : 무브 컴포넌트 캐싱 실패 <인스펙터 확인>");
-				return;
-			}
-		}
-    }
 
     private void Update()
     {
-		float speed = _move.GetSpeedParam;
-        _anim.SetFloat(_hashSpeed, speed);
+        if (Mathf.Approximately(_speed, _targerSpeed)) { return; }
+
+        _speed = Mathf.Lerp(_speed, _targerSpeed, _paramUpdatespeed * Time.deltaTime);
+
+        _anim.SetFloat(_hashSpeed, _speed);
     }
 
-	#region 외부 호출 함수
+    #region 외부 호출 함수
+    public void MoveAnimUpdate(EMovementState state)
+	{
+		switch(state)
+		{
+			case EMovementState.Idle: _targerSpeed = 0.00f;	break;
+            case EMovementState.Walk: _targerSpeed = 0.66f; break;
+			case EMovementState.Crouch: _targerSpeed = 0.33f; break;
+			case EMovementState.Run: _targerSpeed = 1.00f; break;
+		}
+    }
+
 	public void SetTreggerAttack()
 	{
 		_anim.SetTrigger(_hashAttack);

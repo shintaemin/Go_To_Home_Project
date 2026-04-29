@@ -30,27 +30,11 @@ public class PlayerInputManager : MonoBehaviour
         Crouch,
     }
 
-    // 상태에 따른 입력 제어를 위한 열거형
-    public enum EInputState
-    {
-        None,
-        Playing,
-        UIOpen,
-        Attack,
-        AllLock,
-    }
-
     public static PlayerInputManager Instance { get; private set; }
 
     #region 인스펙터
     [SerializeField] private bool _isRunToggle = true; // 달리기 토글
     [SerializeField] private bool _isCrouchToggle = true; // 웅크리기 토글
-
-    [Header("테스트 옵션")] // 테스트용
-    [SerializeField] private bool _testInput = true; 
-    [SerializeField] private EInputState _startState = EInputState.Playing;
-    [SerializeField] private KeyCode _runToggleSetKey = KeyCode.O;
-    [SerializeField] private KeyCode _crouchToggleSetKey = KeyCode.P;
     #endregion
 
     #region 내부변수
@@ -61,8 +45,6 @@ public class PlayerInputManager : MonoBehaviour
     public bool RunInput { get; private set; } // 달리기 입력 프로퍼티
     public bool CrouchInput { get; private set; } // 웅크리기 입력 프로퍼티
 
-    public bool CanMoveInput { get; set; } // 상태에 따른 움직임 제어를 위한 프로퍼티
-    public bool CanRotateInput { get; set; } // 상태에 따른 회전 제어를 위한 프로퍼티
     #endregion
 
     #region 이벤트
@@ -89,7 +71,6 @@ public class PlayerInputManager : MonoBehaviour
         _actions.Enable(); // 뉴인풋 활성화
 
         InputSettingUpdate(EInputType.All); // 키 셋팅 업데이트
-        SetInputState(_startState); // 우선은 플레이상태로 시작하기
     }
 
     private void OnDisable()
@@ -103,25 +84,6 @@ public class PlayerInputManager : MonoBehaviour
         if (Instance == this)
         {
             Instance = null;
-        }
-    }
-
-    // 토글 변경 테스트용 빌드시 삭제
-    private void Update()
-    {
-        if (!_testInput) { return; }
-
-        if (Input.GetKeyDown(_runToggleSetKey))
-        {
-            _isRunToggle = !_isRunToggle;
-            SetRunToggle(_isRunToggle);
-            Debug.Log($"[{this.name}] : 테스트 달리기 토글 : {_isRunToggle}");
-        }
-        if (Input.GetKeyDown(_crouchToggleSetKey))
-        {
-            _isCrouchToggle = !_isCrouchToggle;
-            SetCrouchToggle(_isCrouchToggle);
-            Debug.Log($"[{this.name}] : 테스트 웅크리기 토글 : {_isCrouchToggle}");
         }
     }
 
@@ -152,17 +114,9 @@ public class PlayerInputManager : MonoBehaviour
     {
         switch(type)
         {
-            case EInputType.All:
-                InputSettingUpdate();
-                break;
-
-            case EInputType.Run:
-                RunToggleSetting(_isRunToggle);
-                break;
-
-            case EInputType.Crouch:
-                CrouchToggleSetting(_isCrouchToggle);
-                break;
+            case EInputType.All:    InputSettingUpdate();                   break;
+            case EInputType.Run:    RunToggleSetting(_isRunToggle);         break;
+            case EInputType.Crouch: CrouchToggleSetting(_isCrouchToggle);   break;
         }
     }
 
@@ -221,10 +175,10 @@ public class PlayerInputManager : MonoBehaviour
     #endregion
 
     #region 외부 호출 함수
-    public Vector2 GetMoveInput => CanMoveInput ? _actions.Player.Move.ReadValue<Vector2>() : Vector2.zero;
-    public bool GetRunInput => CanMoveInput ? RunInput : false;
-    public bool GetCrouchInput => CanMoveInput ? CrouchInput : false;
-    public Vector2 GetMousePos => CanRotateInput ? _actions.Player.MousePosition.ReadValue<Vector2>() : Vector2.zero;
+    public Vector2 GetMoveInput => _actions.Player.Move.ReadValue<Vector2>();
+    public Vector2 GetMousePos => _actions.Player.MousePosition.ReadValue<Vector2>();
+    public bool GetRunInput => RunInput;
+    public bool GetCrouchInput =>CrouchInput;
 
     /// <summary> 이후 옵션 매니저 생성하여 게임옵션 설정때에 사용할 함수 미리 사용 </summary>
     /// <param name="toggle"> 토글 사용 유무 On / Off </param>
@@ -237,23 +191,6 @@ public class PlayerInputManager : MonoBehaviour
     {
         _isCrouchToggle = toggle;
         InputSettingUpdate(EInputType.Crouch);
-    }
-
-    /// <summary> 입력 상태 설정 상태에 따른 입력 제어 를 위함 </summary>
-    /// <param name="state"> 각 상태를 넣기 </param>
-    public void SetInputState(EInputState state)
-    {
-        switch(state)
-        {
-            case EInputState.Playing: CanMoveInput = true; CanRotateInput = true;
-                break;
-            case EInputState.UIOpen: CanMoveInput = false; CanRotateInput = false;
-                break;
-            case EInputState.Attack: CanMoveInput = false; CanRotateInput = true;
-                break;
-            case EInputState.AllLock: CanMoveInput = false; CanRotateInput = false;
-                break;
-        }
     }
     #endregion
 }

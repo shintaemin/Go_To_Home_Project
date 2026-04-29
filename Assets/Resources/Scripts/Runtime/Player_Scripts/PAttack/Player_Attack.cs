@@ -25,76 +25,40 @@ public class Player_Attack : MonoBehaviour
     #endregion
 
     #region 내부 변수
-    private PlayerInputManager _im;
-    private Player_State _pState;
+    private Player_Controller _controllCS;
     #endregion
 
     private void Awake()
     {
-        if (_anim == null)
+        if (_controllCS == null)
         {
-            if (!TryGetComponent<Player_Anim>(out _anim))
-            {
-                Debug.LogWarning($"[{this.name}] : 플레이어 애니메이션 스크립트 캐싱 실패");
-                return;
-            }
+            _controllCS = FindFirstObjectByType<Player_Controller>();
         }
-        if (_pState == null)
-        {
-            if (!TryGetComponent<Player_State>(out _pState))
-            {
-                Debug.LogWarning($"[{this.name}] : 플레이어 상태 스크립트 캐싱 실패");
-                return;
-            }
-        }
-    }
-
-    private void OnEnable()
-    {
-        if (PlayerInputManager.Instance != null)
-        {
-            _im = PlayerInputManager.Instance;
-            _im.OnAttack += TryAttack;
-        }
-        else
-        {
-            if (_log) { Debug.LogWarning($"[{this.name}] : 인풋매니저 생선 전 자동 구독 시작"); }
-            StartCoroutine(CoWaitInputManager());
-        }
-    }
-
-    // 인풋매니저 대기를 위한 코루틴 - 현재는 같은씬에서 생성되어 이 코루틴이 호출되지만 빌드시점에 씬이 나눠질거라서 큰 문제는없음 추후 삭제도 무방함
-    private IEnumerator CoWaitInputManager()
-    {
-        while(true)
-        {
-            if (PlayerInputManager.Instance != null)
-            {
-                _im = PlayerInputManager.Instance;
-                _im.OnAttack += TryAttack;
-
-                if (_log) { Debug.Log($"[{this.name}] : 공격 이벤트 구독 완료"); }
-
-                yield break;
-            }
-
-            yield return null;
-        }
-    }
-
-    private void TryAttack()
-    {
-        _anim.SetTreggerAttack();
-        _pState.SetState(EPlayerState.Attack);
     }
 
     #region 외부 호출 함수
+    public void TryAttack()
+    {
+        _anim.SetTreggerAttack();
+        _controllCS.MovementState = EMovementState.Attack;
+
+        if (_log)
+        {
+            Debug.Log($"[{this.name}] : 공격 시작!");
+        }
+    }
+
     /// <summary>
     /// 애니메이션 마지막 프레임에 호출할 함수
     /// </summary>
     public void EndAttack()
     {
-        _pState.SetState(EPlayerState.Idle);
+        _controllCS.MovementState = EMovementState.Idle;
+
+        if (_log)
+        {
+            Debug.Log($"[{this.name}] : 공격 종료");
+        }
     }
     #endregion
 }
