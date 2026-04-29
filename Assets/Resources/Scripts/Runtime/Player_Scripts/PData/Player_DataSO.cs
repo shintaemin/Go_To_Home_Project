@@ -14,11 +14,24 @@ public class Player_DataSO : ScriptableObject
 	#region 인스펙터
 	[SerializeField] private string _name = "Daddy";
 	[SerializeField] private float _moveSpeed = 5.0f;
-
+	[SerializeField] private int _hp = 100;
+	[SerializeField] private int _stemina = 100;
 	#endregion
 
 	#region 외부 호출 함수
 	public string GetName => _name;
 	public float GetSpeed => _moveSpeed;
+
+	public int HP
+	{
+		get { return _hp; }
+		set { _hp = value; }
+	}
+
+	public int Stemina
+	{
+		get { return _stemina; }
+		set { _stemina = value; }
+	}
 	#endregion
 }
