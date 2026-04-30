@@ -38,7 +38,7 @@ public class Player_Stemina : MonoBehaviour
     private Player_DataSO _data;
     #endregion
 
-    private void Awake()
+    private void Start()
     {
         if (_data == null)
         {
