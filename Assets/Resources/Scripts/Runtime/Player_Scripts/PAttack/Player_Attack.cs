@@ -26,6 +26,7 @@ public class Player_Attack : MonoBehaviour
 
     #region 내부 변수
     private Player_Controller _controllCS;
+    private Player_DataSO _dataSO;
     #endregion
 
     private void Awake()
@@ -36,11 +37,33 @@ public class Player_Attack : MonoBehaviour
         }
     }
 
+    private void Start()
+    {
+        if (_dataSO == null)
+        {
+            if (Player_DataManager.Instance != null)
+            {
+                _dataSO = Player_DataManager.Instance.GetDataSO;
+            }
+        }
+    }
+
     #region 외부 호출 함수
     public void TryAttack()
     {
-        _anim.SetTreggerAttack();
+        if (_dataSO == null && Player_DataManager.Instance != null)
+        {
+            _dataSO = Player_DataManager.Instance.GetDataSO;
+        }
+
+        if (_dataSO.Stemina < _dataSO.GetSteminaAttackCost)
+        {
+            Debug.Log($"[{this.name}] : 스테미너 부족 공격 불가");
+            return;
+        }
+
         _controllCS.MovementState = EMovementState.Attack;
+        _anim.SetTreggerAnim(_controllCS.MovementState);
 
         if (_log)
         {

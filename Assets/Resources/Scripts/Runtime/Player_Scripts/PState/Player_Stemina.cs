@@ -18,7 +18,8 @@ public class Player_Stemina : MonoBehaviour
     {
         None = 0,
         Idle,
-        Decrese
+        Decrese,
+        Attack,
     }
 
     #region 인스펙터
@@ -28,12 +29,9 @@ public class Player_Stemina : MonoBehaviour
     [SerializeField] private float _idleStateTime;
 
     [Header("옵션")]
-    [SerializeField] private int _addVal = 5;
-    [SerializeField] private int _decreaseVal = 1;
     [SerializeField] private float _decreaseCool = 0.3f;
     [SerializeField] private float _addCool = 30.0f;
     [SerializeField] private bool _log = false;
-    [SerializeField] private int _attackSteminaVal = 10;
     #endregion
 
     #region 내부 변수
@@ -59,7 +57,7 @@ public class Player_Stemina : MonoBehaviour
 
             if (_idleStateTime >= _addCool)
             {
-                AddStemina(_addVal);
+                AddStemina(_data.GetSteminaAddAmount);
                 _idleStateTime = 0;
             }
         }
@@ -69,10 +67,34 @@ public class Player_Stemina : MonoBehaviour
             _decreaseStateTime += Time.deltaTime;
             if (_decreaseStateTime >= _decreaseCool)
             {
-                DecreaseStemina(_decreaseVal);
+                DecreaseStemina(_data.GetSteminaDecreaceCost);
                 _decreaseStateTime = 0;
             }
         }
+    }
+
+    private ESteminaState TrangitionState(EMovementState moveState)
+    {
+        ESteminaState state = ESteminaState.Idle;
+
+        switch (moveState)
+        {
+            case EMovementState.Idle:
+            case EMovementState.Walk:
+                state = ESteminaState.Idle;
+                break;
+
+            case EMovementState.Crouch:
+            case EMovementState.Run:
+                state = ESteminaState.Decrese;
+                break;
+
+            case EMovementState.Attack:
+                state = ESteminaState.Attack;
+                break;
+        }
+
+        return state;
     }
 
     #region 외부 호출 함수
@@ -94,6 +116,7 @@ public class Player_Stemina : MonoBehaviour
         stemina = Mathf.Clamp(stemina, 0, 100);
 
         _data.Stemina = stemina;
+        if (_log) { Debug.Log($"[{this.name}] : 현재 증가 현재 : {stemina}"); }
     }
 
     public void DecreaseStemina(int value)
@@ -114,30 +137,22 @@ public class Player_Stemina : MonoBehaviour
         stemina = Mathf.Clamp(stemina, 0, 100);
 
         _data.Stemina = stemina;
+        if (_log) { Debug.Log($"[{this.name}] : 현재 감소 현재 : {stemina}"); } 
     }
 
     public void SetState(EMovementState moveState)
     {
-        ESteminaState state = ESteminaState.Idle;
+        ESteminaState state = TrangitionState(moveState);
 
-        switch(moveState)
-        {
-            case EMovementState.Idle:   case EMovementState.Walk: 
-                state = ESteminaState.Idle; 
-                break;
-
-            case EMovementState.Crouch: case EMovementState.Run:
-                state = ESteminaState.Decrese; 
-                break;
-
-            case EMovementState.Attack: 
-                DecreaseStemina(_attackSteminaVal);
-                state = ESteminaState.Idle; 
-                break;
-        }
+        if (_state == state) { return; }
 
         _state = state;
-    
+        
+        if (_state == ESteminaState.Attack)
+        {
+            DecreaseStemina(_data.GetSteminaAttackCost);
+        }
+
         if (_log) { Debug.Log($"[{this.name}] : 상태 변경 = {_state}"); }
     }
     #endregion

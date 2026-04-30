@@ -43,11 +43,6 @@ public class Player_LoockMousePointer : MonoBehaviour
         }
     }
 
-    private void Update()
-    {
-        LookMousePoint();
-    }
-
     private void LookMousePoint()
     {
         Ray ray = _cam.ScreenPointToRay(_target);
@@ -65,9 +60,14 @@ public class Player_LoockMousePointer : MonoBehaviour
     }
 
     #region 외부 호출 함수
-    public void SetTarget(Vector2 point)
+    public void SetTarget(Vector2 point, bool update = true)
     {
         _target = point;
+
+        if (update)
+        {
+            LookMousePoint();
+        }
     }
     #endregion
 }

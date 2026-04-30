@@ -14,3 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _name: Daddy
   _moveSpeed: 5
+  _hp: 100
+  _stemina: 100
+  _maxSpeed: 10
+  _maxHP: 100
+  _maxStemina: 100

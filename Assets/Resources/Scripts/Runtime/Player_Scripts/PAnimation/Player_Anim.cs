@@ -65,9 +65,14 @@ public class Player_Anim : MonoBehaviour
 		}
     }
 
-	public void SetTreggerAttack()
+	public void SetTreggerAnim(EMovementState state)
 	{
-		_anim.SetTrigger(_hashAttack);
+		switch (state)
+		{
+			case EMovementState.Attack: _anim.SetTrigger(_hashAttack); break;
+				// 상호 작용 사망 등을 여기서 처리
+        }
+		
 	}
 	#endregion
 }

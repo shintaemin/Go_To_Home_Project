@@ -1104,7 +1104,7 @@ MonoBehaviour:
   _idleStateTime: 0
   _addVal: 5
   _decreaseVal: 1
-  _decreaseCool: 0.3
+  _decreaseCool: 1
   _addCool: 30
   _log: 0
   _attackSteminaVal: 10

@@ -15,6 +15,7 @@ public enum EMovementState
     Walk,
     Run,
     Attack,
+    Interact,
 }
 
 // 상태에 따른 입력 제어를 위한 열거형
@@ -53,11 +54,12 @@ public class Player_Controller : MonoBehaviour
         set { SetMovementState(value); }
     }
 
-    public bool CanMove { get; set; } // 상태에 따른 움직임 제어를 위한 프로퍼티
-    public bool CanRotate { get; set; } // 상태에 따른 회전 제어를 위한 프로퍼티
-
+    private bool CanMove { get; set; } // 상태에 따른 움직임 제어를 위한 프로퍼티
+    private bool CanRotate { get; set; } // 상태에 따른 회전 제어를 위한 프로퍼티
+    private bool CanAttack { get; set; }
     #endregion
-
+    
+    #region 공격 이벤트
     private void OnEnable()
     {
         if (PlayerInputManager.Instance != null)
@@ -67,9 +69,12 @@ public class Player_Controller : MonoBehaviour
         }
         else
         {
-            StartCoroutine(CoWaitInputManager());
+            StartCoroutine(CoWaitInputManager()); // 인풋매니저를 못찾을 경우를 대비한 안전장치
         }
+
+        MovementState = EMovementState.Idle;
     }
+    #region 인풋 매니저 생성 대기 코루틴
     private IEnumerator CoWaitInputManager()
     {
         while (true)
@@ -83,7 +88,7 @@ public class Player_Controller : MonoBehaviour
             yield return null;
         }
     }
-
+    #endregion
     private void OnDisable()
     {
         if (_im != null && PlayerInputManager.Instance != null)
@@ -92,46 +97,43 @@ public class Player_Controller : MonoBehaviour
         }
     }
 
+    private void AttackInput()
+    {
+        if (!CanAttack) { return; }
+        if (_attackCS == null)
+        {
+            Debug.LogWarning($"[{this.name}] : 공격 스크립트 없음");
+            return;
+        }
+
+        _attackCS.TryAttack();
+    }
+    #endregion
+
     private void Update()
     {
-        ControllSwitch();
-
-        MoveUpdate();
-        RotateUpdate();
-        AnimUpdate();
-        SteminaUpdate();
-        SoundUpdate();
+        MoveUpdate(); // 이동 업데이트
+        RotateUpdate(); // 회전 업데이트
+        _steminaCS.SetState(_state);    // 스테미너 업데이트
+        _soundCS.SetSoundDistatce(_state); // 사운드 범위 업데이트
     }
 
     private void MoveUpdate()
     {
         if (!CanMove || _im == null) { return; }
-        if (_state == EMovementState.Attack) { return; }
 
         Vector2 move = _im.GetMoveInput;
         bool run = _im.GetRunInput;
         bool crouch = _im.GetCrouchInput;
 
-        _moveCS.UpdateMove(move, run, crouch);
-    }
-
-    private void AnimUpdate()
-    {
-        _animCS.MoveAnimUpdate(_state);
-    }
-
-    private void SteminaUpdate()
-    {
-        _steminaCS.SetState(_state);
-    }
-    private void SoundUpdate()
-    {
-        _soundCS.SetSoundDistatce(_state);
+        _moveCS.UpdateMove(move, run, crouch); // 이동 명령
+        _animCS.MoveAnimUpdate(_state); // 이동 애니메이션 업데이트
     }
 
     private void SetMovementState(EMovementState state)
     {
         _state = state;
+        ControllSwitch();
     }
 
     private void RotateUpdate()
@@ -141,18 +143,8 @@ public class Player_Controller : MonoBehaviour
         _rotateCS.SetTarget(_im.GetMousePos);
     }
 
-    private void AttackInput()
-    {
-        if (_attackCS == null)
-        {
-            Debug.LogWarning($"[{this.name}] : 공격 스크립트 없음");
-            return;
-        }
-
-        _attackCS.TryAttack();
-    }
-
-    private void ControllSwitch()
+    // 상태가 바뀌면 실행될 입력제어 스위치
+    private void ControllSwitch() 
     {
         EControllMode mode = EControllMode.Playing;
         switch (_state)
@@ -174,16 +166,16 @@ public class Player_Controller : MonoBehaviour
         switch (state)
         {
             case EControllMode.Playing:
-                CanMove = true; CanRotate = true;
+                CanMove = true; CanRotate = true; CanAttack = true;
                 break;
             case EControllMode.UIOpen:
-                CanMove = false; CanRotate = false;
+                CanMove = false; CanRotate = false; CanAttack = false;
                 break;
             case EControllMode.Attack:
-                CanMove = false; CanRotate = true;
+                CanMove = false; CanRotate = true; CanAttack = true;
                 break;
             case EControllMode.AllLock:
-                CanMove = false; CanRotate = false;
+                CanMove = false; CanRotate = false; CanAttack = false;
                 break;
         }
     }

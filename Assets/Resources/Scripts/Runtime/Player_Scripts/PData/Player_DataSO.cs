@@ -18,10 +18,21 @@ public class Player_DataSO : ScriptableObject
 	[SerializeField] private int _hp = 100;
 	[SerializeField] private int _stemina = 100;
 
-    [Header("옵션")]
     [SerializeField] private float _maxSpeed = 10;
+
+    [Header("HP 옵션")]
     [SerializeField] private int _maxHP = 100;
+
+    [Header("스테미너 옵션")]
     [SerializeField] private int _maxStemina = 100;
+    [SerializeField] private int _steminaAddAmount = 5;
+    [SerializeField] private int _steminaDecreaceCost = 1;
+    [SerializeField] private int _steminaAttaceCost = 10;
+
+
+    [SerializeField] private float _testStartSpeed = 5;
+    [SerializeField] private int _testStartHP = 100;
+    [SerializeField] private int _testStartStemina = 100;
 	#endregion
 
 	#region 이벤트
@@ -29,9 +40,19 @@ public class Player_DataSO : ScriptableObject
 	public event Action<int> OnSteminaUpdate; 
 	#endregion
 
-	#region 외부 호출 함수
-	public string GetName => _name;
+    private void Awake()
+    {
+        InitData(_testStartHP, _testStartStemina, _testStartSpeed);
+    }
+
+    #region 외부 호출 함수
+    public string GetName => _name;
 	public float GetSpeed => _moveSpeed;
+
+    public int GetSteminaAddAmount => _steminaAddAmount;
+    public int GetSteminaDecreaceCost => _steminaDecreaceCost;
+    public int GetSteminaAttackCost => _steminaAttaceCost;
+
     public void InitData(int hp, int stemina, float moveSpeed)
     {
         HP = Mathf.Clamp(hp, 0, _maxHP);

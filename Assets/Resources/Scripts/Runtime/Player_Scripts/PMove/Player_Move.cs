@@ -34,6 +34,7 @@ public class Player_Move : MonoBehaviour
 
     #region 내부변수
     private Player_Controller _controllCS;
+    private Player_DataSO _dataSo;
     private const float _gravity = -9.81f; // 중력 대표값
     private Vector3 _verticalVec; // 중력 적용 벡터 변수
     #endregion
@@ -60,7 +61,8 @@ public class Player_Move : MonoBehaviour
     {
         if (Player_DataManager.Instance != null)
         {
-            float speed = Player_DataManager.Instance.GetDataSO.GetSpeed;
+            _dataSo = Player_DataManager.Instance.GetDataSO;
+            float speed = _dataSo.GetSpeed;
             _moveSpeed = speed;
         }
         else
@@ -105,7 +107,7 @@ public class Player_Move : MonoBehaviour
     }
 
     // 애니메이션에서 읽을 _speedParam 업데이트
-    private void SpeedParamUpdate(Vector3 dir)
+    private void MovementUpdate(Vector3 dir)
     {
         EMovementState state;
 
@@ -129,6 +131,14 @@ public class Player_Move : MonoBehaviour
         SetMoveState(state);
     }
 
+    private void FindDataSO()
+    {
+        if (Player_DataManager.Instance != null)
+        {
+            _dataSo = Player_DataManager.Instance.GetDataSO;
+            return;
+        }
+    }
     
 
     #region 외부 호출 함수
@@ -141,14 +151,38 @@ public class Player_Move : MonoBehaviour
 
     public void UpdateMove(Vector2 dir, bool isRun, bool isCrouce)
     {
-        SetRun(isRun);            // 달리기 입력 전달
-        SetCrouch(isCrouce);      // 웅크리기 입력 전달
+        SetRun(isRun);          // 달리기 입력 전달
+        SetCrouch(isCrouce);    // 웅크리기 입력 전달
 
         MoveUpdata(dir);        // 이동
-        SpeedParamUpdate(dir);  // 스피드 파라미터 업데이트 - 부드러운 애니메이션전환을 위해 상태전달이아닌 Update로 값변경방식
+        MovementUpdate(dir);    // 무브 먼트 업데이트 컨트롤러로 상태전달
     }
 
-    public void SetCrouch(bool use) => _isCrouch = use;
-    public void SetRun(bool use) => _isRun = use;
+    public void SetCrouch(bool use)
+    {
+        if (_dataSo == null) 
+        {
+            FindDataSO();
+            if (_dataSo == null)
+            {
+                return;
+            }
+        }
+
+        _isCrouch = _dataSo.Stemina >= _dataSo.GetSteminaDecreaceCost ? use: false;
+    }
+    public void SetRun(bool use)
+    {
+        if (_dataSo == null)
+        {
+            FindDataSO();
+            if (_dataSo == null)
+            {
+                return;
+            }
+        }
+
+        _isRun = _dataSo.Stemina >= _dataSo.GetSteminaDecreaceCost ? use: false;
+    }
     #endregion
 }
