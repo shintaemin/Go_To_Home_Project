@@ -21,9 +21,6 @@ public class Player_Sound : MonoBehaviour
     [SerializeField] private float _walkRange = 5f; // 걷기 사운드 범위
     [SerializeField] private float _runRange = 10f; // 달리기 사운드 범위
     [SerializeField] private float _attackRange = 15f; // 공격 사운드 범위
-
-    [Header("옵션")]
-    [SerializeField] private bool _log = false; // 디버깅용
     #endregion
 
     #region 내부 변수    
@@ -32,23 +29,11 @@ public class Player_Sound : MonoBehaviour
 
     private void Awake()
     {
-        if (_audio == null)
-        {
-            if (!TryGetComponent<AudioSource>(out _audio))
-            {
-                Debug.Log($"[{this.name}] : 오디오 캐싱 실패");
-                return;
-            }
-        }
+        GUtill.TryGetCS(this, ref _audio);
 
         if (_decal == null)
         {
             _decal = FindFirstObjectByType<Player_SoundDecal>();
-
-            if (_decal == null)
-            {
-                Debug.LogWarning($"[{this.name}] : 데칼 스크립트 캐싱 실패");
-            }
         }
     }
 
@@ -80,13 +65,11 @@ public class Player_Sound : MonoBehaviour
             _currentRange = range;
 
             if (_decal != null) 
-            { 
-                if (_log) { Debug.Log($"[{this.name}] : 데칼 범위 설정 : {range}"); }
-
+            {
                 _decal.SetTargetRange(range); 
             }
         }
-        else { Debug.LogWarning($"[{this.name}] : 상태 지정 실패 오디오범위 : {range}"); }
+        else { GUtill.Log($"[{this.name}] : 상태 지정 실패 오디오범위 : {range}", EDebugType.Warn); }
     }
 
     // 외부 사용을 위해 (추후 SoundManager 작업시 필요할 수 있어 미리 작업)

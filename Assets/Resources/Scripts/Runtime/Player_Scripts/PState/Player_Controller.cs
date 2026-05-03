@@ -23,7 +23,7 @@ public enum EControllMode
 {
     None,
     Playing,
-    UIOpen,
+    Inventory,
     Attack,
     AllLock,
 }
@@ -39,13 +39,13 @@ public class Player_Controller : MonoBehaviour
     [SerializeField] private Player_Stemina _steminaCS;
     [SerializeField] private Player_Attack _attackCS;
     [SerializeField] private Player_Sound _soundCS;
+    [SerializeField] private Player_Inventory _inventoryCS;
     [SerializeField] private Player_LoockMousePointer _rotateCS;
     #endregion
 
     #region 내부 변수
     private PlayerInputManager _im;
     #endregion
-
 
     #region 프로퍼티
     public EMovementState MovementState
@@ -56,16 +56,15 @@ public class Player_Controller : MonoBehaviour
 
     private bool CanMove { get; set; } // 상태에 따른 움직임 제어를 위한 프로퍼티
     private bool CanRotate { get; set; } // 상태에 따른 회전 제어를 위한 프로퍼티
-    private bool CanAttack { get; set; }
+    private bool CanAttack { get; set; } // 상태에 따른 공격 제어를 위한 프로퍼티
     #endregion
     
-    #region 공격 이벤트
-    private void OnEnable()
+    #region 이벤트 구독
+     private void OnEnable()
     {
         if (PlayerInputManager.Instance != null)
         {
-            _im = PlayerInputManager.Instance;
-            _im.OnAttack += AttackInput;
+            SubscriptInputManager();
         }
         else
         {
@@ -81,19 +80,28 @@ public class Player_Controller : MonoBehaviour
         {
             if (PlayerInputManager.Instance != null)
             {
-                _im = PlayerInputManager.Instance;
-                _im.OnAttack += AttackInput;
+                SubscriptInputManager();
                 yield break;
             }
             yield return null;
         }
     }
+    private void SubscriptInputManager() // 구독
+    {
+        if (_im != null || PlayerInputManager.Instance == null) { return; }
+
+        _im = PlayerInputManager.Instance;
+        _im.OnAttack += AttackInput;
+        _im.OnInventory += InventoryInput;
+    }
+
     #endregion
     private void OnDisable()
     {
         if (_im != null && PlayerInputManager.Instance != null)
         {
             _im.OnAttack -= AttackInput;
+            _im.OnInventory -= InventoryInput;
         }
     }
 
@@ -102,20 +110,44 @@ public class Player_Controller : MonoBehaviour
         if (!CanAttack) { return; }
         if (_attackCS == null)
         {
-            Debug.LogWarning($"[{this.name}] : 공격 스크립트 없음");
+            GUtill.Log($"[{this.name}] : 공격 스크립트 없음", EDebugType.Warn);
             return;
         }
 
         _attackCS.TryAttack();
     }
+
+    private void InventoryInput()
+    {
+        if (_inventoryCS == null)
+        {
+            GUtill.Log($"[{this.name}] : 인벤토리 스크립트 없음", EDebugType.Warn);
+            return;
+        }
+
+        _inventoryCS.TryInventoryOpen();
+        GUtill.Log($"[{this.name}] : 인벤토리 열림");
+    }
     #endregion
+
+    private void Awake()
+    {
+        GUtill.TryGetCS(this, ref _stateCS);
+        GUtill.TryGetCS(this, ref _moveCS);
+        GUtill.TryGetCS(this, ref _animCS);
+        GUtill.TryGetCS(this, ref _steminaCS);
+        GUtill.TryGetCS(this, ref _attackCS);
+        GUtill.TryGetCS(this, ref _soundCS);
+        GUtill.TryGetCS(this, ref _inventoryCS);
+        GUtill.TryGetCS(this, ref _rotateCS);
+    }
 
     private void Update()
     {
         MoveUpdate(); // 이동 업데이트
         RotateUpdate(); // 회전 업데이트
-        _steminaCS.SetState(_state);    // 스테미너 업데이트
-        _soundCS.SetSoundDistatce(_state); // 사운드 범위 업데이트
+        _steminaCS?.SetState(_state);    // 스테미너 업데이트
+        _soundCS?.SetSoundDistatce(_state); // 사운드 범위 업데이트
     }
 
     private void MoveUpdate()
@@ -126,21 +158,19 @@ public class Player_Controller : MonoBehaviour
         bool run = _im.GetRunInput;
         bool crouch = _im.GetCrouchInput;
 
-        _moveCS.UpdateMove(move, run, crouch); // 이동 명령
-        _animCS.MoveAnimUpdate(_state); // 이동 애니메이션 업데이트
+        _moveCS?.UpdateMove(move, run, crouch); // 이동 명령
+        _animCS?.MoveAnimUpdate(_state); // 이동 애니메이션 업데이트
     }
-
-    private void SetMovementState(EMovementState state)
-    {
-        _state = state;
-        ControllSwitch();
-    }
-
     private void RotateUpdate()
     {
         if (!CanRotate || _im == null) { return; }
 
-        _rotateCS.SetTarget(_im.GetMousePos);
+        _rotateCS?.SetTarget(_im.GetMousePos);
+    }
+    private void SetMovementState(EMovementState state)
+    {
+        _state = state;
+        ControllSwitch();
     }
 
     // 상태가 바뀌면 실행될 입력제어 스위치
@@ -168,7 +198,7 @@ public class Player_Controller : MonoBehaviour
             case EControllMode.Playing:
                 CanMove = true; CanRotate = true; CanAttack = true;
                 break;
-            case EControllMode.UIOpen:
+            case EControllMode.Inventory:
                 CanMove = false; CanRotate = false; CanAttack = false;
                 break;
             case EControllMode.Attack:

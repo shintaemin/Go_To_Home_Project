@@ -25,9 +25,11 @@ public class Player_SoundDecal : MonoBehaviour
     {
         if (_decalObj != null && _decal == null)
         {
-            if (!_decalObj.TryGetComponent<DecalProjector>(out _decal))
+            GUtill.TryGetCS(_decalObj, ref _decal);
+
+            if (_decal == null)
             {
-                Debug.LogWarning($"[{this.name}] : µ¥Ä® Ä³½Ì ½ÇÆÐ");
+                GUtill.Log($"[{this.name}] : µ¥Ä® Ä³½Ì ½ÇÆÐ", EDebugType.Warn);
                 _decalObj.SetActive(false);
                 enabled = false;
                 return;

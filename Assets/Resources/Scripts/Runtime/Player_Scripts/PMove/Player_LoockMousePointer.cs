@@ -38,7 +38,7 @@ public class Player_LoockMousePointer : MonoBehaviour
             }
             else
             {
-                Debug.LogWarning($"[Player_LoockMousePointer] : 플레이어 인풋 매니저가 없음");
+                GUtill.Log($"[Player_LoockMousePointer] : 플레이어 인풋 매니저가 없음", EDebugType.Warn);
             }
         }
     }

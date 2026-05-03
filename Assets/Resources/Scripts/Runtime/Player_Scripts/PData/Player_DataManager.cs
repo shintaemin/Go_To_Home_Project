@@ -26,6 +26,7 @@ public class Player_DataManager : MonoBehaviour
 
         Instance = this;
         DontDestroyOnLoad(this.gameObject);
+        _dataSO.InitData();
     }
 
     private void OnDestroy()

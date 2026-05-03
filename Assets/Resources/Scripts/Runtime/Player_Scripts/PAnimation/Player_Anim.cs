@@ -1,4 +1,3 @@
-using TMPro;
 using UnityEngine;
 
 #region 플레이어 애니메이션
@@ -31,14 +30,7 @@ public class Player_Anim : MonoBehaviour
 
     private void Awake()
     {
-		if (_anim == null)
-		{
-			if (!TryGetComponent<Animator>(out _anim))
-			{
-                Debug.LogWarning($"[Player_Anim] : 애니메이터 캐싱 실패 <인스펙터 확인>");
-                return;
-            }
-		}
+		GUtill.TryGetCS(this, ref _anim);
 
         _hashSpeed = Animator.StringToHash(_speedParam);
         _hashAttack = Animator.StringToHash(_attackParam);

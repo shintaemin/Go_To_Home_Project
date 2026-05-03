@@ -20,8 +20,6 @@ public class Player_Attack : MonoBehaviour
     #region 인스펙터
     [SerializeField] private Player_Anim _anim;
 
-    [Header("옵션")]
-    [SerializeField] private bool _log = true;
     #endregion
 
     #region 내부 변수
@@ -58,17 +56,14 @@ public class Player_Attack : MonoBehaviour
 
         if (_dataSO.Stemina < _dataSO.GetSteminaAttackCost)
         {
-            Debug.Log($"[{this.name}] : 스테미너 부족 공격 불가");
+            GUtill.Log($"[{this.name}] : 스테미너 부족 공격 불가");
             return;
         }
 
         _controllCS.MovementState = EMovementState.Attack;
         _anim.SetTreggerAnim(_controllCS.MovementState);
 
-        if (_log)
-        {
-            Debug.Log($"[{this.name}] : 공격 시작!");
-        }
+        GUtill.Log($"[{this.name}] : 공격 시작!");
     }
 
     /// <summary>
@@ -78,10 +73,7 @@ public class Player_Attack : MonoBehaviour
     {
         _controllCS.MovementState = EMovementState.Idle;
 
-        if (_log)
-        {
-            Debug.Log($"[{this.name}] : 공격 종료");
-        }
+        GUtill.Log($"[{this.name}] : 공격 종료");
     }
     #endregion
 }

@@ -16,6 +16,15 @@
                     "initialStateCheck": true
                 },
                 {
+                    "name": "MousePosition",
+                    "type": "Value",
+                    "id": "08e4224c-c92b-45d9-b573-37429cb0cc35",
+                    "expectedControlType": "Vector2",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": true
+                },
+                {
                     "name": "Run",
                     "type": "Button",
                     "id": "79b6d106-0677-44cd-b8b5-74215f2f69a2",
@@ -34,18 +43,18 @@
                     "initialStateCheck": false
                 },
                 {
-                    "name": "MousePosition",
-                    "type": "Value",
-                    "id": "08e4224c-c92b-45d9-b573-37429cb0cc35",
-                    "expectedControlType": "Vector2",
-                    "processors": "",
-                    "interactions": "",
-                    "initialStateCheck": true
-                },
-                {
                     "name": "Attack",
                     "type": "Button",
                     "id": "3240ad3f-7bae-4239-bc55-70f231a18832",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "Inventory",
+                    "type": "Button",
+                    "id": "cc56fb3a-ac6d-4f9f-84f7-2e13d531b908",
                     "expectedControlType": "",
                     "processors": "",
                     "interactions": "",
@@ -149,6 +158,17 @@
                     "processors": "",
                     "groups": "",
                     "action": "Attack",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "c223095e-b0d9-4dde-aac6-3743748afc4c",
+                    "path": "<Keyboard>/tab",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Inventory",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

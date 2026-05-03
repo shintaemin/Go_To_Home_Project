@@ -24,7 +24,6 @@ public class Player_State : MonoBehaviour
 
     [Header("옵션")]
     [SerializeField] private EPlayerState _startState = EPlayerState.Idle; // 시작 상태 옵션
-    [SerializeField] private bool _log = false; // 로그 확인용
     #endregion
 
     #region 내부변수
@@ -43,7 +42,7 @@ public class Player_State : MonoBehaviour
         EPlayerState lastState = _currentState;
         _currentState = state;
 
-        if (_log) { Debug.Log($"[{this.name}] : 현재 상태 : {_currentState}"); }
+        GUtill.Log($"[{this.name}] : 현재 상태 : {_currentState}");
     }
     #endregion
 }

@@ -44,11 +44,11 @@ public class PlayerInputManager : MonoBehaviour
     #region 프로퍼티
     public bool RunInput { get; private set; } // 달리기 입력 프로퍼티
     public bool CrouchInput { get; private set; } // 웅크리기 입력 프로퍼티
-
     #endregion
 
     #region 이벤트
-    public event Action OnAttack;
+    public event Action OnAttack;   // 공격 이벤트
+    public event Action OnInventory; // 인벤토리 이벤트
     #endregion
 
     private void Awake()
@@ -94,6 +94,7 @@ public class PlayerInputManager : MonoBehaviour
         RunToggleSetting(_isRunToggle); // 달리기 구독
         CrouchToggleSetting(_isCrouchToggle); // 웅크리기 구독
         _actions.Player.Attack.performed += OnAttackInput; // 공격 구독
+        _actions.Player.Inventory.performed += OnInventoryInput; // 인벤토리 구독
     }
 
     private void AllDiscription()
@@ -107,6 +108,7 @@ public class PlayerInputManager : MonoBehaviour
         _actions.Player.Run.canceled -= OnRunCanceled;
 
         _actions.Player.Attack.performed -= OnAttackInput;
+        _actions.Player.Inventory.performed -= OnInventoryInput;
     }
 
     // 플레이어 셋팅이 변경되면 호출될 함수 (오버로딩)
@@ -168,17 +170,17 @@ public class PlayerInputManager : MonoBehaviour
     private void OnCrouchCanceled(InputAction.CallbackContext ctx) => CrouchInput = false;
     #endregion
     #region 공격 이벤트
-    private void OnAttackInput(InputAction.CallbackContext ctx)
-    {
-        OnAttack?.Invoke();
-    }
+    private void OnAttackInput(InputAction.CallbackContext ctx) => OnAttack?.Invoke();
+    #endregion
+    #region 인벤토리 이벤트
+    private void OnInventoryInput(InputAction.CallbackContext ctx) => OnInventory?.Invoke();
     #endregion
 
     #region 외부 호출 함수
     public Vector2 GetMoveInput => _actions.Player.Move.ReadValue<Vector2>();
     public Vector2 GetMousePos => _actions.Player.MousePosition.ReadValue<Vector2>();
     public bool GetRunInput => RunInput;
-    public bool GetCrouchInput =>CrouchInput;
+    public bool GetCrouchInput => CrouchInput;
 
     /// <summary> 이후 옵션 매니저 생성하여 게임옵션 설정때에 사용할 함수 미리 사용 </summary>
     /// <param name="toggle"> 토글 사용 유무 On / Off </param>

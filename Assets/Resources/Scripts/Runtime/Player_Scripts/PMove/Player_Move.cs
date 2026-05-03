@@ -41,15 +41,7 @@ public class Player_Move : MonoBehaviour
 
     private void Awake()
     {
-        if (_controller == null)
-        {
-            if (!TryGetComponent<CharacterController>(out _controller))
-            {
-                Debug.LogWarning($"[{this.name}] : 캐릭터 컨트롤러 캐싱 실패 <인스펙터 확인>");
-                enabled = false;
-                return;
-            }
-        }
+        GUtill.TryGetCS(this, ref _controller);
 
         if (_controllCS == null)
         {
@@ -68,7 +60,7 @@ public class Player_Move : MonoBehaviour
         else
         {
             _moveSpeed = _defaultSpeed;
-            Debug.LogWarning($"[{this.name}] : Player_DataManager 를 찾지 못함 기본값 사용 속도 : {_moveSpeed}");
+            GUtill.Log($"[{this.name}] : Player_DataManager 를 찾지 못함 기본값 사용 속도 : {_moveSpeed}", EDebugType.Warn);
         }
     }
 

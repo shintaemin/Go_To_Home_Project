@@ -40,10 +40,6 @@ public class Player_DataSO : ScriptableObject
 	public event Action<int> OnSteminaUpdate; 
 	#endregion
 
-    private void Awake()
-    {
-        InitData(_testStartHP, _testStartStemina, _testStartSpeed);
-    }
 
     #region 외부 호출 함수
     public string GetName => _name;
@@ -53,12 +49,13 @@ public class Player_DataSO : ScriptableObject
     public int GetSteminaDecreaceCost => _steminaDecreaceCost;
     public int GetSteminaAttackCost => _steminaAttaceCost;
 
-    public void InitData(int hp, int stemina, float moveSpeed)
+    public void InitData()
     {
-        HP = Mathf.Clamp(hp, 0, _maxHP);
-        Stemina = Mathf.Clamp(stemina, 0, _maxStemina);
-        _moveSpeed = Mathf.Clamp(moveSpeed, 0, _maxSpeed);
+        HP = Mathf.Clamp(_testStartHP, 0, _maxHP);
+        Stemina = Mathf.Clamp(_testStartStemina, 0, _maxStemina);
+        _moveSpeed = Mathf.Clamp(_testStartSpeed, 0, _maxSpeed);
 
+        GUtill.Log($"[{this.name}] : 초기 설정 완료 [ 체력 : {HP}, 스테미너 : {Stemina}, 이동속도 : {_moveSpeed} ]");
     }
     #endregion
 

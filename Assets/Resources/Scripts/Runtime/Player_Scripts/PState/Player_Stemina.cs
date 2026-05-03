@@ -31,7 +31,6 @@ public class Player_Stemina : MonoBehaviour
     [Header("옵션")]
     [SerializeField] private float _decreaseCool = 0.3f;
     [SerializeField] private float _addCool = 30.0f;
-    [SerializeField] private bool _log = false;
     #endregion
 
     #region 내부 변수
@@ -106,7 +105,7 @@ public class Player_Stemina : MonoBehaviour
 
             if (_data == null)
             {
-                Debug.LogError($"[{this.name}] : 데이터 매니저 없음");
+                GUtill.Log($"[{this.name}] : 데이터 매니저 없음" , EDebugType.Error);
                 return;
             }
         }
@@ -116,7 +115,7 @@ public class Player_Stemina : MonoBehaviour
         stemina = Mathf.Clamp(stemina, 0, 100);
 
         _data.Stemina = stemina;
-        if (_log) { Debug.Log($"[{this.name}] : 현재 증가 현재 : {stemina}"); }
+        GUtill.Log($"[{this.name}] : 현재 증가 현재 : {stemina}");
     }
 
     public void DecreaseStemina(int value)
@@ -127,7 +126,7 @@ public class Player_Stemina : MonoBehaviour
 
             if (_data == null)
             {
-                Debug.LogError($"[{this.name}] : 데이터 매니저 없음");
+                GUtill.Log($"[{this.name}] : 데이터 매니저 없음",EDebugType.Error);
                 return;
             }
         }
@@ -137,7 +136,7 @@ public class Player_Stemina : MonoBehaviour
         stemina = Mathf.Clamp(stemina, 0, 100);
 
         _data.Stemina = stemina;
-        if (_log) { Debug.Log($"[{this.name}] : 현재 감소 현재 : {stemina}"); } 
+        GUtill.Log($"[{this.name}] : 현재 감소 현재 : {stemina}");
     }
 
     public void SetState(EMovementState moveState)
@@ -153,7 +152,7 @@ public class Player_Stemina : MonoBehaviour
             DecreaseStemina(_data.GetSteminaAttackCost);
         }
 
-        if (_log) { Debug.Log($"[{this.name}] : 상태 변경 = {_state}"); }
+        GUtill.Log($"[{this.name}] : 상태 변경 = {_state}");
     }
     #endregion
 }
