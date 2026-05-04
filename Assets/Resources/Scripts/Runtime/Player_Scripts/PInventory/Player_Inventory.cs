@@ -25,6 +25,7 @@ public class Player_Inventory : MonoBehaviour
     private bool _isOpening = false;
     private Player_BackPack _backPack;
     private Player_Controller _controller;
+    private CineMashine_System _cineSystem;
     #endregion
 
     private void Awake()
@@ -34,6 +35,7 @@ public class Player_Inventory : MonoBehaviour
             GUtill.TryGetCS(_bag, ref _backPack);
         }
         GUtill.TryGetCS(this, ref _controller);
+        GUtill.TryGetCS(Camera.main, ref _cineSystem);
     }
 
     private void SpawnPosUpdate()
@@ -57,16 +59,18 @@ public class Player_Inventory : MonoBehaviour
         _bag.transform.SetParent(parent);
         _bag.transform.localPosition = Vector3.zero;
         _bag.transform.localRotation = Quaternion.identity;
+        _bag.transform.localScale = _isOpening ? Vector3.one * 2 : Vector3.one;
     }
 
     private void Open()
     {
+        _isOpening = true;
+        _cineSystem.SetVirtualCamViewer(EVirtualCamType.Inventory, true);
         _controller.SetControllState(EControllMode.Inventory);
         SpawnPosUpdate();
         BackPackPosUpdate(_spawnPosObj.transform);
 
         if (_backPack != null) { _backPack.SetTriggerBackPack(true); }
-        _isOpening = true;
     }
 
     private void Close()
@@ -88,9 +92,10 @@ public class Player_Inventory : MonoBehaviour
 
     public void MoveToHand()
     {
-        BackPackPosUpdate(_leftHandBackPackPos.transform);
         _isOpening = false;
+        BackPackPosUpdate(_leftHandBackPackPos.transform);
         _controller.SetControllState(EControllMode.Playing);
+        _cineSystem.SetVirtualCamViewer(EVirtualCamType.Inventory, false);
     }
     #endregion
 }
