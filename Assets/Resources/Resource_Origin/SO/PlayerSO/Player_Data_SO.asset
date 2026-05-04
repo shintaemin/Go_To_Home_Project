@@ -15,7 +15,13 @@ MonoBehaviour:
   _name: Daddy
   _moveSpeed: 5
   _hp: 100
-  _stemina: 100
+  _stemina: 5
   _maxSpeed: 10
   _maxHP: 100
   _maxStemina: 100
+  _steminaAddAmount: 5
+  _steminaDecreaceCost: 1
+  _steminaAttaceCost: 10
+  _testStartSpeed: 5
+  _testStartHP: 100
+  _testStartStemina: 100
