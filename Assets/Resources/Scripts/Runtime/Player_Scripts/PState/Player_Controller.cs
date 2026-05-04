@@ -41,6 +41,8 @@ public class Player_Controller : MonoBehaviour
     [SerializeField] private Player_Sound _soundCS;
     [SerializeField] private Player_Inventory _inventoryCS;
     [SerializeField] private Player_LoockMousePointer _rotateCS;
+    [SerializeField] private Player_InteractFinder _finderCS;
+    [SerializeField] private Player_Interact _interactCS;
     #endregion
 
     #region 내부 변수
@@ -93,8 +95,8 @@ public class Player_Controller : MonoBehaviour
         _im = PlayerInputManager.Instance;
         _im.OnAttack += AttackInput;
         _im.OnInventory += InventoryInput;
+        _im.OnInteract += InteractInput;
     }
-
     #endregion
     private void OnDisable()
     {
@@ -102,6 +104,7 @@ public class Player_Controller : MonoBehaviour
         {
             _im.OnAttack -= AttackInput;
             _im.OnInventory -= InventoryInput;
+            _im.OnInteract -= InteractInput;
         }
     }
 
@@ -119,6 +122,7 @@ public class Player_Controller : MonoBehaviour
 
     private void InventoryInput()
     {
+        if (MovementState == EMovementState.Attack) { return; }
         if (_inventoryCS == null)
         {
             GUtill.Log($"[{this.name}] : 인벤토리 스크립트 없음", EDebugType.Warn);
@@ -128,18 +132,27 @@ public class Player_Controller : MonoBehaviour
         _inventoryCS.TryInventoryOpen();
         GUtill.Log($"[{this.name}] : 인벤토리 열림");
     }
+
+    private void InteractInput()
+    {
+        if (MovementState == EMovementState.Attack) { return; }
+        if (_interactCS == null)
+        {
+            GUtill.Log($"[{this.name}] : 상호작용 스크립트 없음", EDebugType.Warn);
+            return;
+        }
+
+        GUtill.Log($"[{this.name}] : 상호작용 시작");
+        _interactCS.TryInteract();
+    }
     #endregion
 
     private void Awake()
     {
-        GUtill.TryGetCS(this, ref _stateCS);
-        GUtill.TryGetCS(this, ref _moveCS);
-        GUtill.TryGetCS(this, ref _animCS);
-        GUtill.TryGetCS(this, ref _steminaCS);
-        GUtill.TryGetCS(this, ref _attackCS);
-        GUtill.TryGetCS(this, ref _soundCS);
-        GUtill.TryGetCS(this, ref _inventoryCS);
-        GUtill.TryGetCS(this, ref _rotateCS);
+        GUtill.TryGetCS(this, ref _stateCS);     GUtill.TryGetCS(this, ref _moveCS);   GUtill.TryGetCS(this, ref _animCS);
+        GUtill.TryGetCS(this, ref _steminaCS);   GUtill.TryGetCS(this, ref _attackCS); GUtill.TryGetCS(this, ref _soundCS);
+        GUtill.TryGetCS(this, ref _inventoryCS); GUtill.TryGetCS(this, ref _rotateCS); GUtill.TryGetCS(this, ref _finderCS);
+        GUtill.TryGetCS(this, ref _interactCS);
     }
 
     private void Update()
@@ -148,6 +161,7 @@ public class Player_Controller : MonoBehaviour
         RotateUpdate(); // 회전 업데이트
         _steminaCS?.SetState(_state);    // 스테미너 업데이트
         _soundCS?.SetSoundDistatce(_state); // 사운드 범위 업데이트
+        _finderCS?.Find();
     }
 
     private void MoveUpdate()
@@ -170,16 +184,17 @@ public class Player_Controller : MonoBehaviour
     private void SetMovementState(EMovementState state)
     {
         _state = state;
-        ControllSwitch();
+        ControllSwitch(_state);
     }
 
     // 상태가 바뀌면 실행될 입력제어 스위치
-    private void ControllSwitch() 
+    private void ControllSwitch(EMovementState state) 
     {
         EControllMode mode = EControllMode.Playing;
-        switch (_state)
+        switch (state)
         {
             case EMovementState.Attack: mode = EControllMode.Attack; break;
+
             case EMovementState.Idle:case EMovementState.Walk:
             case EMovementState.Run: case EMovementState.Crouch:
                 mode = EControllMode.Playing; break;
@@ -195,18 +210,13 @@ public class Player_Controller : MonoBehaviour
     {
         switch (state)
         {
-            case EControllMode.Playing:
-                CanMove = true; CanRotate = true; CanAttack = true;
-                break;
-            case EControllMode.Inventory:
-                CanMove = false; CanRotate = false; CanAttack = false;
-                break;
-            case EControllMode.Attack:
-                CanMove = false; CanRotate = true; CanAttack = true;
-                break;
-            case EControllMode.AllLock:
-                CanMove = false; CanRotate = false; CanAttack = false;
-                break;
+            case EControllMode.Playing:   CanMove = true; CanRotate = true; CanAttack = true;    break;
+
+            case EControllMode.Attack:    CanMove = false; CanRotate = true; CanAttack = true;   break;
+
+            case EControllMode.Inventory: CanMove = false; CanRotate = false; CanAttack = false; break;
+
+            case EControllMode.AllLock:   CanMove = false; CanRotate = false; CanAttack = false; break;
         }
     }
     #endregion

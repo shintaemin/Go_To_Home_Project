@@ -49,6 +49,7 @@ public class PlayerInputManager : MonoBehaviour
     #region 이벤트
     public event Action OnAttack;   // 공격 이벤트
     public event Action OnInventory; // 인벤토리 이벤트
+    public event Action OnInteract;
     #endregion
 
     private void Awake()
@@ -95,6 +96,7 @@ public class PlayerInputManager : MonoBehaviour
         CrouchToggleSetting(_isCrouchToggle); // 웅크리기 구독
         _actions.Player.Attack.performed += OnAttackInput; // 공격 구독
         _actions.Player.Inventory.performed += OnInventoryInput; // 인벤토리 구독
+        _actions.Player.Interact.performed += OnInteractInput; // 상호작용 구독
     }
 
     private void AllDiscription()
@@ -109,6 +111,7 @@ public class PlayerInputManager : MonoBehaviour
 
         _actions.Player.Attack.performed -= OnAttackInput;
         _actions.Player.Inventory.performed -= OnInventoryInput;
+        _actions.Player.Interact.performed -= OnInteractInput;
     }
 
     // 플레이어 셋팅이 변경되면 호출될 함수 (오버로딩)
@@ -169,11 +172,10 @@ public class PlayerInputManager : MonoBehaviour
     private void OnCrouchStarted(InputAction.CallbackContext ctx) => CrouchInput = true;
     private void OnCrouchCanceled(InputAction.CallbackContext ctx) => CrouchInput = false;
     #endregion
-    #region 공격 이벤트
+    #region 공격, 인벤토리, 상호작용 이벤트
     private void OnAttackInput(InputAction.CallbackContext ctx) => OnAttack?.Invoke();
-    #endregion
-    #region 인벤토리 이벤트
     private void OnInventoryInput(InputAction.CallbackContext ctx) => OnInventory?.Invoke();
+    private void OnInteractInput(InputAction.CallbackContext ctx) => OnInteract?.Invoke();
     #endregion
 
     #region 외부 호출 함수

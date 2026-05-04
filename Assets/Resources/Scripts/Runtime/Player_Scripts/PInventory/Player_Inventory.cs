@@ -3,8 +3,9 @@ using UnityEngine;
 #region 플레이어 인벤토리
 /*
  ▶ 할일
-  - 아이템 리스트를 들고있을 스크립트
-  - 가방 오브젝트의 부모오브젝트 지정 및 애니메이션을 호출
+  - 아이템 리스트를 들고있을 스크립트 <- 이건 추후 옮겨질걸로 보여짐 현재 로직에 Data 관리 로직까지 들어오면 코드가 너무 길어질거같음
+  - 가방 오브젝트의 부모, 위치 를 지정
+  - 가방 애니메이션 Trigger 함수 호출
 */
 #endregion
 
@@ -24,6 +25,7 @@ public class Player_Inventory : MonoBehaviour
     #region 내부변수
     private bool _isOpening = false;
     private Player_BackPack _backPack;
+    private Player_Anim _anim;
     private Player_Controller _controller;
     private CineMashine_System _cineSystem;
     #endregion
@@ -35,6 +37,7 @@ public class Player_Inventory : MonoBehaviour
             GUtill.TryGetCS(_bag, ref _backPack);
         }
         GUtill.TryGetCS(this, ref _controller);
+        GUtill.TryGetCS(this, ref _anim);
         GUtill.TryGetCS(Camera.main, ref _cineSystem);
     }
 
@@ -69,7 +72,7 @@ public class Player_Inventory : MonoBehaviour
         _controller.SetControllState(EControllMode.Inventory);
         SpawnPosUpdate();
         BackPackPosUpdate(_spawnPosObj.transform);
-
+        _anim.OnInventoryAnim();
         if (_backPack != null) { _backPack.SetTriggerBackPack(true); }
     }
 
@@ -93,6 +96,7 @@ public class Player_Inventory : MonoBehaviour
     public void MoveToHand()
     {
         _isOpening = false;
+        _anim.OffInventoryAnim();
         BackPackPosUpdate(_leftHandBackPackPos.transform);
         _controller.SetControllState(EControllMode.Playing);
         _cineSystem.SetVirtualCamViewer(EVirtualCamType.Inventory, false);

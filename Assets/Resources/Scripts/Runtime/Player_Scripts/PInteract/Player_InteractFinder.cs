@@ -12,7 +12,6 @@ public class Player_InteractFinder : MonoBehaviour
 {
     #region 인스펙터
     [SerializeField] private LayerMask _interactLayer;  // 검사할 레이어
-    [SerializeField] private IInteract _targetObj;      // 상호작용할  타겟
 
     [Header("옵션")]
     [SerializeField] private float _range = 4.0f;       // 검사 범위
@@ -20,10 +19,16 @@ public class Player_InteractFinder : MonoBehaviour
     [SerializeField] private float _findInterval = 0.5f; // 지정한 시간에 한번씩 검사
     #endregion
 
-    #region
+    #region 내부 변수
     private Collider[] _reserver = new Collider[5];     // 충돌체를 담을 변수 - 검사마다 new 로 생성하기보다 미리 담아둘공간을 확보
     private float _nextFindTime = 0;    // 다음 검사 시간
+    private Player_Interact _interact;
     #endregion
+
+    private void Awake()
+    {
+        GUtill.TryGetCS(this, ref _interact);
+    }
 
     private void Start()
     {
@@ -75,7 +80,7 @@ public class Player_InteractFinder : MonoBehaviour
         }
 
         // 최종 타겟 지정 + 다음 검사시간 업데이트
-        _targetObj = target;
+        _interact?.SetTarget(target);
         _nextFindTime = Time.time + _findInterval;
     }
 
@@ -90,8 +95,5 @@ public class Player_InteractFinder : MonoBehaviour
     {
         UpdateFinder();
     }
-
-    // 플레이어의 상호작용 입력에서 처리할 함수
-    public IInteract GetTarget => _targetObj;
     #endregion
 }

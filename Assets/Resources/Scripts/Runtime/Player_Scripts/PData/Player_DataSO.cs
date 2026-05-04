@@ -18,9 +18,10 @@ public class Player_DataSO : ScriptableObject
 	[SerializeField] private int _hp = 100;
 	[SerializeField] private int _stemina = 100;
 
+    [Header("스피드 옵션")]
     [SerializeField] private float _maxSpeed = 10;
 
-    [Header("HP 옵션")]
+    [Header("체력 옵션")]
     [SerializeField] private int _maxHP = 100;
 
     [Header("스테미너 옵션")]

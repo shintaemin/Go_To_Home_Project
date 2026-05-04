@@ -17,6 +17,7 @@ public class Player_Anim : MonoBehaviour
     [Header("파라미터")]
 	[SerializeField] private string _speedParam = "fSpeed";
 	[SerializeField] private string _attackParam = "tAttack";
+	[SerializeField] private string _inventoryParam = "bInventory";
 
 	[Header("옵션")]
 	[SerializeField] private float _paramUpdatespeed = 1.0f;
@@ -26,6 +27,7 @@ public class Player_Anim : MonoBehaviour
 	private int _hashSpeed;
 	private int _hashAttack;
 	private float _targerSpeed;
+	private int _hashInventory;
     #endregion
 
     private void Awake()
@@ -34,6 +36,7 @@ public class Player_Anim : MonoBehaviour
 
         _hashSpeed = Animator.StringToHash(_speedParam);
         _hashAttack = Animator.StringToHash(_attackParam);
+        _hashInventory = Animator.StringToHash(_inventoryParam);
     }
 
     private void Update()
@@ -66,5 +69,15 @@ public class Player_Anim : MonoBehaviour
         }
 		
 	}
+
+	public void OnInventoryAnim()
+	{
+		_anim.SetBool(_hashInventory, true);
+	}
+
+	public void OffInventoryAnim()
+    {
+        _anim.SetBool(_hashInventory, false);
+    }
 	#endregion
 }
