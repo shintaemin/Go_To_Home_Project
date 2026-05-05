@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 8480965457685178018}
   - component: {fileID: 4784459401587771603}
   m_Layer: 0
-  m_Name: ClawHammer_01
+  m_Name: Hammer
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
