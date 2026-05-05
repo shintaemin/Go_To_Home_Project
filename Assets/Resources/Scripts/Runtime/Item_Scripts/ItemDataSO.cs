@@ -27,6 +27,20 @@ public class ItemDataSO : ScriptableObject
     [SerializeField] private string _info;
 
     #region 외부 호출 함수
+    public void SetUp(int id, string name, EItemType type, int isInteract, int isStackable, int maxStackCount, Sprite icon, string info)
+    {
+        _id = id;
+        _name = name;
+        _itemType = type;
+        _isInteractable = isInteract == 1;
+        _isStackable = isStackable == 1;
+        _maxStackCount = _isStackable ? maxStackCount : 1;
+        _icon = icon;
+        _info = info;
+    }
+    #endregion
+
+    #region 외부 호출 함수
     public int ID => _id;
     public string Name => _name;
     public EItemType Type => _itemType;

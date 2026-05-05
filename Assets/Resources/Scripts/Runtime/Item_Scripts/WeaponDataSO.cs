@@ -1,4 +1,3 @@
-using Unity.VisualScripting;
 using UnityEngine;
 
 #region 무기 데이터 SO
@@ -36,6 +35,18 @@ public class WeaponDataSO : ItemDataSO
 
     [Header("업데이트 될 데이터")]
     [SerializeField] private float _currentDurability = 0.0f;
+
+    #region 파싱시 셋업 함수
+    public void SetUp(EWeaponType type, int damage, float speed, float dur, float cost, EAttackSoundType soundType)
+    {
+        _weapontype = type;
+        _damage = damage;
+        _attackSpeedRatio = speed;
+        _maxDurability = dur;
+        _attackCost = cost;
+        _attackSoundType = soundType;
+    }
+    #endregion
 
     #region 외부 호출 함수
     public EWeaponType WeaponType => _weapontype;

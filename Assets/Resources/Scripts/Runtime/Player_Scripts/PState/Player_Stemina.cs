@@ -1,4 +1,3 @@
-using System;
 using UnityEngine;
 
 #region 플레이어 스테미너
