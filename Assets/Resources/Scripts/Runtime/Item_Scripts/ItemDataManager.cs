@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 #region 아이템 데이터 매니저
@@ -48,9 +46,13 @@ public class ItemDataManager : MonoBehaviour
     }
 
     #region 외부 호출 함수
-    public ItemDataSO GetItem(int id)
+    public ItemDataSO GetItem(int id) // id 로 아이템을 꺼내오기
     {
         return _registrySO?.GetItemData(id);
+    }
+    public ItemDataSO GetItem(string name)
+    {
+        return _registrySO?.GetItemData(name);
     }
     #endregion
 }

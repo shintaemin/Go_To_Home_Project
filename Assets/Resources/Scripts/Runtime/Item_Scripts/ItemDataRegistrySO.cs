@@ -5,6 +5,7 @@ using UnityEngine;
 /*
  ▶ 할일
   - 아이템 데이터 SO 들을 저장할 RegistrySO
+  - 게임중에 변경되지않도록 외부에서 추가나 등록이 불가하게 private 로하고 사용만 가능하도록 작업하기
 */
 #endregion
 
@@ -13,20 +14,22 @@ public class ItemDataRegistrySO : ScriptableObject
 {
     #region 인스펙터
     [SerializeField] private List<ItemDataSO> _itemList = new List<ItemDataSO>();
-    [SerializeField] private string _path;
+    [SerializeField] private string _path = "SO/ItemSO";
     #endregion
 
     #region 내부변수
     private Dictionary<int , ItemDataSO> _itemsDic = new Dictionary<int , ItemDataSO>();
     #endregion
 
+    // 데이터를 List 와 Dictionary 에 등록할 함수
     private void InitDataList()
     {
-        _itemList.Clear();
+        _itemList.Clear();  // 시작시 비워버리기
         _itemsDic.Clear();
 
-        ItemDataSO[] items = Resources.LoadAll<ItemDataSO>(_path);
+        ItemDataSO[] items = Resources.LoadAll<ItemDataSO>(_path); // 지정된 위치에 모든 ItemDataSO 를 배열로 생성
 
+        // 찾은 아이템 SO 들을 딕셔너리의 <키 : id , 밸류 , ItemDataSO> 로 등록
         foreach(ItemDataSO data in items)
         {
             if (data == null) { continue; }
@@ -46,6 +49,7 @@ public class ItemDataRegistrySO : ScriptableObject
         GUtill.Log($"[{this.name}] : 딕셔너리 초기화 완료", EDebugType.Warn);
     }
 
+    // 리스트에 아이템을 추가할 함수
     private void AddItemData(ItemDataSO data)
     {
         if (_itemList.Contains(data))
@@ -71,6 +75,24 @@ public class ItemDataRegistrySO : ScriptableObject
         return data;
     }
 
+    // 외부에서 이름으로도 찾을수 있도록 간단하게 리스트를 순회하는 로직
+    public ItemDataSO GetItemData(string name)
+    {
+        ItemDataSO data = null;
+
+        for (int i = _itemList.Count - 1; i >= 0; i--)
+        {
+            if (_itemList[i].Name == name)
+            {
+                data = _itemList[i];
+                break;
+            }
+        }
+
+        return data;
+    }
+
+    // 시작시 업데이트를 진행할 진입점
     public void Init()
     {
         InitDataList();
