@@ -23,9 +23,25 @@ public class HealItemSO : AvailableDataSO
     [SerializeField] private float _cooldown;
 
     #region 파싱시 셋업 함수
-    public void SetUp(EAvailableType availableType, EHealingType healType, int value, float dur, float cooldown)
+    public void SetUp
+        (
+        int id, 
+        string name, 
+        EItemType itemType, 
+        int isInteract, 
+        int isStackable, 
+        int maxStackCount, 
+        Sprite icon, 
+        string info, 
+        EAvailableType availableType, 
+        EHealingType healType, 
+        int value, 
+        float dur, 
+        float cooldown,
+        GameObject prefab
+        )
     {
-        base.SetUp(availableType);
+        base.SetUp(id, name, itemType, isInteract, isStackable, maxStackCount, icon, info, availableType, prefab);
         _healType = healType;
         _value = value;
         _duration = dur;

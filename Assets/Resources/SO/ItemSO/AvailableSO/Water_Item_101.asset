@@ -1,0 +1,28 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e3e55863fcb7a3f47919c9e475413723, type: 3}
+  m_Name: Water_Item_101
+  m_EditorClassIdentifier: 
+  _id: 101
+  _name: "\uBB3C"
+  _itemType: 2
+  _isInteractable: 1
+  _isStackable: 0
+  _maxStackCount: 1
+  _icon: {fileID: 21300000, guid: fa778b5a3e169f34db6ba3fbb3aa279c, type: 3}
+  _info: "\uC2A4\uD14C\uBBF8\uB108\uB97C 50\uB9CC\uD07C 20\uCD08\uAC04 \uD68C\uBCF5"
+  _prefab: {fileID: 0}
+  _availableType: 1
+  _healType: 2
+  _value: 50
+  _duration: 20
+  _cooldown: 0

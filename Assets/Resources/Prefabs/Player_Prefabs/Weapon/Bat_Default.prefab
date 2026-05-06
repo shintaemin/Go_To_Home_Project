@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 7168507104641872167}
   - component: {fileID: 2387839466061075249}
   m_Layer: 0
-  m_Name: Bat_Default_Prefab
+  m_Name: Bat_Default
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

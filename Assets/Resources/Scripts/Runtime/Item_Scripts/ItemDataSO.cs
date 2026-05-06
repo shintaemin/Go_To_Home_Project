@@ -25,9 +25,10 @@ public class ItemDataSO : ScriptableObject
     [SerializeField] private int _maxStackCount;
     [SerializeField] private Sprite _icon;
     [SerializeField] private string _info;
+    [SerializeField] private GameObject _prefab;
 
-    #region 외부 호출 함수
-    public void SetUp(int id, string name, EItemType type, int isInteract, int isStackable, int maxStackCount, Sprite icon, string info)
+    #region 파싱시 셋업 함수
+    public void SetUp(int id, string name, EItemType type, int isInteract, int isStackable, int maxStackCount, Sprite icon, string info, GameObject prefab)
     {
         _id = id;
         _name = name;
@@ -37,6 +38,7 @@ public class ItemDataSO : ScriptableObject
         _maxStackCount = _isStackable ? maxStackCount : 1;
         _icon = icon;
         _info = info;
+        _prefab = prefab;
     }
     #endregion
 
@@ -49,5 +51,6 @@ public class ItemDataSO : ScriptableObject
     public int MaxStack => _maxStackCount;
     public Sprite Icon => _icon;
     public string Info => _info;
+    public GameObject Prefab => _prefab;
     #endregion
 }

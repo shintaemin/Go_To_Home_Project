@@ -11,6 +11,7 @@ public enum EAvailableType
 {
     None,
     Healing,
+    Buff,
 }
 
 public abstract class AvailableDataSO : ItemDataSO
@@ -18,7 +19,12 @@ public abstract class AvailableDataSO : ItemDataSO
     [SerializeField] private EAvailableType _availableType;
 
     #region 파싱 시 호출 함수
-    public void SetUp(EAvailableType type) => _availableType = type;
+    public void SetUp(int id, string name, EItemType itemType, int isInteract, int isStackable, int maxStackCount, Sprite icon, string info, EAvailableType type, GameObject prefab)
+    {
+        base.SetUp(id, name, itemType, isInteract, isStackable, maxStackCount, icon, info, prefab);
+
+        _availableType = type;
+    }
     #endregion
 
     #region 외부 호출 함수

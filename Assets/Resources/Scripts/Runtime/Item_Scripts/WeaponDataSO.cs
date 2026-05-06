@@ -37,9 +37,28 @@ public class WeaponDataSO : ItemDataSO
     [SerializeField] private float _currentDurability = 0.0f;
 
     #region 파싱시 셋업 함수
-    public void SetUp(EWeaponType type, int damage, float speed, float dur, float cost, EAttackSoundType soundType)
+    public void SetUp
+        (
+        int id,
+        string name,
+        EItemType itemType,
+        int isInteract,
+        int isStackable,
+        int maxStackCount,
+        Sprite icon,
+        string info,
+        EWeaponType weaponType,
+        int damage,
+        float speed,
+        float dur,
+        float cost,
+        EAttackSoundType soundType,
+        GameObject prefab
+        )
     {
-        _weapontype = type;
+        base.SetUp(id, name, itemType, isInteract, isStackable, maxStackCount, icon, info, prefab);
+
+        _weapontype = weaponType;
         _damage = damage;
         _attackSpeedRatio = speed;
         _maxDurability = dur;

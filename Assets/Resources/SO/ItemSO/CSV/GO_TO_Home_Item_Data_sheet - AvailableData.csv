@@ -1,0 +1,5 @@
+0,1,2,3,4,5,6,7,8,9,10,11,12,13,14
+파일 이름,ID,아이템 이름,아이템 타입,상호작용 유무,스택 가능 유무,스택 갯수,아이콘 주소,설명,사용가능 타입,회복 타입,Value,지속시간,쿨타임,프리펩 주소
+id 100~,int,string,string,bool,bool,int,string,string,string,string,int,float,float,string
+MediKit_Item,100,체력 키트,Available,1,1,3,Icons/AvailableIcons/HealIcon/MediKit_HP_01,체력을 30 만큼 30초간 회복,Healing,HP,30,30,60,null
+Water_Item,101,물,Available,1,0,1,Icons/AvailableIcons/HealIcon/Water_Stemina_01,스테미너를 50만큼 20초간 회복,Healing,Stemina,50,20,0,null

@@ -1,0 +1,9 @@
+0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15
+파일 이름,ID,아이템 이름,아이템 타입,상호작용 유무,스택 가능 유무,스택 갯수,아이콘 경로,설명,무기 타입,데미지,공격 속도,내구도,공격 비용,공격 사운드 클립 타입,프리펩 경로
+id 1000~,int,string,string,bool,bool,int,string,string,string,int,float,float,int,string,string
+Bat_Default_Item,1000,야구 배트,Weapon,1,0,1,Icons/WeaponIcons/Blunt/Bat_Default_01,OO고등학교 야구부가 쓰는 배트,Blunt,30,0.5,100,10,Blunt,Prefabs/Player_Prefabs/Weapon/Bat_Default
+Bat_Cretical_Item,1001,강화 배트,Weapon,1,0,1,Icons/WeaponIcons/Blunt/Bat_Critical_01,살상용 야구 배트,Blunt,40,0.5,100,10,Blunt,Prefabs/Player_Prefabs/Weapon/Bat_Critical
+Crow_Default_Item,1002,빠루,Weapon,1,0,1,Icons/WeaponIcons/Blunt/Crow_Default_01,다른걸 고칠 수 있을지도...,Blunt,35,0.5,100,8,Sharp,Prefabs/Player_Prefabs/Weapon/Crow_Default
+MiniHammer_Default_Item,1003,손 망치,Weapon,1,0,1,Icons/WeaponIcons/Hand/MiniHammer_Default_01,못 만 치기엔 재미가 없겠지?,Hand,20,2,100,3,Blunt,Prefabs/Player_Prefabs/Weapon/MiniHammer_Default
+Axe_Default_Item,1004,도끼,Weapon,1,0,1,Icons/WeaponIcons/Axe/Axe_Default_01,찍는 맛이 있지,Axe,50,0.5,100,15,Heavy,Prefabs/Player_Prefabs/Weapon/Axe_Default
+Knife_Default_Item,1005,전투용 칼,Weapon,1,0,1,Icons/WeaponIcons/Hand/Knife_Default_01,푸슉,Hand,30,2,100,3,Sharp,Prefabs/Player_Prefabs/Weapon/Knife_Default
