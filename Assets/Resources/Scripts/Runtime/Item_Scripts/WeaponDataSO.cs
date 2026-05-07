@@ -33,9 +33,6 @@ public class WeaponDataSO : ItemDataSO
     [SerializeField] private float _attackCost;
     [SerializeField] private EAttackSoundType _attackSoundType;
 
-    [Header("업데이트 될 데이터")]
-    [SerializeField] private float _currentDurability = 0.0f;
-
     #region 파싱시 셋업 함수
     public void SetUp
         (
@@ -72,19 +69,7 @@ public class WeaponDataSO : ItemDataSO
     public int Damage => _damage;
     public float AttackSpeedRatio => _attackSpeedRatio;
     public float MaxDur => _maxDurability;
-    public float CurrentDur => _currentDurability;
     public float AttackCost => _attackCost;
     public EAttackSoundType AttackSoundType => _attackSoundType;
-
-    public void DecreaseDur(float value)
-    {
-        float current = _currentDurability - value;
-        _currentDurability = Mathf.Max(0, current);
-    }
-    
-    public void Repair()
-    {
-        _currentDurability = _maxDurability;
-    }
     #endregion
 }
