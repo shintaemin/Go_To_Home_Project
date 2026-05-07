@@ -36,6 +36,15 @@ public class SlotData
         _count++;
     }
 
+    public void SetCount(int count)
+    {
+        if (_item != null)
+        {
+            int max = _item.MaxStack;
+            _count = Mathf.Min(count, max);
+        }
+    }
+
     public void InitItem(ItemDataSO item, int id, bool stack = false, int maxStack = 1)
     {
         if (item is WeaponDataSO weapon)
@@ -122,58 +131,12 @@ public class Inventory_Manager : MonoBehaviour
     #region 외부 호출 함수
     public void AddItem(ItemDataSO item)
     {
-        if (item.IsStackable)
-        {
-            for (int i = 0; i < _items.Count; i++)
-            {
-                if (_items[i] == null || _items[i].GetItem != item) { continue; }
-                if (_items[i].GetCount >= item.MaxStack) { continue; }
 
-                _items[i].AddCount();
-                return;
-            }
-        }
-
-        SlotData slot = new SlotData();
-
-        int id = ProvidedID();
-        if (id == -1) { return; }
-
-        slot.InitItem(item, id);
-
-        if (id == _items.Count)
-        {
-            _items.Add(slot);
-            return;
-        }
-
-        _items[id] = slot;
     }
 
     public void AddItem(SlotData slot)
     {
-        ItemDataSO item = slot.GetItem;
-        if (item.IsStackable)
-        {
-            for (int i = 0; i < _items.Count; i++)
-            {
-                if (_items[i] == null || _items[i].GetItem != item) { continue; }
-                if (_items[i].GetCount >= item.MaxStack) { continue; }
 
-                _items[i].AddCount();
-                return;
-            }
-        }
-
-        int id = ProvidedID();
-        if (id == -1) { return; }
-        if (id == _items.Count)
-        {
-            _items.Add(slot);
-            return;
-        }
-
-        _items[id] = slot;
     }
 
     public SlotData GetSlotData(int id)
