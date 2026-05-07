@@ -1,4 +1,3 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -30,7 +29,12 @@ public class SlotData
     public ItemDataSO GetItem => _item;
     public int GetId => _slotId;
     public float GetDur => _curentDur;
-    public int Count => _count;
+    public int GetCount => _count;
+
+    public void AddCount()
+    {
+        _count++;
+    }
 
     public void InitItem(ItemDataSO item, int id, bool stack = false, int maxStack = 1)
     {
@@ -59,6 +63,7 @@ public class SlotData
         _item = item;
         _slotId = id;
     }
+
     public void DecreaseDur(float value)
     {
         float current = _curentDur - value;
@@ -97,9 +102,8 @@ public class Inventory_Manager : MonoBehaviour
         Instance = this;
         DontDestroyOnLoad(this.gameObject);
 
-
         _capacityOverlab += _maxStorege;
-        _items = new List<SlotData>(_capacityOverlab); // 리스트의 최대 범위를 미리 지정       
+        _items = new List<SlotData>(_capacityOverlab); // 리스트의 최대 범위를 미리 지정
     }
 
     private int ProvidedID()
@@ -118,6 +122,18 @@ public class Inventory_Manager : MonoBehaviour
     #region 외부 호출 함수
     public void AddItem(ItemDataSO item)
     {
+        if (item.IsStackable)
+        {
+            for (int i = 0; i < _items.Count; i++)
+            {
+                if (_items[i] == null || _items[i].GetItem != item) { continue; }
+                if (_items[i].GetCount >= item.MaxStack) { continue; }
+
+                _items[i].AddCount();
+                return;
+            }
+        }
+
         SlotData slot = new SlotData();
 
         int id = ProvidedID();
@@ -125,8 +141,8 @@ public class Inventory_Manager : MonoBehaviour
 
         slot.InitItem(item, id);
 
-        if (id == _items.Count) 
-        { 
+        if (id == _items.Count)
+        {
             _items.Add(slot);
             return;
         }
@@ -136,9 +152,21 @@ public class Inventory_Manager : MonoBehaviour
 
     public void AddItem(SlotData slot)
     {
+        ItemDataSO item = slot.GetItem;
+        if (item.IsStackable)
+        {
+            for (int i = 0; i < _items.Count; i++)
+            {
+                if (_items[i] == null || _items[i].GetItem != item) { continue; }
+                if (_items[i].GetCount >= item.MaxStack) { continue; }
+
+                _items[i].AddCount();
+                return;
+            }
+        }
+
         int id = ProvidedID();
         if (id == -1) { return; }
-
         if (id == _items.Count)
         {
             _items.Add(slot);
