@@ -31,18 +31,10 @@ public class SlotData
     public float GetDur => _curentDur;
     public int GetCount => _count;
 
-    public void SetCount(int count)
-    {
-        if (_item != null)
-        {
-            int max = _item.MaxStack;
-            _count = Mathf.Min(count, max);
-        }
-    }
-
-    public int AddCount(int value)
+    public int AddCount(int value = 1)
     {
         if (_item == null) { return -1; }
+        if (!_item.IsStackable) { return -1; }
 
         int remain = _count;
         int amount = value;
@@ -64,30 +56,14 @@ public class SlotData
         return rest;
     }
 
-    public void InitItem(ItemDataSO item, int id, bool stack = false, int maxStack = 1, int count = 1)
+    public void InitItem(ItemDataSO item, int id,  int count = 1)
     {
         if (item is WeaponDataSO weapon)
         {
             _curentDur = weapon.MaxDur;
         }
 
-        if (stack)
-        {
-            if (_count < maxStack)
-            {
-                _count += count;
-            }
-            else
-            {
-                GUtill.Log($"[SlotData] : ÇöÀç ½½·ÔÀº °¡µæÂü");
-                return;
-            }
-        }
-        else
-        {
-            _count = count;
-        }
-
+        _count = count;
         _item = item;
         _slotId = id;
     }
@@ -156,19 +132,20 @@ public class Inventory_Manager : MonoBehaviour
         {
             for (int i = 0; i < _items.Count; i++)
             {
-                if (_items[i] == null || _items[i].GetItem != item) { continue; }
+                if (_items[i] == null) { continue; }
+                if (_items[i].GetItem != item) { continue; }
                 if (_items[i].GetCount >= item.MaxStack) { continue; }
 
-                _items[i].AddCount(1);
+                int rest = _items[i].AddCount();
+                if (rest != 0) { continue; }
                 return true;
             }
         }
 
-        SlotData slot = new SlotData();
         int id = ProvidedID();
-
         if (id == -1) { return false; }
 
+        SlotData slot = new SlotData();
         slot.InitItem(item, id);
 
         if (id == _items.Count) { _items.Add(slot); }
@@ -180,12 +157,31 @@ public class Inventory_Manager : MonoBehaviour
     public bool AddItem(SlotData slot)
     {
         ItemDataSO item = slot.GetItem;
-        int id = slot.GetId;
         int amount = slot.GetCount;
         int max = item.MaxStack;
         bool isStack = item.IsStackable;
+        
+        if (isStack)
+        {
+            for (int i = 0; i < _items.Count; i++)
+            {
+                if (_items[i] == null) { continue; }
+                if (_items[i].GetItem != item) { continue; }
 
+                amount = _items[i].AddCount(amount);
 
+                if (amount == 0) { return true; }
+            }
+        }
+
+        int id = ProvidedID();
+        if (id == -1) { return false; }
+
+        SlotData newSlot = new SlotData();
+        newSlot.InitItem(item, id, amount);
+
+        if (id == _items.Count) { _items.Add(newSlot); }
+        else { _items[id] = newSlot; }
 
         return true;
     }
@@ -195,6 +191,13 @@ public class Inventory_Manager : MonoBehaviour
         if (id < 0 || id >= _items.Count) { return null; }
 
         return _items[id];
+    }
+
+    public void RemoveItem(int id)
+    {
+        if (_items[id] == null) { return; }
+
+        _items[id] = null;
     }
 
     public void ResetInventory()
