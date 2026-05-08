@@ -31,11 +31,6 @@ public class SlotData
     public float GetDur => _curentDur;
     public int GetCount => _count;
 
-    public void AddCount()
-    {
-        _count++;
-    }
-
     public void SetCount(int count)
     {
         if (_item != null)
@@ -45,7 +40,31 @@ public class SlotData
         }
     }
 
-    public void InitItem(ItemDataSO item, int id, bool stack = false, int maxStack = 1)
+    public int AddCount(int value)
+    {
+        if (_item == null) { return -1; }
+
+        int remain = _count;
+        int amount = value;
+        int result = remain + amount;
+        int max = _item.MaxStack;
+        int rest = 0;
+
+        if (result > max)
+        {
+            rest = result - max;
+            _count = max;
+        }
+        else
+        {
+            rest = 0;
+            _count = result;
+        }
+
+        return rest;
+    }
+
+    public void InitItem(ItemDataSO item, int id, bool stack = false, int maxStack = 1, int count = 1)
     {
         if (item is WeaponDataSO weapon)
         {
@@ -56,7 +75,7 @@ public class SlotData
         {
             if (_count < maxStack)
             {
-                _count += 1;
+                _count += count;
             }
             else
             {
@@ -66,7 +85,7 @@ public class SlotData
         }
         else
         {
-            _count = 1;
+            _count = count;
         }
 
         _item = item;
@@ -129,14 +148,46 @@ public class Inventory_Manager : MonoBehaviour
     }
 
     #region 외부 호출 함수
-    public void AddItem(ItemDataSO item)
+    public bool AddItem(ItemDataSO item)
     {
+        bool isStack = item.IsStackable;
 
+        if (isStack && _items.Count != 0)
+        {
+            for (int i = 0; i < _items.Count; i++)
+            {
+                if (_items[i] == null || _items[i].GetItem != item) { continue; }
+                if (_items[i].GetCount >= item.MaxStack) { continue; }
+
+                _items[i].AddCount(1);
+                return true;
+            }
+        }
+
+        SlotData slot = new SlotData();
+        int id = ProvidedID();
+
+        if (id == -1) { return false; }
+
+        slot.InitItem(item, id);
+
+        if (id == _items.Count) { _items.Add(slot); }
+        else { _items[id] = slot; }
+
+        return true;
     }
 
-    public void AddItem(SlotData slot)
+    public bool AddItem(SlotData slot)
     {
+        ItemDataSO item = slot.GetItem;
+        int id = slot.GetId;
+        int amount = slot.GetCount;
+        int max = item.MaxStack;
+        bool isStack = item.IsStackable;
 
+
+
+        return true;
     }
 
     public SlotData GetSlotData(int id)
