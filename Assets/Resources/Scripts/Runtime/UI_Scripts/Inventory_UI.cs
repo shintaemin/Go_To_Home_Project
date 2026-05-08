@@ -14,6 +14,7 @@ public class Inventory_UI : MonoBehaviour
     #region 인스펙터
     [SerializeField] private GameObject _inventoryRoot;
     [SerializeField] private bool _isActive = false;    // 테스트 및 정보 매칭 확인용
+
     #endregion
 
     private void Awake()
