@@ -24,6 +24,10 @@ public class Inventory_UI : MonoBehaviour
     [SerializeField] private GameObject _slotGrid;
     #endregion
 
+    #region 내부 변수
+    private Player_InventoryAnim _invenAnim;
+    #endregion
+
     private void Awake()
     {
         if (_inventoryRoot == null)
@@ -41,6 +45,11 @@ public class Inventory_UI : MonoBehaviour
             GUtill.Log($"[{this.name}] : 슬롯의 부모 오브젝트 없음 : 슬롯 생성 불가", EDebugType.Error);
             enabled = false;
             return;
+        }
+
+        if (_invenAnim == null)
+        {
+            _invenAnim = FindFirstObjectByType<Player_InventoryAnim>();
         }
     }
 
@@ -75,6 +84,10 @@ public class Inventory_UI : MonoBehaviour
 
     public void OnClickCloseButton()
     {
+        if (_invenAnim != null)
+        {
+            _invenAnim.TryInventoryOpen();
+        }
         Active(false);
     }
     #endregion

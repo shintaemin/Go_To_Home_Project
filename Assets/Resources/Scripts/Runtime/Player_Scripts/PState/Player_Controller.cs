@@ -39,7 +39,7 @@ public class Player_Controller : MonoBehaviour
     [SerializeField] private Player_Stemina _steminaCS;
     [SerializeField] private Player_Attack _attackCS;
     [SerializeField] private Player_Sound _soundCS;
-    [SerializeField] private Player_Inventory _inventoryCS;
+    [SerializeField] private Player_InventoryAnim _inventoryCS;
     [SerializeField] private Player_LoockMousePointer _rotateCS;
     [SerializeField] private Player_InteractFinder _finderCS;
     [SerializeField] private Player_Interact _interactCS;

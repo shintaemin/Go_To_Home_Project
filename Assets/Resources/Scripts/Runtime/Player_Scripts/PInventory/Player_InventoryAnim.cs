@@ -10,7 +10,7 @@ using UnityEngine;
 #endregion
 
 
-public class Player_Inventory : MonoBehaviour
+public class Player_InventoryAnim : MonoBehaviour
 {
     #region ¿ŒΩ∫∆Â≈Õ
     [SerializeField] private GameObject _bag;

@@ -24,13 +24,13 @@ public class Player_BackPack : MonoBehaviour
     #region 내부 변수
     private int _openHash;
     private int _closeHash;
-    private Player_Inventory _inventoryCS;
+    private Player_InventoryAnim _inventoryAnim;
     #endregion
 
     private void Awake()
     {
         GUtill.TryGetCS(this, ref _anim);
-        _inventoryCS = FindFirstObjectByType<Player_Inventory>();
+        _inventoryAnim = FindFirstObjectByType<Player_InventoryAnim>();
 
         _openHash = Animator.StringToHash(_openParam);
         _closeHash = Animator.StringToHash(_closeParam);
@@ -63,7 +63,7 @@ public class Player_BackPack : MonoBehaviour
     // 애니메이션이 끝날떄 키프레임 마지막에 실행될 함수
     public void ClosingEnd()
     {
-        _inventoryCS.MoveToHand();
+        _inventoryAnim.MoveToHand();
     }
     #endregion
 }
