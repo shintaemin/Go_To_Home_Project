@@ -1,0 +1,47 @@
+using System.Collections.Generic;
+using UnityEngine;
+
+public class UI_Manager : MonoBehaviour
+{
+    public static UI_Manager Instance { get; private set; }
+
+    #region 인스펙터
+    [SerializeField] private Inventory_UI _invenUI;
+    #endregion
+
+    private void Awake()
+    {
+        if (Instance  != null && Instance != this)
+        {
+            Destroy(this.gameObject);
+            enabled = false;
+            return;
+        }
+        Instance = this;
+        DontDestroyOnLoad(this.gameObject);
+
+        if (_invenUI == null)
+        {
+            _invenUI = FindFirstObjectByType<Inventory_UI>();
+        }
+    }
+
+    private void OnDestroy()
+    {
+        if (Instance == this)
+        {
+            Instance = null;
+        }
+    }
+
+
+    #region 외부 호출 함수
+    public void InitInventoryUI(List<SlotData> slots)
+    {
+        if (_invenUI == null) { return; }
+
+        _invenUI.InitSlotUI(slots);
+    }
+    #endregion
+
+}
