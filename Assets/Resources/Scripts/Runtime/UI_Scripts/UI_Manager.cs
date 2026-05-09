@@ -42,6 +42,13 @@ public class UI_Manager : MonoBehaviour
 
         _invenUI.InitSlotUI(slots);
     }
+
+    public void InventoryActive(bool active)
+    {
+        if (_invenUI == null) { return; }
+
+        _invenUI.Active(active);
+    }
     #endregion
 
 }

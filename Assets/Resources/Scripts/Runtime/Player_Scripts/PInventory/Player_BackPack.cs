@@ -44,6 +44,22 @@ public class Player_BackPack : MonoBehaviour
         _anim.SetTrigger(num);
     }
 
+    public void UIOpen()
+    {
+        if (UI_Manager.Instance != null)
+        {
+            UI_Manager.Instance.InventoryActive(true);
+        }
+    }
+
+    public void UIClose()
+    {
+        if (UI_Manager.Instance != null)
+        {
+            UI_Manager.Instance.InventoryActive(false);
+        }
+    }
+
     // 애니메이션이 끝날떄 키프레임 마지막에 실행될 함수
     public void ClosingEnd()
     {

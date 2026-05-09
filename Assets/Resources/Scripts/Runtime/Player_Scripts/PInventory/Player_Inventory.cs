@@ -3,7 +3,7 @@ using UnityEngine;
 #region 플레이어 인벤토리
 /*
  ▶ 할일
-  - 아이템 리스트를 들고있을 스크립트 <- 이건 추후 옮겨질걸로 보여짐 현재 로직에 Data 관리 로직까지 들어오면 코드가 너무 길어질거같음
+  - 인벤토리 연출용 스크립트
   - 가방 오브젝트의 부모, 위치 를 지정
   - 가방 애니메이션 Trigger 함수 호출
 */
@@ -16,7 +16,6 @@ public class Player_Inventory : MonoBehaviour
     [SerializeField] private GameObject _bag;
     [SerializeField] private GameObject _spawnPosObj;
     [SerializeField] private GameObject _leftHandBackPackPos;
-    //[SerializeField] private List<Item_Data> _items = new List<Item_Data>();
 
     [Header("생성 옵션")]
     [SerializeField] private Vector3 _spawnBagPos = new Vector3(0, 0.1f, 1);

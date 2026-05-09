@@ -45,6 +45,7 @@ public class Inventory_Manager : MonoBehaviour
         for (int i = 0; i < _maxStorege; i++)
         {
             _items.Add(new SlotData()); // 미리 리스트 채워듬
+            _items[i].InitItem(null, i, 0);
         }    
     }
 

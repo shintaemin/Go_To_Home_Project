@@ -52,14 +52,15 @@ public class Inventory_UI : MonoBehaviour
         int length = slots.Count;
         for (int i = 0; i < length; i++)
         {
-            Slot_UI slotui = new Slot_UI();
+            Slot_UI slotui = null;
 
             GameObject obj = Instantiate(_slotPrefab);
             obj.transform.SetParent(_slotGrid.transform);
             obj.transform.localScale = Vector3.one;
 
             GUtill.TryGetCS(obj, ref slotui);
-            slotui.InitData(slots[i]);
+
+            if (slotui != null) slotui.InitData(slots[i]);
         }
 
         Active(false);
