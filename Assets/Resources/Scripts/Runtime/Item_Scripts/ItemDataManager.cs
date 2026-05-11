@@ -54,5 +54,20 @@ public class ItemDataManager : MonoBehaviour
     {
         return _registrySO?.GetItemData(name);
     }
+
+    public ItemDataSO GetRandomItem()
+    {
+        if (_registrySO == null)
+        {
+            GUtill.Log($"[{this.name}] : 레지스트리 비어있음");
+            return null;
+        }
+
+        int length = _registrySO.GetLength;
+
+        int random = Random.Range(0, length);
+
+        return _registrySO.GetItemDataIndex(random);
+    }
     #endregion
 }

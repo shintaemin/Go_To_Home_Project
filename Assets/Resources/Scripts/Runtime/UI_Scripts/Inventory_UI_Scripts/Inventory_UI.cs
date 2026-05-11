@@ -9,11 +9,10 @@ using UnityEngine;
 */
 #endregion
 
-
 public class Inventory_UI : MonoBehaviour
 {
     #region 인스펙터
-    [SerializeField] private List<Slot_UI> _slots;
+    [SerializeField] private List<Slot_UI> _slotList;
     [SerializeField] private GameObject _inventoryRoot;
     [SerializeField] private bool _isActive = false;    // 테스트 및 정보 매칭 확인용
 
@@ -69,12 +68,16 @@ public class Inventory_UI : MonoBehaviour
 
             GUtill.TryGetCS(obj, ref slotui);
 
-            if (slotui != null) slotui.InitData(slots[i]);
+            if (slotui != null)
+            {
+                slotui.UpdataSlotUI(slots[i]);
+                slotui.Index = i;
+            }
+            _slotList.Add(slotui);
         }
 
         Active(false);
-    }    
-
+    }
 
     public void Active(bool active)
     {
@@ -89,6 +92,16 @@ public class Inventory_UI : MonoBehaviour
             _invenAnim.TryInventoryOpen();
         }
         Active(false);
+    }
+
+    public void InventoryAllUpdate(List<SlotData> slotList)
+    {
+        for (int i = 0; i < _slotList.Count; i++)
+        {
+            if (_slotList[i] == null) { continue; }
+
+            _slotList[i].UpdataSlotUI(slotList[i]);
+        }
     }
     #endregion
 }

@@ -15,6 +15,7 @@ public class ItemDataRegistrySO : ScriptableObject
     #region 인스펙터
     [SerializeField] private List<ItemDataSO> _itemList = new List<ItemDataSO>();
     [SerializeField] private string _path = "SO/ItemSO";
+    [SerializeField] private int _length;
     #endregion
 
     #region 내부변수
@@ -46,6 +47,7 @@ public class ItemDataRegistrySO : ScriptableObject
             _itemsDic.Add(id, item);
         }
 
+        _length = _itemList.Count;
         GUtill.Log($"[{this.name}] : 딕셔너리 초기화 완료", EDebugType.Warn);
     }
 
@@ -91,6 +93,19 @@ public class ItemDataRegistrySO : ScriptableObject
 
         return data;
     }
+
+    public ItemDataSO GetItemDataIndex(int index)
+    {
+        if (_itemsDic.Count == 0) 
+        {
+            GUtill.Log($"[{this.name}] : 아이템 없음");
+            return null; 
+        }
+
+        return _itemList[index];
+    }
+
+    public int GetLength => _length;
 
     // 시작시 업데이트를 진행할 진입점
     public void Init()

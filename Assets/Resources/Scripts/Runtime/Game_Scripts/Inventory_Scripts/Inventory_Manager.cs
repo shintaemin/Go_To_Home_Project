@@ -25,8 +25,6 @@ public class Inventory_Manager : MonoBehaviour
     #endregion
 
     #region 이벤트
-    public event Action<int> OnSlotChanged;
-    public event Action<int> OnListUpdate;
     #endregion
 
     private void Awake()
@@ -94,7 +92,7 @@ public class Inventory_Manager : MonoBehaviour
 
                 int rest = _items[i].AddCount(); // 아이템을 추가하고 남는값을 반환
                 if (rest != 0) { continue; }    // 남은값이 있다면 continue;
-                OnSlotChanged?.Invoke(i);
+
                 return true;                    // 정상적으로 스택되면 함수 종료
             }
         }
@@ -104,7 +102,6 @@ public class Inventory_Manager : MonoBehaviour
 
         _items[id].InitItem(item, id); // 아이템 설정
 
-        OnSlotChanged?.Invoke(id);
         return true;
     }
 
@@ -125,7 +122,6 @@ public class Inventory_Manager : MonoBehaviour
 
                 if (amount == 0) 
                 {
-                    OnSlotChanged?.Invoke(i);
                     return true; 
                 } // 남은 갯수가 0 이면 함수종료
             }
@@ -136,7 +132,6 @@ public class Inventory_Manager : MonoBehaviour
 
         _items[id].InitItem(item, id, amount); // 데이터 할당
 
-        OnSlotChanged?.Invoke(id);
         return true;
     }
 
@@ -166,7 +161,6 @@ public class Inventory_Manager : MonoBehaviour
             RemoveSlot(id); // 슬롯 삭제
         }
 
-        OnSlotChanged.Invoke(id);
         return outSlot; // 반환
     }
 
@@ -177,8 +171,6 @@ public class Inventory_Manager : MonoBehaviour
         for (int i = _items.Count - 1; i >= 0; i--)
         {
             _items[i].InitItem(null, i, 0);
-
-            OnSlotChanged.Invoke(i);
         }
     }
     #endregion
