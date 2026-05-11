@@ -11106,7 +11106,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &264487056
 RectTransform:
   m_ObjectHideFlags: 0
@@ -73880,7 +73880,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d49a188625c66d34b9938bfc11f65407, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _slots: []
+  _slotList: []
   _inventoryRoot: {fileID: 264487055}
   _isActive: 0
   _slotPrefab: {fileID: 1481272910845420145, guid: 1e1ea0b555063374fb4b8fa990c4db30,
