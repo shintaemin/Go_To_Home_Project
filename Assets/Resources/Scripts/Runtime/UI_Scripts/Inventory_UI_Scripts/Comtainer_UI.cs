@@ -67,7 +67,7 @@ public class Comtainer_UI : MonoBehaviour
             if (slotUI != null)
             {
                 SlotData slotData = new SlotData();
-                slotUI.UpdataSlotUI(slotData);
+                slotUI.Data = slotData;
                 slotUI.Index = i;
                 slotUI.PathType = ESlotPathType.Container;
                 _slotUIList.Add(slotUI);
@@ -94,7 +94,7 @@ public class Comtainer_UI : MonoBehaviour
             return; 
         }
 
-        _slotUIList[index].UpdataSlotUI(slot);
+        _slotUIList[index].Data = slot;
     }
 
     public void AllUpdata(List<SlotData> slotList)
@@ -104,7 +104,7 @@ public class Comtainer_UI : MonoBehaviour
             if (i < slotList.Count)
             {
                 _slotUIList[i].gameObject.SetActive(true);
-                _slotUIList[i].UpdataSlotUI(slotList[i]);
+                _slotUIList[i].Data = slotList[i];
             }
             else
             {

@@ -81,34 +81,6 @@ public class Inventory_Manager : MonoBehaviour
     }
 
     #region 외부 호출 함수
-    public bool AddItem(ItemDataSO item) // 아이템 추가 ItemDataSO 를 통한 추가
-    {
-        bool isStack = item.IsStackable;
-
-        if (isStack && _itemList.Count != 0) // 스택 유무와 아이템 리스트 요소 확인
-        {   
-            // 같은 item 슬롯 찾기
-            for (int i = 0; i < _itemList.Count; i++)
-            {   // 슬롯이 없거나 아이템 이 다르거나 최대스택갯수보다 크거나 같으면 다음 반복
-                if (_itemList[i] == null) { continue; }
-                if (_itemList[i].GetItem != item) { continue; }
-                if (_itemList[i].GetCount >= item.MaxStack) { continue; }
-
-                int rest = _itemList[i].AddCount(); // 아이템을 추가하고 남는값을 반환
-                if (rest != 0) { continue; }    // 남은값이 있다면 continue;
-
-                return true;                    // 정상적으로 스택되면 함수 종료
-            }
-        }
-
-        int id = ProvidedID(); // 들어갈수 있는 공간 체크
-        if (id == -1) { return false; }
-
-        _itemList[id].InitItem(item, id); // 아이템 설정
-
-        return true;
-    }
-
     public bool AddItem(SlotData slot) // 아이템 추가 SlotData 를 통한 추가
     {
         ItemDataSO item = slot.GetItem; // 슬롯의 아이템
@@ -144,6 +116,13 @@ public class Inventory_Manager : MonoBehaviour
         if (id < 0 || id >= _itemList.Count) { return null; }
 
         return _itemList[id];
+    }
+
+    public void RemoveSlotData(SlotData data)
+    {
+        int id = data.GetId;
+
+        _itemList[id] = null;
     }
 
     public SlotData MoveSlot(int id, int count = 1) // 아이디와 갯수로 아이템 이동

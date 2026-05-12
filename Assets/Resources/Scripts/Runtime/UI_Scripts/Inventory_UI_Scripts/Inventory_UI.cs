@@ -68,7 +68,7 @@ public class Inventory_UI : MonoBehaviour
 
             if (slotui != null)
             {
-                slotui.UpdataSlotUI(slots[i]);
+                slotui.Data = slots[i];
                 slotui.Index = i;
                 slotui.PathType = ESlotPathType.Inventory;
             }
@@ -100,7 +100,7 @@ public class Inventory_UI : MonoBehaviour
         {
             if (_slotList[i] == null) { continue; }
 
-            _slotList[i].UpdataSlotUI(slotList[i]);
+            _slotList[i].Data = slotList[i];
         }
     }
     #endregion

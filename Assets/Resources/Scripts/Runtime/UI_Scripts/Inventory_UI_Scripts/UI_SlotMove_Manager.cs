@@ -1,4 +1,6 @@
+using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 #region 슬롯 이동 매니저
 /*
@@ -8,17 +10,25 @@ using UnityEngine;
 */
 #endregion
 
-
 public class UI_SlotMove_Manager : MonoBehaviour
 {
     public static UI_SlotMove_Manager Instance { get; private set; }
 
     #region 인스펙터
+    [Header("이동시킬 오브젝트")]
+    [SerializeField] private GameObject _dragObj;
+    [Header("이동시킬 슬롯 데이터")]
+    [SerializeField] private SlotData _dragData;
+    [Header("이동시킬 슬롯 UI")]
     [SerializeField] private Slot_UI _dragSlot;
-    [SerializeField] private Slot_UI _dragIcon;
+    [Header("이동중 표시할 이미지")]
+    [SerializeField] private Image _drageImage;
     #endregion
 
     #region 내부변수
+    private Interact_Container _container;
+    private List<SlotData> _containerList;
+    private List<SlotData> _inventoryList;
     #endregion
 
     private void Awake()
@@ -34,7 +44,7 @@ public class UI_SlotMove_Manager : MonoBehaviour
 
     private void Start()
     {
-        _dragIcon.gameObject.SetActive(false);
+        _dragObj.SetActive(false);
     }
 
     private void OnDestroy()
@@ -48,27 +58,35 @@ public class UI_SlotMove_Manager : MonoBehaviour
     #region 외부 호출 함수
     public void DropSlot()
     {
-        _dragIcon.gameObject.SetActive(false);
+        _dragObj.SetActive(false);
         // 레이 충돌 슬롯에 등록 로직 구상
     }
 
-    public void GetUpSlot(Slot_UI slotUI)
+    public void Begin(Slot_UI slotUI)
     {
         _dragSlot = slotUI;
-        _dragIcon.SetSlotIcon(slotUI.GetSlotIcon);
-        _dragIcon.SetText(slotUI.GetCountText);
-        _dragIcon.gameObject.SetActive(true);
+        _dragData = _dragSlot.Data;
+        _drageImage.sprite = _dragSlot.SlotIcon;
+        _dragObj.SetActive(true);
     }
 
-    public void DragSlot()
+    public void Drag()
     {
-        _dragIcon.transform.position = Input.mousePosition;
+        _dragObj.transform.position = Input.mousePosition;
     }
 
     public void DragEnd()
     {
-        _dragIcon.gameObject.SetActive(false);
-        _dragSlot = null;
+        _dragObj.SetActive(false);
     }
+
+    public void SetContainer(Interact_Container container)
+    {
+        _container = container;
+    }
+
+    public Interact_Container GetContainer => _container;
+    public SlotData GetDragData => _dragData;
+    public Slot_UI GetDragUI => _dragSlot;
     #endregion
 }

@@ -10,6 +10,9 @@ public class UI_Manager : MonoBehaviour
     [SerializeField] private Comtainer_UI _containerUI;
     #endregion
 
+    #region 내부 변수
+    #endregion
+
     private void Awake()
     {
         if (Instance  != null && Instance != this)

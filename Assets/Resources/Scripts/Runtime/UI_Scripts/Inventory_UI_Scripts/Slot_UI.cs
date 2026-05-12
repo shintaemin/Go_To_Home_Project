@@ -21,17 +21,15 @@ public enum ESlotPathType
 public class Slot_UI : MonoBehaviour, IPointerClickHandler, IBeginDragHandler, IDragHandler, IEndDragHandler, IDropHandler
 {
     #region 인스펙터
-    [SerializeField] private int _index;
+    [SerializeField] private SlotData _slotData;
     [SerializeField] private ESlotPathType _pathType;
+    [SerializeField] private int _index;
 
 	[Header("표시할 데이터")]
 	[SerializeField] private Image _image;
     [SerializeField] private GameObject _textRoot;
 	[SerializeField] private TextMeshProUGUI _countText;
-    #endregion
-
-    #region 내부 변수
-    private string _countStr;
+    [SerializeField] private string _countStr;
     #endregion
 
     private void Awake()
@@ -48,14 +46,12 @@ public class Slot_UI : MonoBehaviour, IPointerClickHandler, IBeginDragHandler, I
 
     }
 
-    #region 외부 호출 함수
-    public void UpdataSlotUI(SlotData slotData)
+    private void UpdateSlot(SlotData slotData)
     {
-        if (_image == null || _countText == null) { return; }
+        _slotData = slotData;
 
-        SlotData slot = slotData;
-        ItemDataSO data = slot.GetItem;
-        int count = slot.GetCount;
+        ItemDataSO data = _slotData.GetItem;
+        int count = _slotData.GetCount;
 
         if (data == null)
         {
@@ -72,12 +68,14 @@ public class Slot_UI : MonoBehaviour, IPointerClickHandler, IBeginDragHandler, I
         _countText.text = _countStr;
     }
 
+    #region 외부 호출 함수
     #region 클릭, 드래그, 드랍 인터페이스
     public void OnPointerClick(PointerEventData eventData)
     {
 
     }
 
+    // 드래그 시작
     public void OnBeginDrag(PointerEventData eventData)
     {
         if (UI_SlotMove_Manager.Instance == null)
@@ -86,16 +84,18 @@ public class Slot_UI : MonoBehaviour, IPointerClickHandler, IBeginDragHandler, I
             return; 
         }
 
-        UI_SlotMove_Manager.Instance.GetUpSlot(this);
+        UI_SlotMove_Manager.Instance.Begin(this);
     }
 
+    // 드래그중 
     public void OnDrag(PointerEventData eventData)
     {
         if (UI_SlotMove_Manager.Instance == null) { return; }
 
-        UI_SlotMove_Manager.Instance.DragSlot();
+        UI_SlotMove_Manager.Instance.Drag();
     }
 
+    // 드래그 종료
     public void OnEndDrag(PointerEventData eventData)
     {
         if (UI_SlotMove_Manager.Instance == null) { return; }
@@ -103,28 +103,64 @@ public class Slot_UI : MonoBehaviour, IPointerClickHandler, IBeginDragHandler, I
         UI_SlotMove_Manager.Instance.DragEnd();
     }
 
+    // 현재 슬롯에 드랍
     public void OnDrop(PointerEventData eventData)
     {
+        if (UI_SlotMove_Manager.Instance == null) { return; }
 
+        SlotData dropData = UI_SlotMove_Manager.Instance.GetDragData;
+        Slot_UI slotUI = UI_SlotMove_Manager.Instance.GetDragUI;
+
+        GUtill.Log($"[{this.name}] : 드롭 성공 {PathType} 로 이동", EDebugType.Warn);
+        switch (PathType)
+        {
+            case ESlotPathType.Inventory: 
+                Inventory_Manager.Instance.AddItem(dropData); break;
+            case ESlotPathType.Container: 
+                UI_SlotMove_Manager.Instance.GetContainer.AddItem(dropData); break;
+        }
+        GUtill.Log($"[{this.name}] : 이동 성공 {slotUI.PathType} 의 데이터 삭제", EDebugType.Warn);
+        switch (slotUI.PathType)
+        {
+            case ESlotPathType.Inventory:
+                Inventory_Manager.Instance.RemoveSlotData(dropData); return;
+            case ESlotPathType.Container:
+                UI_SlotMove_Manager.Instance.GetContainer.RemoveItem(dropData); return;
+        }
+
+        GUtill.Log($"[{this.name}] : 나오면 안되는것", EDebugType.Warn);
     }
-    #endregion
+    #endregion  -> 드래그 드랍 End
+    #region 프로퍼티
+    public SlotData Data // 슬롯데이터
+    {
+        get { return _slotData; }
+        set { UpdateSlot(value); }
+    }
 
-    public int Index
-    { 
-        get { return _index; } 
+    public int Index // 인덱스 (id 매칭)
+    {
+        get { return _index; }
         set { _index = value; }
     }
 
-    public ESlotPathType PathType
+    public ESlotPathType PathType // 현재 창고 (인벤토리, 루팅상자, 필드)
     {
         get { return _pathType; }
         set { _pathType = value; }
     }
 
-    public Sprite GetSlotIcon => _image.sprite;
+    public Sprite SlotIcon // 아이콘 이미지
+    {
+        get { return _image.sprite; }
+        set { _image.sprite = value; }
+    }
 
-    public string GetCountText => _countStr;
-    public void SetSlotIcon(Sprite icon) => _image.sprite = icon;
-    public void SetText(string text) => _countText.text = text;
-    #endregion
+    public string CountText // 갯수 텍스트
+    {
+        get { return _countStr; }
+        set { _countStr = value; }
+    }
+    #endregion -> 프로퍼티 End
+    #endregion -> 외부호출 함수 End 
 }
