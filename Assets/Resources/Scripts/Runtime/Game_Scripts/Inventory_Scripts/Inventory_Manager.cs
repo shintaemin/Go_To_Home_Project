@@ -17,14 +17,12 @@ public class Inventory_Manager : MonoBehaviour
     public static Inventory_Manager Instance { get; private set; }
 
     #region 인스펙터
-    [SerializeField] private List<SlotData> _items;
+    [SerializeField] private List<SlotData> _itemList;
+    [SerializeField] private Player_InventoryAnim _inventoryAnim;
 
     [Header("옵션")]
     [SerializeField] private int _maxStorege = 24;
     [SerializeField] private int _capacityOverlab = 1;
-    #endregion
-
-    #region 이벤트
     #endregion
 
     private void Awake()
@@ -38,12 +36,17 @@ public class Inventory_Manager : MonoBehaviour
         Instance = this;
         DontDestroyOnLoad(this.gameObject);
 
+        if (_inventoryAnim == null)
+        {
+            _inventoryAnim = FindFirstObjectByType<Player_InventoryAnim>();
+        }
+
         _capacityOverlab += _maxStorege;
-        _items = new List<SlotData>(_capacityOverlab); // 리스트의 최대 범위를 미리 지정
+        _itemList = new List<SlotData>(_capacityOverlab); // 리스트의 최대 범위를 미리 지정
         for (int i = 0; i < _maxStorege; i++)
         {
-            _items.Add(new SlotData()); // 미리 리스트 채워듬
-            _items[i].InitItem(null, i, 0);
+            _itemList.Add(new SlotData()); // 미리 리스트 채워듬
+            _itemList[i].InitItem(null, i, 0);
         }    
     }
 
@@ -51,19 +54,20 @@ public class Inventory_Manager : MonoBehaviour
     {
         if (UI_Manager.Instance != null)
         {
-            UI_Manager.Instance.InitInventoryUI(_items);
+            UI_Manager.Instance.InitInventoryUI(_itemList);
+            GUtill.Log($"[{this.name}] : 인벤토리 초기업데이트 수행");
         }
     }
 
     // 아이템 리스트 안 빈공간을 찾아 리턴
     private int ProvidedID()
     {
-        for (int i = 0; i < _items.Count; i++)
+        for (int i = 0; i < _itemList.Count; i++)
         {
-            if (_items[i].GetItem == null) { return i; }
+            if (_itemList[i].GetItem == null) { return i; }
         }
 
-        if (_items.Count < _maxStorege) { return _items.Count; }
+        if (_itemList.Count < _maxStorege) { return _itemList.Count; }
 
         GUtill.Log($"[{this.name}] : 인벤토리 가득참", EDebugType.Warn);
         return -1;
@@ -71,9 +75,9 @@ public class Inventory_Manager : MonoBehaviour
 
     private void RemoveSlot(int id) // 슬롯 삭제
     {
-        if (_items[id].GetItem == null) { return; }
+        if (_itemList[id].GetItem == null) { return; }
 
-        _items[id].InitItem(null, id , 0);
+        _itemList[id].InitItem(null, id , 0);
     }
 
     #region 외부 호출 함수
@@ -81,16 +85,16 @@ public class Inventory_Manager : MonoBehaviour
     {
         bool isStack = item.IsStackable;
 
-        if (isStack && _items.Count != 0) // 스택 유무와 아이템 리스트 요소 확인
+        if (isStack && _itemList.Count != 0) // 스택 유무와 아이템 리스트 요소 확인
         {   
             // 같은 item 슬롯 찾기
-            for (int i = 0; i < _items.Count; i++)
+            for (int i = 0; i < _itemList.Count; i++)
             {   // 슬롯이 없거나 아이템 이 다르거나 최대스택갯수보다 크거나 같으면 다음 반복
-                if (_items[i] == null) { continue; }
-                if (_items[i].GetItem != item) { continue; }
-                if (_items[i].GetCount >= item.MaxStack) { continue; }
+                if (_itemList[i] == null) { continue; }
+                if (_itemList[i].GetItem != item) { continue; }
+                if (_itemList[i].GetCount >= item.MaxStack) { continue; }
 
-                int rest = _items[i].AddCount(); // 아이템을 추가하고 남는값을 반환
+                int rest = _itemList[i].AddCount(); // 아이템을 추가하고 남는값을 반환
                 if (rest != 0) { continue; }    // 남은값이 있다면 continue;
 
                 return true;                    // 정상적으로 스택되면 함수 종료
@@ -100,7 +104,7 @@ public class Inventory_Manager : MonoBehaviour
         int id = ProvidedID(); // 들어갈수 있는 공간 체크
         if (id == -1) { return false; }
 
-        _items[id].InitItem(item, id); // 아이템 설정
+        _itemList[id].InitItem(item, id); // 아이템 설정
 
         return true;
     }
@@ -113,12 +117,12 @@ public class Inventory_Manager : MonoBehaviour
         
         if (isStack)
         {
-            for (int i = 0; i < _items.Count; i++)
+            for (int i = 0; i < _itemList.Count; i++)
             {
-                if (_items[i] == null) { continue; }
-                if (_items[i].GetItem != item) { continue; }
+                if (_itemList[i] == null) { continue; }
+                if (_itemList[i].GetItem != item) { continue; }
                 
-                amount = _items[i].AddCount(amount); // 아이템 갯수 추가후 남는 값 반환
+                amount = _itemList[i].AddCount(amount); // 아이템 갯수 추가후 남는 값 반환
 
                 if (amount == 0) 
                 {
@@ -130,16 +134,16 @@ public class Inventory_Manager : MonoBehaviour
         int id = ProvidedID(); // 빈 인덱스 찾기
         if (id == -1) { return false; }
 
-        _items[id].InitItem(item, id, amount); // 데이터 할당
+        _itemList[id].InitItem(item, id, amount); // 데이터 할당
 
         return true;
     }
 
     public SlotData GetSlotData(int id) // 아이디를 통해 슬롯데이터 획득
     {
-        if (id < 0 || id >= _items.Count) { return null; }
+        if (id < 0 || id >= _itemList.Count) { return null; }
 
-        return _items[id];
+        return _itemList[id];
     }
 
     public SlotData MoveSlot(int id, int count = 1) // 아이디와 갯수로 아이템 이동
@@ -166,12 +170,19 @@ public class Inventory_Manager : MonoBehaviour
 
     public void ResetInventory() // 인벤토리 초기화
     {
-        if (_items.Count == 0) { return; }
+        if (_itemList.Count == 0) { return; }
 
-        for (int i = _items.Count - 1; i >= 0; i--)
+        for (int i = _itemList.Count - 1; i >= 0; i--)
         {
-            _items[i].InitItem(null, i, 0);
+            _itemList[i].InitItem(null, i, 0);
         }
+    }
+
+    public void TryInventoryOpen()
+    {
+        if (_inventoryAnim == null) { return; }
+
+        _inventoryAnim.TryInventoryOpen();
     }
     #endregion
 }

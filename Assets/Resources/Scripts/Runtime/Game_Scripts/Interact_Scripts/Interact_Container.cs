@@ -23,7 +23,7 @@ public class Interact_Container : MonoBehaviour, IInteract
 
     #region 내부 변수
     private Comtainer_UI _containerUI;
-    private bool _isOpen;
+    private Inventory_Manager _inventoryManager;
     #endregion
 
     private void Awake()
@@ -34,6 +34,13 @@ public class Interact_Container : MonoBehaviour, IInteract
         }
     }
 
+    private void Start()
+    {
+        if (_inventoryManager == null && Inventory_Manager.Instance != null)
+        {
+            _inventoryManager = Inventory_Manager.Instance;
+        }
+    }
     private void InitItems()
     {
         if (ItemDataManager.Instance == null) 
@@ -44,9 +51,9 @@ public class Interact_Container : MonoBehaviour, IInteract
 
         _items.Capacity = _slotMax;
 
-        int random = Random.Range(_slotMin, _slotMax);
+        _randomLength = Random.Range(_slotMin, _slotMax);
         
-        for (int i = 0; i < random; i++)
+        for (int i = 0; i < _randomLength; i++)
         {
             SlotData data = new SlotData();
             ItemDataSO item = ItemDataManager.Instance.GetRandomItem();
@@ -63,24 +70,25 @@ public class Interact_Container : MonoBehaviour, IInteract
     #region 외부 호출 함수
     public void Interact()
     {
-        if (_isOpen)
+        if (UI_Manager.Instance.ContainerIsActive) { return; }
+        if (_inventoryManager == null)
         {
-            _isOpen = false;
-            _containerUI.Active(false);
-            _containerUI.AllUpdata(_items);
-            return;
+            if (Inventory_Manager.Instance == null) { return; }
+            
+            _inventoryManager = Inventory_Manager.Instance;
         }
+
+        _inventoryManager.TryInventoryOpen();
 
         // 여기서 UI매니저 통해서 컨테이너 UI 띄우기
         _containerUI.Active(true);
-        _isOpen = true;
 
         if (!_isInit)
         {
             InitItems();
         }
 
-        // 리스트에 정보를 컨테이너 UI 에 SetUI(icon, count, dur) 을 지정
+        // 리스트에 정보를 컨테이너 UI 에 Update
         _containerUI.AllUpdata(_items);
     }
     #endregion

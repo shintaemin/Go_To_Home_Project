@@ -32,6 +32,7 @@ public class Player_Controller : MonoBehaviour
 {
     #region 인스펙터
     [SerializeField] private EMovementState _state;
+    [SerializeField] private EControllMode _controlMode;
 
     [SerializeField] private Player_State _stateCS;
     [SerializeField] private Player_Move _moveCS;
@@ -39,10 +40,10 @@ public class Player_Controller : MonoBehaviour
     [SerializeField] private Player_Stemina _steminaCS;
     [SerializeField] private Player_Attack _attackCS;
     [SerializeField] private Player_Sound _soundCS;
-    [SerializeField] private Player_InventoryAnim _inventoryCS;
     [SerializeField] private Player_LoockMousePointer _rotateCS;
     [SerializeField] private Player_InteractFinder _finderCS;
     [SerializeField] private Player_Interact _interactCS;
+    [SerializeField] private Inventory_Manager _inventoryCS;
     #endregion
 
     #region 내부 변수
@@ -125,8 +126,13 @@ public class Player_Controller : MonoBehaviour
         if (MovementState == EMovementState.Attack) { return; }
         if (_inventoryCS == null)
         {
-            GUtill.Log($"[{this.name}] : 인벤토리 스크립트 없음", EDebugType.Warn);
-            return;
+            if (Inventory_Manager.Instance == null)
+            {
+                GUtill.Log($"[{this.name}] : 인벤토리 매니저 없음", EDebugType.Warn);
+                return;
+            }
+
+            _inventoryCS = Inventory_Manager.Instance;
         }
 
         _inventoryCS.TryInventoryOpen();
@@ -136,6 +142,7 @@ public class Player_Controller : MonoBehaviour
     private void InteractInput()
     {
         if (MovementState == EMovementState.Attack) { return; }
+        if (_controlMode == EControllMode.Inventory) { return; }
         if (_interactCS == null)
         {
             GUtill.Log($"[{this.name}] : 상호작용 스크립트 없음", EDebugType.Warn);
@@ -151,8 +158,7 @@ public class Player_Controller : MonoBehaviour
     {
         GUtill.TryGetCS(this, ref _stateCS);     GUtill.TryGetCS(this, ref _moveCS);   GUtill.TryGetCS(this, ref _animCS);
         GUtill.TryGetCS(this, ref _steminaCS);   GUtill.TryGetCS(this, ref _attackCS); GUtill.TryGetCS(this, ref _soundCS);
-        GUtill.TryGetCS(this, ref _inventoryCS); GUtill.TryGetCS(this, ref _rotateCS); GUtill.TryGetCS(this, ref _finderCS);
-        GUtill.TryGetCS(this, ref _interactCS);
+        GUtill.TryGetCS(this, ref _rotateCS); GUtill.TryGetCS(this, ref _finderCS);    GUtill.TryGetCS(this, ref _interactCS);
     }
 
     private void Update()
@@ -170,7 +176,7 @@ public class Player_Controller : MonoBehaviour
 
         Vector2 move = _im.GetMoveInput;
         bool run = _im.GetRunInput;
-        bool crouch = _im.GetCrouchInput;
+        bool crouch = !run ? _im.GetCrouchInput : false;
 
         _moveCS?.UpdateMove(move, run, crouch); // 이동 명령
         _animCS?.MoveAnimUpdate(_state); // 이동 애니메이션 업데이트
@@ -208,6 +214,7 @@ public class Player_Controller : MonoBehaviour
     /// <param name="state"> 각 상태를 넣기 </param>
     public void SetControllState(EControllMode state)
     {
+        _controlMode = state;
         switch (state)
         {
             case EControllMode.Playing:   CanMove = true; CanRotate = true; CanAttack = true;    break;

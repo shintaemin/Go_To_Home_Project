@@ -20,7 +20,7 @@ public class Inventory_UI : MonoBehaviour
     [SerializeField] private GameObject _slotPrefab;
 
     [Header("인벤토리 슬롯을 생성시킬 위치")]
-    [SerializeField] private GameObject _slotGrid;
+    [SerializeField] private Transform _slotGrid;
     #endregion
 
     #region 내부 변수
@@ -41,9 +41,7 @@ public class Inventory_UI : MonoBehaviour
 
         if (_slotGrid == null)
         {
-            GUtill.Log($"[{this.name}] : 슬롯의 부모 오브젝트 없음 : 슬롯 생성 불가", EDebugType.Error);
-            enabled = false;
-            return;
+            _slotGrid = _inventoryRoot?.transform.GetChild(1).transform;
         }
 
         if (_invenAnim == null)
@@ -63,7 +61,7 @@ public class Inventory_UI : MonoBehaviour
             Slot_UI slotui = null;
 
             GameObject obj = Instantiate(_slotPrefab);
-            obj.transform.SetParent(_slotGrid.transform);
+            obj.transform.SetParent(_slotGrid);
             obj.transform.localScale = Vector3.one;
 
             GUtill.TryGetCS(obj, ref slotui);
@@ -72,6 +70,7 @@ public class Inventory_UI : MonoBehaviour
             {
                 slotui.UpdataSlotUI(slots[i]);
                 slotui.Index = i;
+                slotui.PathType = ESlotPathType.Inventory;
             }
             _slotList.Add(slotui);
         }
@@ -91,6 +90,7 @@ public class Inventory_UI : MonoBehaviour
         {
             _invenAnim.TryInventoryOpen();
         }
+
         Active(false);
     }
 

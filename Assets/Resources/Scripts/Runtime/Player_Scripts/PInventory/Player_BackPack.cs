@@ -57,6 +57,10 @@ public class Player_BackPack : MonoBehaviour
         if (UI_Manager.Instance != null)
         {
             UI_Manager.Instance.InventoryActive(false);
+            if (UI_Manager.Instance.ContainerIsActive)
+            {
+                UI_Manager.Instance.ContainerActive(false);
+            }
         }
     }
 

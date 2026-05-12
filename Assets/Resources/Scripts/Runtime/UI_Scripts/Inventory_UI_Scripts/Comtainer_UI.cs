@@ -1,4 +1,3 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -20,6 +19,7 @@ public class Comtainer_UI : MonoBehaviour
 
     [Header("옵션")]
     [SerializeField] private GameObject _slotUIRoot;
+    [SerializeField] private Transform _slotGrid;
     [SerializeField] private GameObject _slotPrefab;
     [SerializeField] private int _slotMax = 5;
     #endregion
@@ -30,6 +30,21 @@ public class Comtainer_UI : MonoBehaviour
 
     private void Awake()
     {
+        if (_slotUIRoot == null)
+        {
+            _slotUIRoot = transform.GetChild(0).gameObject;
+        }
+
+        if (_slotGrid == null)
+        {
+            _slotGrid = _slotUIRoot?.transform.GetChild(1).transform;
+        }
+
+        if (_slotPrefab == null)
+        {
+            _slotPrefab = Resources.Load<GameObject>("Prefabs/Inventory_Prefabs/Slot_Obj");
+        }
+
         InitSlotUI();
     }
 
@@ -44,7 +59,7 @@ public class Comtainer_UI : MonoBehaviour
             if (slotObj == null) { continue; }
 
             Slot_UI slotUI = null;
-            Transform root = _slotUIRoot.transform;
+            Transform root = _slotGrid;
             slotObj.transform.SetParent(root);
             slotObj.transform.localScale = Vector3.one;
 
@@ -54,6 +69,7 @@ public class Comtainer_UI : MonoBehaviour
                 SlotData slotData = new SlotData();
                 slotUI.UpdataSlotUI(slotData);
                 slotUI.Index = i;
+                slotUI.PathType = ESlotPathType.Container;
                 _slotUIList.Add(slotUI);
             }
         }
@@ -62,6 +78,8 @@ public class Comtainer_UI : MonoBehaviour
     }
 
     #region 외부 호출 함수
+    public bool IsActive => _isActive;
+
     public void Active (bool active)
     {
         _isActive = active;
@@ -70,7 +88,11 @@ public class Comtainer_UI : MonoBehaviour
 
     public void SetSlotUI(int index, SlotData slot)
     {
-        if (_slotUIList[index] == null) { return; }
+        if (_slotUIList[index] == null) 
+        {
+            GUtill.Log($"[{this.name}] : 현재 슬롯 비어있음");
+            return; 
+        }
 
         _slotUIList[index].UpdataSlotUI(slot);
     }

@@ -7,6 +7,7 @@ public class UI_Manager : MonoBehaviour
 
     #region ÀÎ½ºÆåÅÍ
     [SerializeField] private Inventory_UI _invenUI;
+    [SerializeField] private Comtainer_UI _containerUI;
     #endregion
 
     private void Awake()
@@ -56,6 +57,15 @@ public class UI_Manager : MonoBehaviour
 
         _invenUI.Active(active);
     }
+
+    public void ContainerActive(bool active)
+    {
+        if (_invenUI == null || _containerUI == null) { return; }
+
+        _containerUI.Active(active);
+    }
+
+    public bool ContainerIsActive => _containerUI.IsActive;
     #endregion
 
 }
