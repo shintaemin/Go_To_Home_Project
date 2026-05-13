@@ -8,7 +8,6 @@ using UnityEngine.Rendering.Universal; // DecalProjector 사용을 위함
 */
 #endregion
 
-
 public class Player_SoundDecal : MonoBehaviour
 {
     #region 인스펙터
