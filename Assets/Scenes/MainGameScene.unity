@@ -2257,13 +2257,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6c27340830286754a8b2cb29873bdad9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _dragObj: {fileID: 912250016}
   _dragData:
     _item: {fileID: 0}
-    _slotId: 0
+    _slotIndex: 0
     _curentDur: 0
     _count: 0
   _dragSlot: {fileID: 0}
-  _dragObj: {fileID: 912250016}
   _drageImage: {fileID: 1626126912}
 --- !u!4 &49639980
 Transform:
@@ -11165,7 +11165,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &264487056
 RectTransform:
   m_ObjectHideFlags: 0
@@ -31944,7 +31944,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &812058162
 RectTransform:
   m_ObjectHideFlags: 0
@@ -34933,7 +34933,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &912250017
 RectTransform:
   m_ObjectHideFlags: 0

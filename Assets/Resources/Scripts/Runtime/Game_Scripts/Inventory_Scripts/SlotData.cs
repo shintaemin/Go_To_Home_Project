@@ -10,23 +10,42 @@ using UnityEngine;
 [System.Serializable]
 public class SlotData
 {
+    #region 인스펙터
     [SerializeField] private ItemDataSO _item;
-    [SerializeField] private int _slotId;
+    [SerializeField] private int _slotIndex;
     [SerializeField] private float _curentDur;
     [SerializeField] private int _count;
+    #endregion
+
+    #region 프로퍼티
+    public int Index
+    {
+        get { return _slotIndex; }
+        set { _slotIndex = value; }
+    }
+
+    public float Dur
+    {
+        get { return _curentDur; }
+        set { _curentDur = Mathf.Clamp(value, 0, 100); }
+    }
+
+    public int Count
+    {
+        get { return _count; }
+        set { _count = value; }
+    }
+    #endregion
 
     #region 외부 호출 함수
     public ItemDataSO GetItem => _item;
-    public int GetId => _slotId;
-    public float GetDur => _curentDur;
-    public int GetCount => _count;
 
     public int AddCount(int value = 1)
     {
         if (_item == null) { return -1; }
         if (!_item.IsStackable) { return -1; }
 
-        int remain = _count;
+        int remain = Count;
         int amount = value;
         int result = remain + amount;
         int max = _item.MaxStack;
@@ -35,49 +54,56 @@ public class SlotData
         if (result > max)
         {
             rest = result - max;
-            _count = max;
+            Count = max;
         }
         else
         {
             rest = 0;
-            _count = result;
+            Count = result;
         }
 
         return rest;
     }
 
-    public void DecreseCount(int count)
+    public void RemoveItemData()
     {
-        if (count > _count)
-        {
-            count = _count;
-        }
-
-        _count -= count;
-        if (_count < 0) { _count = 0; }
+        _item = null;
+        _count = 0;
+        _curentDur = 0;
     }
 
-    public void InitItem(ItemDataSO item, int id, int count = 1)
+    public void DecreseCount(int count)
+    {
+        if (count > Count)
+        {
+            count = Count;
+        }
+
+        Count -= count;
+        if (Count < 0) { Count = 0; }
+    }
+
+    public void SetItem(ItemDataSO item, int index, int count = 0, float dur = -0.1f)
     {
         if (item is WeaponDataSO weapon)
         {
-            _curentDur = weapon.MaxDur;
+            _curentDur = dur == -0.1f ? weapon.MaxDur : dur;
         }
 
-        _count = count;
         _item = item;
-        _slotId = id;
-    }
-
-    public void SetDur(float value)
-    {
-        _curentDur = Mathf.Clamp(value, 0, 100);
+        _count = count != 0  ? count : 0;
+        _slotIndex = index;
     }
 
     public void DecreaseDur(float value)
     {
-        float current = _curentDur - value;
-        _curentDur = Mathf.Max(0, current);
+        if (value > 100)
+        {
+            value = 100;
+        }
+
+        float current = Dur - value;
+        Dur = Mathf.Max(0, current);
     }
 
     public void Repair()

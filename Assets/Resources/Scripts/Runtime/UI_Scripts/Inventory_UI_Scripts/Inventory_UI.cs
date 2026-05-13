@@ -103,5 +103,10 @@ public class Inventory_UI : MonoBehaviour
             _slotList[i].Data = slotList[i];
         }
     }
+
+    public void SlotUpdate(int index, SlotData slot)
+    {
+        _slotList[index].Data = slot;
+    }
     #endregion
 }

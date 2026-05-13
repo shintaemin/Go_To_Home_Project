@@ -54,6 +54,13 @@ public class UI_Manager : MonoBehaviour
         _invenUI.InventoryAllUpdate(slotList);
     }
 
+    public void InventorySlotUpdate(int index, SlotData slot)
+    {
+        if (_invenUI == null) { return; }
+
+        _invenUI.SlotUpdate(index, slot);
+    }
+
     public void InventoryActive(bool active)
     {
         if (_invenUI == null) { return; }

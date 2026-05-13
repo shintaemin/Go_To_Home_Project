@@ -1,5 +1,5 @@
+using System;
 using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
 
 #region 컨테이너
@@ -53,20 +53,32 @@ public class Interact_Container : MonoBehaviour, IInteract
 
         _itemList.Capacity = _slotMax;
 
-        _randomLength = Random.Range(_slotMin, _slotMax);
+        _randomLength = UnityEngine.Random.Range(_slotMin, _slotMax);
         
         for (int i = 0; i < _randomLength; i++)
         {
             SlotData data = new SlotData();
             ItemDataSO item = ItemDataManager.Instance.GetRandomItem();
-            int count = Random.Range(1, item.MaxStack);
+            int count = UnityEngine.Random.Range(1, item.MaxStack);
 
-            data.InitItem(item, i, count);
+            data.SetItem(item, i, count);
             _containerUI.SetSlotUI(i, data);
             _itemList.Add(data);
         }
 
         _isInit = true;
+    }
+    private int ProvidedID()
+    {
+        for (int i = 0; i < _itemList.Count; i++)
+        {
+            if (_itemList[i].GetItem == null) { return i; }
+        }
+
+        if (_itemList.Count < _randomLength) { return _itemList.Count; }
+
+        GUtill.Log($"[{this.name}] : 인벤토리 가득참", EDebugType.Warn);
+        return -1;
     }
 
     #region 외부 호출 함수
@@ -93,14 +105,57 @@ public class Interact_Container : MonoBehaviour, IInteract
         _containerUI.AllUpdata(_itemList);
     }
 
-    public void AddItem(SlotData slot)
+    public bool AddItem(SlotData slot, int index)
     {
-        
+        ItemDataSO item = slot.GetItem; // 슬롯의 아이템
+        int amount = slot.Count;     // 추가할 슬롯의 아이템 갯수
+        bool isStack = item.IsStackable; // 아이템 스택유무
+        float dur = slot.Dur;
+
+        if (isStack)
+        {
+            if (index >= 0 && index < _randomLength && _itemList[index].GetItem == item)
+            {
+                amount = _itemList[index].AddCount(amount);
+
+                _containerUI.AllUpdata(_itemList);
+
+                if (amount == 0) { return true; }
+            }
+
+            for (int i = 0; i < _itemList.Count; i++)
+            {
+                if (_itemList[i] == null) { continue; }
+                if (_itemList[i].GetItem != item) { continue; }
+
+                amount = _itemList[i].AddCount(amount); // 아이템 갯수 추가후 남는 값 반환
+
+                _containerUI.AllUpdata(_itemList);
+
+                if (amount == 0) { return true; }// 남은 갯수가 0 이면 함수종료
+            }
+        }
+
+        if (_itemList[index].GetItem != null)
+        {
+            index = ProvidedID();
+
+            if (index == -1) { return false; }
+        }
+
+        _itemList[index].SetItem(item, index, amount, dur); // 데이터 할당
+
+        _containerUI.AllUpdata(_itemList);
+        return true;
     }
 
     public void RemoveItem(SlotData slot)
     {
+        int id = slot.Index;
 
+        _itemList[id].RemoveItemData();
+
+        _containerUI.AllUpdata(_itemList);
     }
 
     public int ProvidedIndex()

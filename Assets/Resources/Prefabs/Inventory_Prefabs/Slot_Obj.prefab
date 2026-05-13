@@ -166,11 +166,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 904cb524890dac941ba2c8f38cc74fe8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _index: 0
+  _slotData:
+    _item: {fileID: 0}
+    _slotIndex: 0
+    _curentDur: 0
+    _count: 0
   _pathType: 0
+  _index: 0
   _image: {fileID: 3677427619890142885}
   _textRoot: {fileID: 8894639086323141319}
   _countText: {fileID: 1700180245925348250}
+  _countStr: 
 --- !u!1 &6090673129658344152
 GameObject:
   m_ObjectHideFlags: 0
@@ -395,7 +401,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &5399196027284934818
 RectTransform:
   m_ObjectHideFlags: 0

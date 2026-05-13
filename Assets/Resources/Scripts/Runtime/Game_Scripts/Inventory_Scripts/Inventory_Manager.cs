@@ -46,7 +46,7 @@ public class Inventory_Manager : MonoBehaviour
         for (int i = 0; i < _maxStorege; i++)
         {
             _itemList.Add(new SlotData()); // 미리 리스트 채워듬
-            _itemList[i].InitItem(null, i, 0);
+            _itemList[i].SetItem(null, i, 0);
         }    
     }
 
@@ -73,22 +73,40 @@ public class Inventory_Manager : MonoBehaviour
         return -1;
     }
 
-    private void RemoveSlot(int id) // 슬롯 삭제
+    private void RemoveSlot(int index) // 슬롯 삭제
     {
-        if (_itemList[id].GetItem == null) { return; }
+        if (_itemList[index].GetItem == null) { return; }
 
-        _itemList[id].InitItem(null, id , 0);
+        _itemList[index].RemoveItemData();
+
+        if (UI_Manager.Instance != null)
+        {
+            UI_Manager.Instance.InventorySlotUpdate(index, _itemList[index]);
+        }
     }
 
     #region 외부 호출 함수
-    public bool AddItem(SlotData slot) // 아이템 추가 SlotData 를 통한 추가
+    public bool AddItem(SlotData slot, int index) // 아이템 추가 SlotData 를 통한 추가
     {
         ItemDataSO item = slot.GetItem; // 슬롯의 아이템
-        int amount = slot.GetCount;     // 추가할 슬롯의 아이템 갯수
+        int amount = slot.Count;     // 추가할 슬롯의 아이템 갯수
         bool isStack = item.IsStackable; // 아이템 스택유무
-        
+        float dur = slot.Dur;
+
         if (isStack)
         {
+            if (index >= 0 && index < _maxStorege && _itemList[index].GetItem == item)
+            {
+                amount = _itemList[index].AddCount(amount);
+
+                if (UI_Manager.Instance != null)
+                {
+                    UI_Manager.Instance.InventorySlotUpdate(index, _itemList[index]);
+                }
+
+                if (amount == 0) { return true; }
+            }
+
             for (int i = 0; i < _itemList.Count; i++)
             {
                 if (_itemList[i] == null) { continue; }
@@ -96,52 +114,72 @@ public class Inventory_Manager : MonoBehaviour
                 
                 amount = _itemList[i].AddCount(amount); // 아이템 갯수 추가후 남는 값 반환
 
-                if (amount == 0) 
+                if (UI_Manager.Instance != null)
                 {
-                    return true; 
-                } // 남은 갯수가 0 이면 함수종료
+                    UI_Manager.Instance.InventorySlotUpdate(i, _itemList[i]);
+                }
+
+                if (amount == 0) { return true; }// 남은 갯수가 0 이면 함수종료
             }
         }
 
-        int id = ProvidedID(); // 빈 인덱스 찾기
-        if (id == -1) { return false; }
+        if (_itemList[index].GetItem != null) 
+        {
+            index = ProvidedID();
 
-        _itemList[id].InitItem(item, id, amount); // 데이터 할당
+            if (index == -1) { return false; }
+        }
 
+        _itemList[index].SetItem(item, index, amount, dur); // 데이터 할당
+
+        if (UI_Manager.Instance != null)
+        {
+            UI_Manager.Instance.InventorySlotUpdate(index, _itemList[index]);
+        }
         return true;
-    }
+    } // <- AddItem End
 
-    public SlotData GetSlotData(int id) // 아이디를 통해 슬롯데이터 획득
+    public SlotData GetSlotData(int index) // 아이디를 통해 슬롯데이터 획득
     {
-        if (id < 0 || id >= _itemList.Count) { return null; }
+        if (index < 0 || index >= _itemList.Count) { return null; }
 
-        return _itemList[id];
+        return _itemList[index];
     }
 
     public void RemoveSlotData(SlotData data)
     {
-        int id = data.GetId;
+        int id = data.Index;
 
-        _itemList[id] = null;
+        _itemList[id].RemoveItemData();
+
+        if (UI_Manager.Instance != null)
+        {
+            UI_Manager.Instance.InventorySlotUpdate(id, _itemList[id]);
+        }
     }
 
-    public SlotData MoveSlot(int id, int count = 1) // 아이디와 갯수로 아이템 이동
+    public SlotData MoveSlot(int index, int count = 1) // 아이디와 갯수로 아이템 이동
     {
-        SlotData slot = GetSlotData(id); // id 로 슬롯 받아오기
+        SlotData slot = GetSlotData(index); // id 로 슬롯 받아오기
 
-        if (slot == null) { return null; }
+        if (slot == null || slot.GetItem == null) { return null; }
 
-        float duration = slot.GetDur;   // 해당 아이템의 내구도 가져오기
+        float duration = slot.Dur;   // 해당 아이템의 내구도 가져오기
         SlotData outSlot = new SlotData(); // 반환시킬 슬롯 생성
 
-        outSlot.InitItem(slot.GetItem, -1, count); // 기존 슬롯 데이터 복사
-        outSlot.SetDur(duration); // 기존 내구도 할당
+        outSlot.SetItem(slot.GetItem, -1, count); // 기존 슬롯 데이터 복사
+        outSlot.Dur = duration; // 기존 내구도 할당
 
         slot.DecreseCount(count); // 기존 슬롯의 아이템 갯수 감소
 
-        if (slot.GetCount <= 0) // 기존 슬롯 이 0보다 작거나 같다면
+        if (slot.Count <= 0) // 기존 슬롯 이 0보다 작거나 같다면
         {
-            RemoveSlot(id); // 슬롯 삭제
+            RemoveSlot(index); // 슬롯 삭제
+        }
+
+        if (UI_Manager.Instance != null)
+        {
+            UI_Manager.Instance.InventorySlotUpdate(index, slot);
         }
 
         return outSlot; // 반환
@@ -153,7 +191,7 @@ public class Inventory_Manager : MonoBehaviour
 
         for (int i = _itemList.Count - 1; i >= 0; i--)
         {
-            _itemList[i].InitItem(null, i, 0);
+            _itemList[i].RemoveItemData();
         }
     }
 

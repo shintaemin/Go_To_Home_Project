@@ -32,6 +32,9 @@ public class Slot_UI : MonoBehaviour, IPointerClickHandler, IBeginDragHandler, I
     [SerializeField] private string _countStr;
     #endregion
 
+    #region 내부 변수
+    private Sprite _nullIcon;
+    #endregion
     private void Awake()
     {
 		if (_image == null)
@@ -44,6 +47,7 @@ public class Slot_UI : MonoBehaviour, IPointerClickHandler, IBeginDragHandler, I
             GUtill.Log($"[{this.name}] : 갯수 TMP Pro 없음", EDebugType.Error);
         }
 
+        _nullIcon = _image.sprite;
     }
 
     private void UpdateSlot(SlotData slotData)
@@ -51,10 +55,11 @@ public class Slot_UI : MonoBehaviour, IPointerClickHandler, IBeginDragHandler, I
         _slotData = slotData;
 
         ItemDataSO data = _slotData.GetItem;
-        int count = _slotData.GetCount;
+        int count = _slotData.Count;
 
         if (data == null)
         {
+            _image.sprite = _nullIcon;
             _textRoot.SetActive(false);
             return;
         }
@@ -112,14 +117,17 @@ public class Slot_UI : MonoBehaviour, IPointerClickHandler, IBeginDragHandler, I
         Slot_UI slotUI = UI_SlotMove_Manager.Instance.GetDragUI;
 
         GUtill.Log($"[{this.name}] : 드롭 성공 {PathType} 로 이동", EDebugType.Warn);
+
         switch (PathType)
         {
             case ESlotPathType.Inventory: 
-                Inventory_Manager.Instance.AddItem(dropData); break;
+                Inventory_Manager.Instance.AddItem(dropData, Index); break;
             case ESlotPathType.Container: 
-                UI_SlotMove_Manager.Instance.GetContainer.AddItem(dropData); break;
+                UI_SlotMove_Manager.Instance.GetContainer.AddItem(dropData, Index); break;
         }
+
         GUtill.Log($"[{this.name}] : 이동 성공 {slotUI.PathType} 의 데이터 삭제", EDebugType.Warn);
+
         switch (slotUI.PathType)
         {
             case ESlotPathType.Inventory:
