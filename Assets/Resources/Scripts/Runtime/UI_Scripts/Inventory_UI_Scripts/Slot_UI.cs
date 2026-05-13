@@ -7,6 +7,7 @@ using UnityEngine.UI;
 /*
  ▶ 할일 
   - 슬롯 데이터를 UI에 보여줄 스크립트
+  - 이동시킬 슬롯을 지정하고 현재 슬롯에 Drop 수행시 매니저를 통해 분기
 */
 #endregion
 
@@ -83,11 +84,7 @@ public class Slot_UI : MonoBehaviour, IPointerClickHandler, IBeginDragHandler, I
     // 드래그 시작
     public void OnBeginDrag(PointerEventData eventData)
     {
-        if (UI_SlotMove_Manager.Instance == null)
-        {
-            GUtill.Log($"[{this.name}] : 드래그 실패?", EDebugType.Warn);
-            return; 
-        }
+        if (UI_SlotMove_Manager.Instance == null) { return; }
 
         UI_SlotMove_Manager.Instance.Begin(this);
     }
@@ -113,30 +110,31 @@ public class Slot_UI : MonoBehaviour, IPointerClickHandler, IBeginDragHandler, I
     {
         if (UI_SlotMove_Manager.Instance == null) { return; }
 
+        // 이동중인 데이터 와 UI 를 확인
         SlotData dropData = UI_SlotMove_Manager.Instance.GetDragData;
         Slot_UI slotUI = UI_SlotMove_Manager.Instance.GetDragUI;
 
         GUtill.Log($"[{this.name}] : 드롭 성공 {PathType} 로 이동", EDebugType.Warn);
-
+        // Drop 한 슬롯의 type 을 확인
         switch (PathType)
         {
-            case ESlotPathType.Inventory: 
+            case ESlotPathType.Inventory: // 인벤토리에 아이템 추가
                 Inventory_Manager.Instance.AddItem(dropData, Index); break;
-            case ESlotPathType.Container: 
+            case ESlotPathType.Container: // 컨테이너에 아이템 추가
                 UI_SlotMove_Manager.Instance.GetContainer.AddItem(dropData, Index); break;
         }
 
         GUtill.Log($"[{this.name}] : 이동 성공 {slotUI.PathType} 의 데이터 삭제", EDebugType.Warn);
-
+        // 이동 UI 의 type 을 확인
         switch (slotUI.PathType)
         {
-            case ESlotPathType.Inventory:
-                Inventory_Manager.Instance.RemoveSlotData(dropData); return;
-            case ESlotPathType.Container:
-                UI_SlotMove_Manager.Instance.GetContainer.RemoveItem(dropData); return;
+            case ESlotPathType.Inventory: // 인벤토리아이템 삭제
+                Inventory_Manager.Instance.RemoveSlotData(dropData); break;
+            case ESlotPathType.Container: // 컨테이너 아이템 삭제
+                UI_SlotMove_Manager.Instance.GetContainer.RemoveItem(dropData); break;
         }
-
-        GUtill.Log($"[{this.name}] : 나오면 안되는것", EDebugType.Warn);
+        UI_SlotMove_Manager.Instance.DataMoveEnd();
+        GUtill.Log($"[{this.name}] : 슬롯데이터 이동완료 {slotUI.PathType} -> {PathType}", EDebugType.Warn);
     }
     #endregion  -> 드래그 드랍 End
     #region 프로퍼티
@@ -145,25 +143,21 @@ public class Slot_UI : MonoBehaviour, IPointerClickHandler, IBeginDragHandler, I
         get { return _slotData; }
         set { UpdateSlot(value); }
     }
-
     public int Index // 인덱스 (id 매칭)
     {
         get { return _index; }
         set { _index = value; }
     }
-
     public ESlotPathType PathType // 현재 창고 (인벤토리, 루팅상자, 필드)
     {
         get { return _pathType; }
         set { _pathType = value; }
     }
-
     public Sprite SlotIcon // 아이콘 이미지
     {
         get { return _image.sprite; }
         set { _image.sprite = value; }
     }
-
     public string CountText // 갯수 텍스트
     {
         get { return _countStr; }
