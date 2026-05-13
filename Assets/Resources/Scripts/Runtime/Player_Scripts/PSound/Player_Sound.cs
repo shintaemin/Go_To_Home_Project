@@ -24,17 +24,12 @@ public class Player_Sound : MonoBehaviour
     #endregion
 
     #region 내부 변수    
-    private Player_SoundDecal _decal; // 데칼 size 지정 스크립트
     #endregion
 
     private void Awake()
     {
         GUtill.TryGetCS(this, ref _audio);
-
-        if (_decal == null)
-        {
-            _decal = FindFirstObjectByType<Player_SoundDecal>();
-        }
+        
     }
 
     private void Start()
@@ -63,13 +58,16 @@ public class Player_Sound : MonoBehaviour
         if (range != -1f)
         {
             _currentRange = range;
-
-            if (_decal != null) 
-            {
-                _decal.SetTargetRange(range); 
-            }
         }
         else { GUtill.Log($"[{this.name}] : 상태 지정 실패 오디오범위 : {range}", EDebugType.Warn); }
+    }
+
+    public void OnMoveSoundEffectPlay()
+    {
+        if (SoundEffect_PoolManager.Instance != null)
+        {
+            SoundEffect_PoolManager.Instance.SpawnEffect(transform.position, _currentRange);
+        }
     }
 
     // 외부 사용을 위해 (추후 SoundManager 작업시 필요할 수 있어 미리 작업)

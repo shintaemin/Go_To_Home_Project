@@ -37,9 +37,9 @@ public class Player_Controller : MonoBehaviour
     [SerializeField] private Player_State _stateCS;
     [SerializeField] private Player_Move _moveCS;
     [SerializeField] private Player_Anim _animCS;
+    [SerializeField] private Player_Sound _soundCS;
     [SerializeField] private Player_Stemina _steminaCS;
     [SerializeField] private Player_Attack _attackCS;
-    [SerializeField] private Player_Sound _soundCS;
     [SerializeField] private Player_LoockMousePointer _rotateCS;
     [SerializeField] private Player_InteractFinder _finderCS;
     [SerializeField] private Player_Interact _interactCS;
@@ -157,8 +157,8 @@ public class Player_Controller : MonoBehaviour
     private void Awake()
     {
         GUtill.TryGetCS(this, ref _stateCS);     GUtill.TryGetCS(this, ref _moveCS);   GUtill.TryGetCS(this, ref _animCS);
-        GUtill.TryGetCS(this, ref _steminaCS);   GUtill.TryGetCS(this, ref _attackCS); GUtill.TryGetCS(this, ref _soundCS);
-        GUtill.TryGetCS(this, ref _rotateCS); GUtill.TryGetCS(this, ref _finderCS);    GUtill.TryGetCS(this, ref _interactCS);
+        GUtill.TryGetCS(this, ref _steminaCS);   GUtill.TryGetCS(this, ref _attackCS); GUtill.TryGetCS(this, ref _interactCS);
+        GUtill.TryGetCS(this, ref _rotateCS);    GUtill.TryGetCS(this, ref _finderCS); GUtill.TryGetCS(this, ref _soundCS);
     }
 
     private void Update()
@@ -166,7 +166,6 @@ public class Player_Controller : MonoBehaviour
         MoveUpdate(); // 이동 업데이트
         RotateUpdate(); // 회전 업데이트
         _steminaCS?.SetState(_state);    // 스테미너 업데이트
-        _soundCS?.SetSoundDistatce(_state); // 사운드 범위 업데이트
         _finderCS?.Find();
     }
 
@@ -179,6 +178,7 @@ public class Player_Controller : MonoBehaviour
         bool crouch = !run ? _im.GetCrouchInput : false;
 
         _moveCS?.UpdateMove(move, run, crouch); // 이동 명령
+        _soundCS?.SetSoundDistatce(_state);
         _animCS?.MoveAnimUpdate(_state); // 이동 애니메이션 업데이트
     }
     private void RotateUpdate()

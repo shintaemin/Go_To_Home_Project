@@ -825,9 +825,10 @@ PrefabInstance:
         type: 3}
       propertyPath: _inventoryCS
       value: 
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 1514618991}
     m_RemovedComponents: []
-    m_RemovedGameObjects: []
+    m_RemovedGameObjects:
+    - {fileID: 543326549138443681, guid: ed4b7eb6080d7504da19d900be229dee, type: 3}
     m_AddedGameObjects:
     - targetCorrespondingSourceObject: {fileID: 6136449000832962896, guid: ed4b7eb6080d7504da19d900be229dee,
         type: 3}
@@ -12779,6 +12780,37 @@ PrefabInstance:
       insertIndex: -1
       addedObject: {fileID: 1747749285}
   m_SourcePrefab: {fileID: 100100000, guid: 05aec82adc02f16409639716322b1673, type: 3}
+--- !u!1 &303007876
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 303007877}
+  m_Layer: 0
+  m_Name: SoundEffectPoolRoot
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &303007877
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 303007876}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1702144668}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &304146284 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 100000, guid: 653e28c8a1ae11240a6cdaac2f9ee8ea,
@@ -65434,6 +65466,55 @@ PrefabInstance:
       insertIndex: -1
       addedObject: {fileID: 1892860311}
   m_SourcePrefab: {fileID: 100100000, guid: 2d5fb229ae2945742b900a405a5e7a0b, type: 3}
+--- !u!1 &1702144666
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1702144668}
+  - component: {fileID: 1702144667}
+  m_Layer: 0
+  m_Name: SoundEffect_PoolManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1702144667
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1702144666}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fc3ee841cbbda38408dc72099e16a43c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _aliveList: []
+  _prefab: {fileID: 5834310539706983275, guid: 7d9cc713f15e1a94eab33543467f4390, type: 3}
+  _poolRoot: {fileID: 303007877}
+  _poolCount: 20
+--- !u!4 &1702144668
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1702144666}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 303.27704, y: 192.63542, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 303007877}
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &1703438063
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -83398,6 +83479,7 @@ SceneRoots:
   - {fileID: 1174345997}
   - {fileID: 1514618990}
   - {fileID: 49639980}
+  - {fileID: 1702144668}
   - {fileID: 598191558}
   - {fileID: 168707263}
   - {fileID: 1522858454}
