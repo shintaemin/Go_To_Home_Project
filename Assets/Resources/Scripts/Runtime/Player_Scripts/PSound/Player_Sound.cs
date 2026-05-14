@@ -23,7 +23,9 @@ public class Player_Sound : MonoBehaviour
     [SerializeField] private float _attackRange = 15f; // 공격 사운드 범위
     #endregion
 
-    #region 내부 변수    
+    #region 내부 변수
+    private float _soundPlayCool = 0.1f;
+    private float _lastSoundPlayTime;
     #endregion
 
     private void Awake()
@@ -64,6 +66,9 @@ public class Player_Sound : MonoBehaviour
 
     public void OnMoveSoundEffectPlay()
     {
+        if (Time.time - _lastSoundPlayTime < _soundPlayCool) { return; }
+        _lastSoundPlayTime = Time.time;
+
         if (SoundEffect_PoolManager.Instance != null)
         {
             SoundEffect_PoolManager.Instance.SpawnEffect(transform.position, _currentRange);

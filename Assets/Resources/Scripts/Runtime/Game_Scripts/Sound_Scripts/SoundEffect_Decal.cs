@@ -63,7 +63,7 @@ public class SoundEffect_Decal : MonoBehaviour
         if (_decal == null || !_isPlaying) { return; }
         
         _aliveTime += Time.deltaTime;
-
+        
         float range = Range * 2f;
         float t = 1.0f - Mathf.Exp(-_smooth * Time.deltaTime); // 지수 보간
 
@@ -71,6 +71,9 @@ public class SoundEffect_Decal : MonoBehaviour
         Vector3 end = new Vector3(range, range, start.z);
         Vector3 Lerp = Vector3.Lerp(start, end, t);
         _decal.size = Lerp;
+
+        float progress = Mathf.Clamp01(_aliveTime / _returnTime);
+        _decal.fadeFactor = 1.0f - progress;
 
         float dis = (end - Lerp).sqrMagnitude;
         if (dis <= 0.001f || _aliveTime >= _returnTime)
@@ -101,6 +104,7 @@ public class SoundEffect_Decal : MonoBehaviour
 
         _decalObj.transform.position = _pos; // Pos 에서 작업하지만 혹시몰라 한번더
         _decal.size = new Vector3(0, 0, _decal.size.z);
+        _decal.fadeFactor = 1.0f;
         _aliveTime = 0;
         _isPlaying = true ;
     }

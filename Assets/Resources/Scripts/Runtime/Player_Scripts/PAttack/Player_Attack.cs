@@ -62,7 +62,6 @@ public class Player_Attack : MonoBehaviour
 
         _controllCS.MovementState = EMovementState.Attack;
         _anim.SetTreggerAnim(_controllCS.MovementState);
-
         GUtill.Log($"[{this.name}] : 공격 시작!");
     }
 
