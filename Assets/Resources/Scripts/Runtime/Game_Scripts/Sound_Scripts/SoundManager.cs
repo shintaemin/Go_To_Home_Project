@@ -30,8 +30,8 @@ public class SoundManager : MonoBehaviour
     [SerializeField] private int _maxSfxPlayingCount = 5; // 동시재생에 최대치
 
     [Header("옵션")]
-    [SerializeField] private float _sfxVolume = 0.3f;
-    [SerializeField] private float _bgmVolume = 0.3f;
+    [SerializeField, Range(0, 1)] private float _sfxVolume = 0.3f;
+    [SerializeField, Range(0, 1)] private float _bgmVolume = 0.3f;
     #endregion
     #region 내부변수
     private int _sfxPlayingCount = 0; // 한프레임에 재생시킨 sfx 사운드 갯수
@@ -60,6 +60,8 @@ public class SoundManager : MonoBehaviour
         }
         Instance = this;
         DontDestroyOnLoad(this.gameObject);
+
+        SoundPlayType = ESountPlayType.Play;
     }
 
     private void OnDestroy()
