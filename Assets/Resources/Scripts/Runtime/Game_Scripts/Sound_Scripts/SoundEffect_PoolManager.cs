@@ -16,8 +16,8 @@ public class SoundEffect_PoolManager : MonoBehaviour
 
 	#region 인스펙터
 	[SerializeField] private List<SoundEffect_Decal> _aliveList = new List<SoundEffect_Decal>();
-	[SerializeField] private GameObject _prefab;
-    [SerializeField] private Transform _poolRoot;
+	[SerializeField] private GameObject _prefab; // 생성할 데칼
+    [SerializeField] private Transform _poolRoot; // 인스펙터 정리용
     [SerializeField] private int _poolCount = 20;
 	#endregion
 
@@ -49,7 +49,7 @@ public class SoundEffect_PoolManager : MonoBehaviour
         }
     }
 
-    private void InitPool()
+    private void InitPool() // Awake 에 Pool에 등록
     {
         _aliveList.Clear();
         _pool.Clear();
@@ -70,6 +70,7 @@ public class SoundEffect_PoolManager : MonoBehaviour
         }
     }
 
+    // 사용시 호출될 함수
     public SoundEffect_Decal SpawnEffect(Vector3 pos, float range)
     {
         SoundEffect_Decal decal = null;
@@ -97,6 +98,7 @@ public class SoundEffect_PoolManager : MonoBehaviour
         return decal;
     }
 
+    // 복귀시 호출될 함수
     public void ReturnToPool(SoundEffect_Decal decal)
     {
         decal.transform.SetParent(_poolRoot);

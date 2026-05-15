@@ -166,6 +166,7 @@ public class Player_Controller : MonoBehaviour
         MoveUpdate(); // 이동 업데이트
         RotateUpdate(); // 회전 업데이트
         _steminaCS?.SetState(_state);    // 스테미너 업데이트
+        _soundCS?.SetSoundDistatce(_state);
         _finderCS?.Find();
     }
 
@@ -178,7 +179,6 @@ public class Player_Controller : MonoBehaviour
         bool crouch = !run ? _im.GetCrouchInput : false;
 
         _moveCS?.UpdateMove(move, run, crouch); // 이동 명령
-        _soundCS?.SetSoundDistatce(_state);
         _animCS?.MoveAnimUpdate(_state); // 이동 애니메이션 업데이트
     }
     private void RotateUpdate()

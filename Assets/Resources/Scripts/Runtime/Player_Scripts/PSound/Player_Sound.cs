@@ -14,6 +14,7 @@ public class Player_Sound : MonoBehaviour
 {
     #region 인스펙터
     [SerializeField] private AudioSource _audio;
+    [SerializeField] private ClipList _clipList;
 
     [Header("사운드 범위 값")]
     [SerializeField] private float _currentRange;
@@ -21,17 +22,17 @@ public class Player_Sound : MonoBehaviour
     [SerializeField] private float _walkRange = 5f; // 걷기 사운드 범위
     [SerializeField] private float _runRange = 10f; // 달리기 사운드 범위
     [SerializeField] private float _attackRange = 15f; // 공격 사운드 범위
+    [SerializeField] private float _soundPlayCool = 0.3f;
     #endregion
 
     #region 내부 변수
-    private float _soundPlayCool = 0.1f;
     private float _lastSoundPlayTime;
     #endregion
 
     private void Awake()
     {
         GUtill.TryGetCS(this, ref _audio);
-        
+        _clipList.InitClipList();
     }
 
     private void Start()
@@ -73,6 +74,35 @@ public class Player_Sound : MonoBehaviour
         {
             SoundEffect_PoolManager.Instance.SpawnEffect(transform.position, _currentRange);
         }
+        /*
+        if (SoundManager.Instance != null)
+        {
+            // 여기서 발소리 재생
+            ClipData clip = _clipList.GetClipData(EClipPlayType.FootStep);
+
+            if (clip != null) { SoundManager.Instance.SfxPlay(_audio, clip); }
+        }
+        */
+    }
+    
+    public void OnAttackEffectPlay()
+    {
+        if (Time.time - _lastSoundPlayTime < _soundPlayCool) { return; }
+        _lastSoundPlayTime = Time.time;
+
+        if (SoundEffect_PoolManager.Instance != null)
+        {
+            SoundEffect_PoolManager.Instance.SpawnEffect(transform.position, _currentRange);
+        }
+        /*
+         if (SoundManager.Instance != null)
+        {
+            // 여기서 공격 사운드 재생
+            ClipData clip = _clipList.GetClipData(EClipPlayType.Attack);
+
+            if (clip != null) { SoundManager.Instance.SfxPlay(_audio, clip); }
+        }
+         */
     }
 
     // 외부 사용을 위해 (추후 SoundManager 작업시 필요할 수 있어 미리 작업)

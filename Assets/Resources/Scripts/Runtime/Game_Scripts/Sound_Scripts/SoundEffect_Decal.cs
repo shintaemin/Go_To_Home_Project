@@ -12,8 +12,8 @@ using UnityEngine.Rendering.Universal;
 public class SoundEffect_Decal : MonoBehaviour
 {
     #region 인스펙터
-    [SerializeField] private GameObject _decalObj;
-    [SerializeField] private DecalProjector _decal;
+    [SerializeField] private GameObject _decalObj; // 데칼의 위치 이동 및 컴포넌트 캐싱을 위함
+    [SerializeField] private DecalProjector _decal; // 쉐이더 그래프 데칼
     [SerializeField] private float _smooth = 3f;
 
     [Header("시간 옵션")]
@@ -26,7 +26,7 @@ public class SoundEffect_Decal : MonoBehaviour
     private bool _isPlaying;
     #endregion
     #region 프로퍼티
-    public Vector3 Pos
+    public Vector3 Pos // 외부에서 위치 지정 하도록
     {
         get { return  _pos; }
         set 
@@ -36,7 +36,7 @@ public class SoundEffect_Decal : MonoBehaviour
         }
     }
 
-    public float Range
+    public float Range // 외부에서 범위 지정 하도록
     {
         get { return _range; }
         set { _range = value; }
@@ -62,33 +62,33 @@ public class SoundEffect_Decal : MonoBehaviour
     {
         if (_decal == null || !_isPlaying) { return; }
         
-        _aliveTime += Time.deltaTime;
+        _aliveTime += Time.deltaTime; // 생존시간을 매프레임 ++
         
-        float range = Range * 2f;
+        float range = Range * 2f; // Range 는 반지름으로 최종사이즈 지정
         float t = 1.0f - Mathf.Exp(-_smooth * Time.deltaTime); // 지수 보간
 
-        Vector3 start = _decal.size;
-        Vector3 end = new Vector3(range, range, start.z);
-        Vector3 Lerp = Vector3.Lerp(start, end, t);
-        _decal.size = Lerp;
+        Vector3 start = _decal.size; // 현재 데칼사이즈
+        Vector3 target = new Vector3(range, range, start.z); // 목표 데칼 사이즈
+        Vector3 Lerp = Vector3.Lerp(start, target, t); // 보간
+        _decal.size = Lerp; // 최종 지정
 
-        float progress = Mathf.Clamp01(_aliveTime / _returnTime);
-        _decal.fadeFactor = 1.0f - progress;
+        float progress = Mathf.Clamp01(_aliveTime / _returnTime); // 데칼 진행도
+        _decal.fadeFactor = 1.0f - progress; // 점차 사라지도록 Fade 처리
 
-        float dis = (end - Lerp).sqrMagnitude;
-        if (dis <= 0.001f || _aliveTime >= _returnTime)
+        float dis = (target - Lerp).sqrMagnitude; // 사이즈 비교를 위함
+        if (dis <= 0.001f || _aliveTime >= _returnTime) // 목표 사이즈에 가깝거나, 돌아갈 시간이되면
         {
-            if (SoundEffect_PoolManager.Instance != null)
+            if (SoundEffect_PoolManager.Instance != null) 
             {
-                _decal.size = end;
-                _isPlaying = false;
-                SoundEffect_PoolManager.Instance.ReturnToPool(this);
+                _decal.size = target; // 명시적으로 최종위치라 지정
+                _isPlaying = false; // 다음 프레임에 실행되지않도록
+                SoundEffect_PoolManager.Instance.ReturnToPool(this); // 풀로 복귀
             }
         }
     }
 
     #region 외부 호출 함수
-    public void InitPlay()
+    public void InitPlay() // 데칼 설정 완료시 호출함수
     {
         if (_decal == null && _decalObj != null)
         {
@@ -103,10 +103,10 @@ public class SoundEffect_Decal : MonoBehaviour
         }
 
         _decalObj.transform.position = _pos; // Pos 에서 작업하지만 혹시몰라 한번더
-        _decal.size = new Vector3(0, 0, _decal.size.z);
-        _decal.fadeFactor = 1.0f;
-        _aliveTime = 0;
-        _isPlaying = true ;
+        _decal.size = new Vector3(0, 0, _decal.size.z); // 사이즈 초기화
+        _decal.fadeFactor = 1.0f; // Fade 1설정
+        _aliveTime = 0; // 생존시간 초기화
+        _isPlaying = true ; // 데칼 플레이중
     }
     #endregion
 }
