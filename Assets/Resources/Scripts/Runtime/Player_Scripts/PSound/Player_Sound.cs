@@ -15,6 +15,7 @@ public class Player_Sound : MonoBehaviour
     #region 인스펙터
     [SerializeField] private AudioSource _audio;
     [SerializeField] private ClipList _clipList;
+    [SerializeField] private Player_FootSound _footSoundCS;
 
     [Header("사운드 범위 값")]
     [SerializeField] private float _currentRange;
@@ -31,6 +32,10 @@ public class Player_Sound : MonoBehaviour
 
     private void Awake()
     {
+        if (_footSoundCS == null)
+        {
+            _footSoundCS = FindFirstObjectByType<Player_FootSound>();
+        }
         GUtill.TryGetCS(this, ref _audio);
         _clipList.InitClipList();
     }
@@ -74,15 +79,8 @@ public class Player_Sound : MonoBehaviour
         {
             SoundEffect_PoolManager.Instance.SpawnEffect(transform.position, _currentRange);
         }
-        /*
-        if (SoundManager.Instance != null)
-        {
-            // 여기서 발소리 재생
-            ClipData clip = _clipList.GetClipData(EClipPlayType.FootStep);
 
-            if (clip != null) { SoundManager.Instance.SfxPlay(_audio, clip); }
-        }
-        */
+        _footSoundCS?.PlayFootStep(_audio, _clipList);
     }
     
     public void OnAttackEffectPlay()

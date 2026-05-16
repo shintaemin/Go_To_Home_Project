@@ -45,6 +45,12 @@ public class Player_Anim : MonoBehaviour
 
         _speed = Mathf.Lerp(_speed, _targerSpeed, _paramUpdatespeed * Time.deltaTime);
 
+		if (Mathf.Abs(_speed - _targerSpeed) < 0.01f)
+		{
+			_speed = _targerSpeed;
+		}
+		_speed = Mathf.Clamp01(_speed);
+
         _anim.SetFloat(_hashSpeed, _speed);
     }
 

@@ -12,7 +12,8 @@ public enum EClipPlayType
 {
     None = 0,
     Attack,
-    FootStep,
+    FootStep_Grass,
+    FootStep_Road,
     UI_Button,
 
 }
