@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Rendering;
 
 public class Player_FootSound : MonoBehaviour
 {
@@ -36,7 +37,7 @@ public class Player_FootSound : MonoBehaviour
 		}
     }
     #region 외부 호출 함수
-	public void PlayFootStep(AudioSource source, ClipList list)
+	public void PlayFootStep(AudioSource source, ClipList list, float volume = -1)
 	{
 		if (SoundManager.Instance == null) { return; }
 
@@ -52,7 +53,7 @@ public class Player_FootSound : MonoBehaviour
 
 		if (clip != null)
         {
-            SoundManager.Instance.SfxPlay(source, clip);
+            SoundManager.Instance.SfxPlay(source, clip, volume);
         }
 	}
 

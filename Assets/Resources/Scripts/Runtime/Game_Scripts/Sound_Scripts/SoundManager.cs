@@ -84,14 +84,14 @@ public class SoundManager : MonoBehaviour
         _bgmAudio.Play();
     }
 
-    public void SfxPlay(AudioSource source, ClipData data)
+    public void SfxPlay(AudioSource source, ClipData data, float volume = -1)
     {
         if (_sfxPlayingCount >= _maxSfxPlayingCount) { return; }
         if (SoundPlayType != ESountPlayType.Play) { return; }
 
         source.clip = data.GetClip;
         source.pitch = data.GetPitch;
-        source.volume = SfxVolume;
+        source.volume = volume == -1 ? SfxVolume : volume;
         source.spatialBlend = data.GetSpatialBlend;
         source.Play();
 

@@ -73,34 +73,32 @@ public class Player_Sound : MonoBehaviour
     public void OnMoveSoundEffectPlay()
     {
         if (Time.time - _lastSoundPlayTime < _soundPlayCool) { return; }
+        if (SoundEffect_PoolManager.Instance == null) { return; }
+        if (SoundManager.Instance == null) { return; }
+        if (_currentRange > _runRange) { return; }
+
         _lastSoundPlayTime = Time.time;
 
-        if (SoundEffect_PoolManager.Instance != null)
-        {
-            SoundEffect_PoolManager.Instance.SpawnEffect(transform.position, _currentRange);
-        }
+        SoundEffect_PoolManager.Instance.SpawnEffect(transform.position, _currentRange);
 
-        _footSoundCS?.PlayFootStep(_audio, _clipList);
+        float sfxVol = SoundManager.Instance.SfxVolume;
+        float volume = _currentRange != 2 ? sfxVol : sfxVol * 0.1f;
+
+        _footSoundCS?.PlayFootStep(_audio, _clipList, volume);
     }
     
-    public void OnAttackEffectPlay()
+    public void OnAttackSoundEffectPlay()
     {
         if (Time.time - _lastSoundPlayTime < _soundPlayCool) { return; }
+        if (SoundEffect_PoolManager.Instance == null) { return; }
+        if (SoundManager.Instance == null) { return; }
+
         _lastSoundPlayTime = Time.time;
 
-        if (SoundEffect_PoolManager.Instance != null)
-        {
-            SoundEffect_PoolManager.Instance.SpawnEffect(transform.position, _currentRange);
-        }
-        /*
-         if (SoundManager.Instance != null)
-        {
-            // 여기서 공격 사운드 재생
-            ClipData clip = _clipList.GetClipData(EClipPlayType.Attack);
+        SoundEffect_PoolManager.Instance.SpawnEffect(transform.position, _currentRange);
 
-            if (clip != null) { SoundManager.Instance.SfxPlay(_audio, clip); }
-        }
-         */
+        ClipData clip = _clipList.GetClipData(EClipPlayType.Attack);
+        SoundManager.Instance.SfxPlay(_audio, clip);
     }
 
     // 외부 사용을 위해 (추후 SoundManager 작업시 필요할 수 있어 미리 작업)
