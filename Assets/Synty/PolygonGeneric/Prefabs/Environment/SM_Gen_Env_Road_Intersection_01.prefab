@@ -68,6 +68,16 @@ PrefabInstance:
       propertyPath: m_Name
       value: SM_Gen_Env_Road_Intersection_01
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 379f381a57f391a4fa472dda3ea7065e,
+        type: 3}
+      propertyPath: m_Layer
+      value: 31
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 379f381a57f391a4fa472dda3ea7065e,
+        type: 3}
+      propertyPath: m_TagString
+      value: Road
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []

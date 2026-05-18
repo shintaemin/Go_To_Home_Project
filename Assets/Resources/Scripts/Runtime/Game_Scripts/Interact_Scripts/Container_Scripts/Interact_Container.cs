@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -24,6 +23,7 @@ public class Interact_Container : MonoBehaviour, IInteract
 
     #region 내부 변수
     private Comtainer_UI _containerUI;
+    private Container_Anim _containerAnim;
     private Inventory_Manager _inventoryManager;
     private UI_SlotMove_Manager _slotMoveManager;
     #endregion
@@ -33,6 +33,10 @@ public class Interact_Container : MonoBehaviour, IInteract
         if (_containerUI == null)
         {
             _containerUI = FindFirstObjectByType<Comtainer_UI>();
+        }
+        if (_containerAnim == null)
+        {
+            GUtill.TryGetCS(this, ref _containerAnim);
         }
     }
 
@@ -53,13 +57,13 @@ public class Interact_Container : MonoBehaviour, IInteract
 
         _itemList.Capacity = _slotMax;
 
-        _randomLength = UnityEngine.Random.Range(_slotMin, _slotMax);
+        _randomLength = Random.Range(_slotMin, _slotMax);
         
         for (int i = 0; i < _randomLength; i++)
         {
             SlotData data = new SlotData();
             ItemDataSO item = ItemDataManager.Instance.GetRandomItem();
-            int count = UnityEngine.Random.Range(1, item.MaxStack);
+            int count = Random.Range(1, item.MaxStack);
 
             data.SetItem(item, i, count);
             _containerUI.SetSlotUI(i, data);

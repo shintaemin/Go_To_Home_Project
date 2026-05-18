@@ -24,8 +24,8 @@ public class Comtainer_UI : MonoBehaviour
     [SerializeField] private int _slotMax = 5;
     #endregion
 
-    #region
-
+    #region 내부 변수
+    private Container_Anim _containerAnim;
     #endregion
 
     private void Awake()
@@ -82,8 +82,23 @@ public class Comtainer_UI : MonoBehaviour
 
     public void Active (bool active)
     {
+        if (_containerAnim == null && UI_SlotMove_Manager.Instance != null)
+        {
+            Interact_Container conta = UI_SlotMove_Manager.Instance.GetContainer;
+            GameObject go = conta != null ? conta.gameObject : null;
+            if (go != null)
+            {
+                GUtill.TryGetCS(go, ref _containerAnim);
+            }
+        }
+
         _isActive = active;
         _slotUIRoot.SetActive(_isActive);
+        if (_containerAnim != null)
+        {
+            _containerAnim.TreggerToggle(_isActive);
+            if (!_isActive) { _containerAnim = null; }
+        }
     }
 
     public void SetSlotUI(int index, SlotData slot)
