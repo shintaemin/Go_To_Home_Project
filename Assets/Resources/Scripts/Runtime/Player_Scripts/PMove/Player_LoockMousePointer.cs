@@ -1,3 +1,4 @@
+using UnityEditor.ShaderGraph.Internal;
 using UnityEngine;
 
 #region 마우스포인터 바라보기
@@ -18,6 +19,8 @@ public class Player_LoockMousePointer : MonoBehaviour
     [SerializeField] private PlayerInputManager _im;
     [SerializeField] private LayerMask _layer;
     [SerializeField] private Vector2 _target;
+    [Header("옵션")]
+    [SerializeField] private float _rotSpeed = 15f;
     #endregion
 
     private void Awake()
@@ -54,7 +57,13 @@ public class Player_LoockMousePointer : MonoBehaviour
             {
                 Vector3 target = hit.point;
                 target.y = transform.position.y;
-                transform.LookAt(target);
+                Vector3 dir = target - transform.position;
+                if (dir != Vector3.zero)
+                {
+                    Quaternion rot = Quaternion.LookRotation(dir);
+                    float t = 1.0f - Mathf.Exp(-_rotSpeed * Time.deltaTime);
+                    transform.rotation = Quaternion.Slerp(transform.rotation, rot, t);
+                }
             }
         }
     }

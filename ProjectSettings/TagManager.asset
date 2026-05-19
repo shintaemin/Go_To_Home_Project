@@ -35,8 +35,8 @@ TagManager:
   - 
   - 
   - 
-  - 
-  - 
+  - NotWalkable
+  - Walkable
   - Interact
   - Ground
   m_SortingLayers:
