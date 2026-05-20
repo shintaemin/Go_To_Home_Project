@@ -99,10 +99,4 @@ public class Player_InteractFinder : MonoBehaviour
         UpdateFinder();
     }
     #endregion
-
-    private void OnDrawGizmos()
-    {
-        Gizmos.color = Color.red;
-        Gizmos.DrawWireSphere(transform.position, _distance / 2);
-    }
 }
