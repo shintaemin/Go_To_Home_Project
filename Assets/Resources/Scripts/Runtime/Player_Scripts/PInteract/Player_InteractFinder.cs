@@ -103,6 +103,6 @@ public class Player_InteractFinder : MonoBehaviour
     private void OnDrawGizmos()
     {
         Gizmos.color = Color.red;
-        Gizmos.DrawWireSphere(transform.position, _range);
+        Gizmos.DrawWireSphere(transform.position, _distance / 2);
     }
 }

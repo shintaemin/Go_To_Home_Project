@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6417180355769922135}
   - component: {fileID: -248143302625521070}
-  m_Layer: 30
+  m_Layer: 0
   m_Name: Glass_Door
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -64,7 +64,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2077655097234727234}
-  m_Layer: 30
+  m_Layer: 0
   m_Name: Door_Axis
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -220,7 +220,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 372702539829021566}
-  m_Layer: 30
+  m_Layer: 0
   m_Name: Filler
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -331,7 +331,7 @@ PrefabInstance:
     - target: {fileID: 1183892747771200184, guid: acbfeb26b5847054790bad6266d4ecd6,
         type: 3}
       propertyPath: m_Layer
-      value: 30
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -425,7 +425,7 @@ PrefabInstance:
     - target: {fileID: 1183892747771200184, guid: acbfeb26b5847054790bad6266d4ecd6,
         type: 3}
       propertyPath: m_Layer
-      value: 30
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -519,7 +519,7 @@ PrefabInstance:
     - target: {fileID: 1183892747771200184, guid: acbfeb26b5847054790bad6266d4ecd6,
         type: 3}
       propertyPath: m_Layer
-      value: 30
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -613,7 +613,7 @@ PrefabInstance:
     - target: {fileID: 1183892747771200184, guid: acbfeb26b5847054790bad6266d4ecd6,
         type: 3}
       propertyPath: m_Layer
-      value: 30
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 3537129656651278037, guid: acbfeb26b5847054790bad6266d4ecd6, type: 3}

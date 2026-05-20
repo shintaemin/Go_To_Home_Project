@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7824687677137738157}
   - component: {fileID: 1092242773167611792}
-  m_Layer: 30
+  m_Layer: 0
   m_Name: Door
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -63,7 +63,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6455406654033807904}
-  m_Layer: 30
+  m_Layer: 0
   m_Name: Door_Axis
   m_TagString: Untagged
   m_Icon: {fileID: 0}
