@@ -109,6 +109,10 @@ public class Interact_Container : MonoBehaviour, IInteract
         _containerUI.AllUpdata(_itemList);
     }
 
+    public string ViewText()
+    {
+        return "전리품 상자 : 열기 [F]";
+    }
     public bool AddItem(SlotData slot, int index)
     {
         ItemDataSO item = slot.GetItem; // 슬롯의 아이템
