@@ -23,6 +23,7 @@ public enum EControllMode
 {
     None,
     Playing,
+    Run,
     Inventory,
     Attack,
     AllLock,
@@ -200,9 +201,9 @@ public class Player_Controller : MonoBehaviour
         switch (state)
         {
             case EMovementState.Attack: mode = EControllMode.Attack; break;
-
+            case EMovementState.Run: mode = EControllMode.Run; break;
             case EMovementState.Idle:case EMovementState.Walk:
-            case EMovementState.Run: case EMovementState.Crouch:
+            case EMovementState.Crouch:
                 mode = EControllMode.Playing; break;
         }
 
@@ -218,6 +219,8 @@ public class Player_Controller : MonoBehaviour
         switch (state)
         {
             case EControllMode.Playing:   CanMove = true; CanRotate = true; CanAttack = true;    break;
+
+            case EControllMode.Run:       CanMove = true; CanRotate = false; CanAttack = true;   break;
 
             case EControllMode.Attack:    CanMove = false; CanRotate = true; CanAttack = true;   break;
 

@@ -10,9 +10,10 @@ TagManager:
   - Default
   - TransparentFX
   - Ignore Raycast
-  - 
+  - Player
   - Water
   - UI
+  - MainCamera
   - 
   - 
   - 
@@ -31,10 +32,9 @@ TagManager:
   - 
   - 
   - 
+  - CuttingObj
   - 
-  - 
-  - 
-  - 
+  - CuttingMask
   - NotWalkable
   - Walkable
   - Interact

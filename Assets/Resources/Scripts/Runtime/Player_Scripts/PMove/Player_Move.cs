@@ -80,6 +80,11 @@ public class Player_Move : MonoBehaviour
         // 좌우 * 속도 + 가져온 중력값
         Vector3 current = (moveDir * speed) + vertical;
 
+        if (_isRun)
+        {
+            Quaternion targetDir = Quaternion.LookRotation(moveDir);
+            transform.rotation = Quaternion.Slerp(transform.rotation, targetDir, speed);
+        }
         _controller.Move(current); // 이동
     }
 
