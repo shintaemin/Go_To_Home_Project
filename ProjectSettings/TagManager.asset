@@ -34,7 +34,7 @@ TagManager:
   - 
   - CuttingObj
   - 
-  - CuttingMask
+  - 
   - NotWalkable
   - Walkable
   - Interact
