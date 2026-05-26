@@ -24,6 +24,7 @@ public class Player_Interact : MonoBehaviour
         }
 
         _target.Interact();
+        GUtill.Log($"[{this.name}] : 상호작용 성공");
     }
 
     public void SetTarget(IInteract target) => _target = target;
