@@ -1,4 +1,6 @@
+using System.Collections;
 using UnityEngine;
+using static UnityEditor.PlayerSettings;
 
 #region 컨트롤러
 /*
@@ -54,10 +56,14 @@ public class Enemy_Controller : MonoBehaviour, ISoundListener
 
     private void Update()
     {
-        if (EnemyMoveState == EEnemyMoveState.Patroll)
+        if (_agentCS.TargetArrival()) // 목적지에 도착했고 플레이어 가 근처에없다면
         {
-            PatrollMove();
+            EnemyMoveState = EEnemyMoveState.Patroll;
+            _animCS.SetSpeedParam(EEnemyMoveAnim.Idle);
+            _nextPatrollTime = Time.time + _patrollInterval; // 다음 patroll 이동시간 지정
         }
+
+        PatrollMove();
 
     }
 
@@ -67,17 +73,22 @@ public class Enemy_Controller : MonoBehaviour, ISoundListener
         if (_animCS == null) { return; }
         if (_agentCS == null) { return; }
 
-        Vector3 targetPos;
-
-        if (Time.time >= _nextPatrollTime) 
+        if (Time.time >= _nextPatrollTime)
         {
-            targetPos = _patrollCS.GetRandomPatrollPos();
+            Vector3 targetPos = _patrollCS.GetRandomPatrollPos();
 
-            _nextPatrollTime = Time.time + _patrollInterval;
+            AgentMoveUpdeate(targetPos); // Agent 에 타겟 위치 전달
         }
-
-        
     }
+
+    private void TrackingMove(Vector3 pos)
+    {
+        EnemyMoveState = EEnemyMoveState.Tracking;
+
+        _agentCS.SetTargetPos(pos);
+        _animCS.SetSpeedParam(EEnemyMoveAnim.Fast);
+    }
+
     private void AgentMoveUpdeate(Vector3 pos)
     {
         _agentCS.SetTargetPos(pos);
@@ -91,9 +102,7 @@ public class Enemy_Controller : MonoBehaviour, ISoundListener
     }
     public void OnSoundListen(Vector3 soundPos)
     {
-        EnemyMoveState = EEnemyMoveState.Tracking;
-        _agentCS.SetTargetPos(soundPos);
-        _animCS.SetSpeedParam(EEnemyMoveAnim.Fast);
+        TrackingMove(soundPos);
     }
     #endregion
 }
