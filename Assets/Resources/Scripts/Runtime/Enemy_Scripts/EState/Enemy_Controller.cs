@@ -56,15 +56,13 @@ public class Enemy_Controller : MonoBehaviour, ISoundListener
 
     private void Update()
     {
-        if (_agentCS.TargetArrival()) // 목적지에 도착했고 플레이어 가 근처에없다면
+        if (_agentCS.TargetArrival()) // 목적지에 도착했다면
         {
             EnemyMoveState = EEnemyMoveState.Patroll;
             _animCS.SetSpeedParam(EEnemyMoveAnim.Idle);
-            _nextPatrollTime = Time.time + _patrollInterval; // 다음 patroll 이동시간 지정
         }
 
         PatrollMove();
-
     }
 
     private void PatrollMove()
@@ -77,7 +75,8 @@ public class Enemy_Controller : MonoBehaviour, ISoundListener
         {
             Vector3 targetPos = _patrollCS.GetRandomPatrollPos();
 
-            AgentMoveUpdeate(targetPos); // Agent 에 타겟 위치 전달
+            AgentMoveUpdeate(targetPos , EEnemyMoveAnim.Walk); // Agent 에 타겟 위치 전달
+            _nextPatrollTime = Time.time + _patrollInterval; // 다음 patroll 이동시간 지정
         }
     }
 
@@ -85,14 +84,13 @@ public class Enemy_Controller : MonoBehaviour, ISoundListener
     {
         EnemyMoveState = EEnemyMoveState.Tracking;
 
-        _agentCS.SetTargetPos(pos);
-        _animCS.SetSpeedParam(EEnemyMoveAnim.Fast);
+        AgentMoveUpdeate(pos, EEnemyMoveAnim.Fast);
     }
 
-    private void AgentMoveUpdeate(Vector3 pos)
+    private void AgentMoveUpdeate(Vector3 pos, EEnemyMoveAnim anim)
     {
         _agentCS.SetTargetPos(pos);
-        _animCS.SetSpeedParam(EEnemyMoveAnim.Walk);
+        _animCS.SetSpeedParam(anim);
     }
 
     #region 외부 호출 함수
