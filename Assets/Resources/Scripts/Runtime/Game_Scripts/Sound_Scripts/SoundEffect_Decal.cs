@@ -15,6 +15,7 @@ public class SoundEffect_Decal : MonoBehaviour
     [SerializeField] private GameObject _decalObj; // 데칼의 위치 이동 및 컴포넌트 캐싱을 위함
     [SerializeField] private DecalProjector _decal; // 쉐이더 그래프 데칼
     [SerializeField] private float _smooth = 3f;
+    [SerializeField] private LayerMask _listenerLayer;
 
     [Header("시간 옵션")]
     [SerializeField] private float _aliveTime;
@@ -107,6 +108,24 @@ public class SoundEffect_Decal : MonoBehaviour
         _decal.fadeFactor = 1.0f; // Fade 1설정
         _aliveTime = 0; // 생존시간 초기화
         _isPlaying = true ; // 데칼 플레이중
+
+        Collider[] colliders = Physics.OverlapSphere(_pos, Range, _listenerLayer);
+
+        foreach (var col in colliders)
+        {
+            ISoundListener listener = col.GetComponent<ISoundListener>();
+
+            if (listener == null)
+            {
+                listener = col.transform.root.GetComponent<ISoundListener>();
+            }
+
+            if (listener != null)
+            {
+                GUtill.Log($"[{this.name}] : 충돌 완료{col.name}");
+                listener.OnSoundListen(_pos);
+            }
+        }
     }
     #endregion
 }

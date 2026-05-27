@@ -25,10 +25,6 @@ public class SoundEffect_PoolManager : MonoBehaviour
 	private Queue<SoundEffect_Decal> _pool = new Queue<SoundEffect_Decal>();
     #endregion
 
-    #region ¿Ã∫•∆Æ
-    public event Action<Vector3, float> OnSoundEmited;
-    #endregion
-
     private void Awake()
     {
         if (Instance != null && Instance != this)
@@ -91,7 +87,6 @@ public class SoundEffect_PoolManager : MonoBehaviour
             decal.Pos = pos;
             decal.Range = range;
             decal.InitPlay();
-            OnSoundEmited?.Invoke(pos, range);
             _aliveList.Add(decal);
         }
         

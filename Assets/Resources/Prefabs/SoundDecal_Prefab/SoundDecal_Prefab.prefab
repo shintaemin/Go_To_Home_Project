@@ -48,6 +48,9 @@ MonoBehaviour:
   _decalObj: {fileID: 7299248585765265920}
   _decal: {fileID: 4026438751468893160}
   _smooth: 3
+  _listenerLayer:
+    serializedVersion: 2
+    m_Bits: 1024
   _aliveTime: 0
   _returnTime: 1
 --- !u!1 &7299248585765265920
