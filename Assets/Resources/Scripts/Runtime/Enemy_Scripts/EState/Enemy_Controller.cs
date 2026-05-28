@@ -1,6 +1,5 @@
 using System.Collections;
 using UnityEngine;
-using static UnityEditor.PlayerSettings;
 
 #region 컨트롤러
 /*
@@ -18,25 +17,23 @@ public enum EEnemyMoveState
     Dead,
 }
 
-public class Enemy_Controller : MonoBehaviour, ISoundListener
+public class Enemy_Controller : MonoBehaviour
 {
     #region 인스펙터
     [SerializeField] private EEnemyMoveState _moveState;
-
-    [Header("옵션")]
-    [SerializeField] private float _patrollInterval = 10.0f;
     #endregion
 
     #region 내부변수
     private Enemy_Patroll _patrollCS;
     private Enemy_Agent _agentCS;
     private Enemy_Anim _animCS;
-    private float _nextPatrollTime;
+    private Enemy_Tracking _trackingCS;
+    private Vector3 _lastPatrollPos;
     #endregion
 
     #region 프로퍼티
-    public EEnemyMoveState EnemyMoveState 
-    { 
+    public EEnemyMoveState EnemyMoveState
+    {
         get { return _moveState; }
         private set { _moveState = value; }
     }
@@ -47,46 +44,120 @@ public class Enemy_Controller : MonoBehaviour, ISoundListener
         GUtill.TryGetCS(this, ref _patrollCS);
         GUtill.TryGetCS(this, ref _agentCS);
         GUtill.TryGetCS(this, ref _animCS);
+        GUtill.TryGetCS(this, ref _trackingCS);
     }
-
+    private void OnEnable()
+    {
+        if (_trackingCS != null) { _trackingCS.OnSoundTracking += HandleOnSoundTracking; }
+        if (_agentCS != null) { _agentCS.OnTargetPosArrival += HandleOnTargetPosArrival; }
+    }
+    private void OnDestroy()
+    {
+        if (_trackingCS != null) { _trackingCS.OnSoundTracking -= HandleOnSoundTracking; }
+        if (_agentCS != null) { _agentCS.OnTargetPosArrival -= HandleOnTargetPosArrival; }
+    }
     private void Start()
     {
-        _nextPatrollTime = Time.time + _patrollInterval;
+        ReturnPatroll();
     }
+    private void HandleOnSoundTracking(Vector3 soundPos)
+    {
+        if (EnemyMoveState == EEnemyMoveState.Dead || EnemyMoveState == EEnemyMoveState.Combat) return;
 
+        if (EnemyMoveState == EEnemyMoveState.Patroll)
+        {
+            SetMoveState(EEnemyMoveState.Tracking);
+            _trackingCS.TrackingStart();
+        }
+    }
+    private void HandleOnTargetPosArrival()
+    {
+        switch(EnemyMoveState)
+        {
+            case EEnemyMoveState.Patroll:
+                _animCS.SetSpeedParam(EEnemyMoveAnim.Idle);
+                _patrollCS.PatrollWaitTimeUpdate(); 
+                break;
+            case EEnemyMoveState.Tracking:
+                if (_trackingCS.HasLiveTarget())
+                {
+                    // Combat 작업 전 테스팅용 3줄
+                    Debug.Log($"[{this.name}] : 전투 돌입!");
+                    _animCS.SetSpeedParam(EEnemyMoveAnim.Idle);
+                    ReturnPatroll();
+                }
+                else
+                {
+                    _animCS.SetSpeedParam(EEnemyMoveAnim.Idle);
+                    ReturnPatroll();
+                }
+                break;
+        }
+    }
     private void Update()
     {
-        if (_agentCS.TargetArrival()) // 목적지에 도착했다면
+        switch(EnemyMoveState)
         {
-            EnemyMoveState = EEnemyMoveState.Patroll;
-            _animCS.SetSpeedParam(EEnemyMoveAnim.Idle);
-        }
-
-        PatrollMove();
-    }
-
-    private void PatrollMove()
-    {
-        if (_patrollCS == null) { return; }
-        if (_animCS == null) { return; }
-        if (_agentCS == null) { return; }
-
-        if (Time.time >= _nextPatrollTime)
-        {
-            Vector3 targetPos = _patrollCS.GetRandomPatrollPos();
-
-            AgentMoveUpdeate(targetPos , EEnemyMoveAnim.Walk); // Agent 에 타겟 위치 전달
-            _nextPatrollTime = Time.time + _patrollInterval; // 다음 patroll 이동시간 지정
+            case EEnemyMoveState.Patroll: PatrollLoop(); break;
+            case EEnemyMoveState.Tracking: TrackingLoop(); break;
+            case EEnemyMoveState.Combat: CombatLoop(); break;
         }
     }
-
-    private void TrackingMove(Vector3 pos)
+    private void PatrollLoop()
     {
-        EnemyMoveState = EEnemyMoveState.Tracking;
+        if (_patrollCS == null || _agentCS == null || _animCS == null) { return; }
 
-        AgentMoveUpdeate(pos, EEnemyMoveAnim.Fast);
+        _trackingCS.UpdateTarget();
+        if (_trackingCS.HasLiveTarget())
+        {
+            _patrollCS.PatrollMoveActive(false);
+            SetMoveState(EEnemyMoveState.Tracking);
+            return;
+        }
+
+        _patrollCS.PatrollUpdate();
+
+        Vector3 patrollPos = _patrollCS.PatrollPos();
+        if (_lastPatrollPos != patrollPos)
+        {
+            _lastPatrollPos = patrollPos;
+            AgentMoveUpdeate(_lastPatrollPos, EEnemyMoveAnim.Walk);
+        }
     }
+    private void TrackingLoop()
+    {
+        if (_trackingCS == null || _agentCS == null || _animCS == null) { return; }
 
+        if (!_trackingCS.IsTargetTracking())
+        {
+            ReturnPatroll();
+            return;
+        }
+
+        _trackingCS.UpdateTarget();
+
+        Vector3 targetPos = _trackingCS.GetTargetPos();
+        if (targetPos != Vector3.zero)
+        {
+            Vector3 currentDest = _agentCS.GetComponent<UnityEngine.AI.NavMeshAgent>().destination;
+            if (Vector3.Distance(currentDest, targetPos) > 0.1f)
+            {
+                AgentMoveUpdeate(targetPos, EEnemyMoveAnim.Fast);
+            }
+        }
+    }
+    private void CombatLoop()
+    {
+
+    }
+    private void ReturnPatroll()
+    {
+        EnemyMoveState = EEnemyMoveState.Patroll;
+        _trackingCS.TargetClear();
+        _agentCS.StopMove();
+        _animCS.SetSpeedParam(EEnemyMoveAnim.Idle);
+        _patrollCS.PatrollMoveActive(true);
+    }
     private void AgentMoveUpdeate(Vector3 pos, EEnemyMoveAnim anim)
     {
         _agentCS.SetTargetPos(pos);
@@ -97,10 +168,10 @@ public class Enemy_Controller : MonoBehaviour, ISoundListener
     public void SetMoveState(EEnemyMoveState state)
     {
         EnemyMoveState = state;
-    }
-    public void OnSoundListen(Vector3 soundPos)
-    {
-        TrackingMove(soundPos);
+        if (state == EEnemyMoveState.Dead || state == EEnemyMoveState.Combat)
+        {
+            _agentCS?.StopMove();
+        }
     }
     #endregion
 }

@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -15,6 +16,14 @@ public class Enemy_Agent : MonoBehaviour
     [SerializeField] private NavMeshAgent _agent;
     #endregion
 
+    #region 내부변수
+    public bool _isMove;
+    #endregion
+
+    #region 이벤트
+    public event Action OnTargetPosArrival;
+    #endregion
+
     private void Awake()
     {
         if (_agent == null)
@@ -23,11 +32,30 @@ public class Enemy_Agent : MonoBehaviour
         }
     }
 
+    private void Update()
+    {
+        if (!_isMove) { return; }
+        if (_agent == null) { return; }
+        if (_agent.pathPending) { return; }
+
+        if (_agent.hasPath && _agent.remainingDistance <= _agent.stoppingDistance)
+        {
+            TargetArrival();
+            return;
+        }
+    }
+    private void TargetArrival()
+    {
+        StopMove();
+
+        OnTargetPosArrival?.Invoke();
+    }
     #region 외부 호출 함수
     public void SetTargetPos(Vector3 pos)
     {
         if (_agent == null) { return; }
 
+        _isMove = true;
         _agent.SetDestination(pos);
     }
     public void StopMove()
@@ -36,22 +64,9 @@ public class Enemy_Agent : MonoBehaviour
 
         _agent.velocity = Vector3.zero;
         _agent.ResetPath();
+        _isMove = false;
     }
-    public bool TargetArrival()
-    {
-        if (_agent == null) { return false; }
-        if (_agent.pathPending) { return false; }
-
-        if (_agent.remainingDistance <= _agent.stoppingDistance)
-        {
-            if (!_agent.hasPath || _agent.velocity.sqrMagnitude == 0f)
-            {
-                return true;
-            }
-        }
-
-        return false;
-    }
+   
     public void SetSpeed(float speed)
     {
         if (_agent == null) { return; }
