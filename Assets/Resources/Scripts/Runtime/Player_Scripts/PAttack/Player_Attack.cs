@@ -20,7 +20,6 @@ public class Player_Attack : MonoBehaviour
 {
     #region 인스펙터
     [SerializeField] private LayerMask _targetLayer;
-    [SerializeField] private float _testAttackDis = 2.0f;
     [SerializeField] private float _attackWidth = 2.0f; // 공격 범위의 좌우 총 가로폭 (미터)
     [SerializeField] private float _attackDepth = 3.0f; // 공격 범위의 앞방향 총 깊이 (미터)
     #endregion

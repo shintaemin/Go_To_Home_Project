@@ -222,7 +222,7 @@ public class Player_Controller : MonoBehaviour
 
             case EControllMode.Run:       CanMove = true; CanRotate = false; CanAttack = true;   break;
 
-            case EControllMode.Attack:    CanMove = false; CanRotate = true; CanAttack = true;   break;
+            case EControllMode.Attack:    CanMove = false; CanRotate = false; CanAttack = true;   break;
 
             case EControllMode.Inventory: CanMove = false; CanRotate = false; CanAttack = false; break;
 
