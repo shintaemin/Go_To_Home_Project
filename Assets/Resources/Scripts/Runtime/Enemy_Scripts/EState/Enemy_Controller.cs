@@ -60,14 +60,22 @@ public class Enemy_Controller : MonoBehaviour
         if (_trackingCS != null) { _trackingCS.OnSoundTracking += HandleOnSoundTracking; }
         if (_agentCS != null) { _agentCS.OnTargetPosArrival += HandleOnTargetPosArrival; }
         if (_combatCS != null) { _combatCS.OnTryAttack += HandleOnAttack; }
-        if (_healthCS != null) { _healthCS.OnDead += HandleOnDead; }
+        if (_healthCS != null) 
+        { 
+            _healthCS.OnDead += HandleOnDead; 
+            // hit 이벤트 구독
+        }
     }
     private void DiscriptEvent()
     {
         if (_trackingCS != null) { _trackingCS.OnSoundTracking -= HandleOnSoundTracking; }
         if (_agentCS != null) { _agentCS.OnTargetPosArrival -= HandleOnTargetPosArrival; }
         if (_combatCS != null) { _combatCS.OnTryAttack -= HandleOnAttack; }
-        if (_healthCS != null) { _healthCS.OnDead -= HandleOnDead; }
+        if (_healthCS != null) 
+        { 
+            _healthCS.OnDead -= HandleOnDead;
+            // hit 이벤트 구독
+        }
     }
     private void HandleOnSoundTracking(Vector3 soundPos)
     {

@@ -13,6 +13,7 @@ public enum EEnemyAnimTrigger
     Attack,
     Death,
     Wake,
+    Hit,
 }
 
 public enum EEnemyMoveAnim
@@ -36,6 +37,7 @@ public class Enemy_Anim : MonoBehaviour
     [SerializeField] private string _attackParam = "tAttack";
     [SerializeField] private string _deathParam = "tDeath";
     [SerializeField] private string _wakeParam = "tWake";
+    [SerializeField] private string _hitParam = "tHit";
 
     [SerializeField] private float _updateSpeed = 5.0f;
     #endregion
@@ -46,6 +48,7 @@ public class Enemy_Anim : MonoBehaviour
     private int _attackHash;
     private int _deathHash;
     private int _wakeHash;
+    private int _hitHash;
 
     private Enemy_Controller _controllerCS;
     #endregion
@@ -77,6 +80,7 @@ public class Enemy_Anim : MonoBehaviour
         _attackHash = Animator.StringToHash(_attackParam);
         _deathHash = Animator.StringToHash(_deathParam);
         _wakeHash = Animator.StringToHash(_wakeParam);
+        _hitHash = Animator.StringToHash(_hitParam);
     }
     private void InjectAnimationEvents()
     {
@@ -129,6 +133,7 @@ public class Enemy_Anim : MonoBehaviour
                 break;
             case EEnemyAnimTrigger.Death: hash = _deathHash; break;
             case EEnemyAnimTrigger.Wake: hash = _wakeHash; break;
+            case EEnemyAnimTrigger.Hit: hash = _hitHash; break;
         }
 
         if (hash != 0) { _anim.SetTrigger(hash); }

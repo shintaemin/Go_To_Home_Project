@@ -28,6 +28,7 @@ public class Enemy_Health : MonoBehaviour
     #endregion
 
     #region ¿Ã∫•∆Æ
+    public event Action OnHit;
     public event Action OnDead;
     #endregion
 
@@ -41,6 +42,7 @@ public class Enemy_Health : MonoBehaviour
     {
         HP = Mathf.Max(HP - damage, 0);
 
+        OnHit?.Invoke();
         if (HP <= 0)
         {
             OnDead?.Invoke();
