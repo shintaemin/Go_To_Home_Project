@@ -46,6 +46,8 @@ public class Enemy_Anim : MonoBehaviour
     private int _attackHash;
     private int _deathHash;
     private int _wakeHash;
+
+    private Enemy_Controller _controllerCS;
     #endregion
 
     private void Awake()
@@ -54,6 +56,10 @@ public class Enemy_Anim : MonoBehaviour
         {
             GUtill.TryGetCS(this, ref _anim);
         }
+        if (_controllerCS == null)
+        {
+            GUtill.TryGetCS(this, ref _controllerCS);
+        }
 
         RuntimeAnimatorController[] controllers = Resources.LoadAll<RuntimeAnimatorController>(_controllersPath);
 
@@ -61,6 +67,8 @@ public class Enemy_Anim : MonoBehaviour
         {
             int random = Random.Range(0, controllers.Length);
             _anim.runtimeAnimatorController = controllers[random];
+
+            InjectAnimationEvents();
         }
 
 
@@ -70,7 +78,28 @@ public class Enemy_Anim : MonoBehaviour
         _deathHash = Animator.StringToHash(_deathParam);
         _wakeHash = Animator.StringToHash(_wakeParam);
     }
+    private void InjectAnimationEvents()
+    {
+        if (_anim == null || _anim.runtimeAnimatorController == null) return;
 
+        // 현재 랜덤 주입된 컨트롤러 안의 모든 애니메이션 클립 배열을 가져옵니다.
+        AnimationClip[] clips = _anim.runtimeAnimatorController.animationClips;
+
+        foreach (AnimationClip clip in clips)
+        {
+            // 중복 주입 방지를 위해 기존 이벤트 찌꺼기를 한 번 청소합니다.
+            clip.events = null;
+
+            if (clip.name.Contains("death"))
+            {
+                // 3. 사망 마감 이벤트 생성 (맨 마지막 프레임에 강제 위치 배치)
+                AnimationEvent deathLastEvent = new AnimationEvent();
+                deathLastEvent.time = clip.length; // 클립 총 길이(맨 끝)를 타임으로 지정
+                deathLastEvent.functionName = nameof(AnimEvent_DeathLastFrame);
+                clip.AddEvent(deathLastEvent);
+            }
+        }
+    }
     private void Update()
     {
         if (_anim == null) { return; }
@@ -118,6 +147,17 @@ public class Enemy_Anim : MonoBehaviour
         }
 
         _targetSpeed = speed;
+    }
+    public void AnimEvent_DeathLastFrame()
+    {
+        if (_controllerCS != null)
+        {
+            _controllerCS.DeathLastFrame();
+        }
+        else
+        {
+            Destroy(transform.root.gameObject);
+        }
     }
     #endregion
 }

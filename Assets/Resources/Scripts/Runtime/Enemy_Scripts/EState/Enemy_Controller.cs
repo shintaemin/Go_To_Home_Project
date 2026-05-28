@@ -1,4 +1,3 @@
-using System.Collections;
 using UnityEngine;
 
 #region 컨트롤러
@@ -28,6 +27,8 @@ public class Enemy_Controller : MonoBehaviour
     private Enemy_Agent _agentCS;
     private Enemy_Anim _animCS;
     private Enemy_Tracking _trackingCS;
+    private Enemy_Combat _combatCS;
+    private Enemy_Health _healthCS;
     private Vector3 _lastPatrollPos;
     #endregion
 
@@ -41,24 +42,32 @@ public class Enemy_Controller : MonoBehaviour
 
     private void Awake()
     {
-        GUtill.TryGetCS(this, ref _patrollCS);
-        GUtill.TryGetCS(this, ref _agentCS);
-        GUtill.TryGetCS(this, ref _animCS);
-        GUtill.TryGetCS(this, ref _trackingCS);
+        GUtill.TryGetCS(this, ref _patrollCS); GUtill.TryGetCS(this, ref _agentCS); 
+        GUtill.TryGetCS(this, ref _animCS);    GUtill.TryGetCS(this, ref _trackingCS); 
+        GUtill.TryGetCS(this, ref _combatCS);  GUtill.TryGetCS(this, ref _healthCS);
     }
+    #region 각 이벤트 구독
     private void OnEnable()
+    {
+        SubscriptEvent();
+    }
+    private void OnDisable()
+    {
+        DiscriptEvent();
+    }
+    private void SubscriptEvent()
     {
         if (_trackingCS != null) { _trackingCS.OnSoundTracking += HandleOnSoundTracking; }
         if (_agentCS != null) { _agentCS.OnTargetPosArrival += HandleOnTargetPosArrival; }
+        if (_combatCS != null) { _combatCS.OnTryAttack += HandleOnAttack; }
+        if (_healthCS != null) { _healthCS.OnDead += HandleOnDead; }
     }
-    private void OnDestroy()
+    private void DiscriptEvent()
     {
         if (_trackingCS != null) { _trackingCS.OnSoundTracking -= HandleOnSoundTracking; }
         if (_agentCS != null) { _agentCS.OnTargetPosArrival -= HandleOnTargetPosArrival; }
-    }
-    private void Start()
-    {
-        ReturnPatroll();
+        if (_combatCS != null) { _combatCS.OnTryAttack -= HandleOnAttack; }
+        if (_healthCS != null) { _healthCS.OnDead -= HandleOnDead; }
     }
     private void HandleOnSoundTracking(Vector3 soundPos)
     {
@@ -72,19 +81,16 @@ public class Enemy_Controller : MonoBehaviour
     }
     private void HandleOnTargetPosArrival()
     {
-        switch(EnemyMoveState)
+        switch (EnemyMoveState)
         {
             case EEnemyMoveState.Patroll:
                 _animCS.SetSpeedParam(EEnemyMoveAnim.Idle);
-                _patrollCS.PatrollWaitTimeUpdate(); 
+                _patrollCS.PatrollWaitTimeUpdate();
                 break;
             case EEnemyMoveState.Tracking:
                 if (_trackingCS.HasLiveTarget())
                 {
-                    // Combat 작업 전 테스팅용 3줄
-                    Debug.Log($"[{this.name}] : 전투 돌입!");
-                    _animCS.SetSpeedParam(EEnemyMoveAnim.Idle);
-                    ReturnPatroll();
+                    SetMoveState(EEnemyMoveState.Combat);
                 }
                 else
                 {
@@ -94,8 +100,40 @@ public class Enemy_Controller : MonoBehaviour
                 break;
         }
     }
+    private void HandleOnAttack()
+    {
+        if (EnemyMoveState == EEnemyMoveState.Dead) return;
+
+        _animCS.TriggerAnim(EEnemyAnimTrigger.Attack);
+    }
+    private void HandleOnDead()
+    {
+        if (_patrollCS == null || _trackingCS == null || _agentCS == null || _animCS == null || _combatCS == null) { return; }
+
+        _agentCS.StopMove();
+        _trackingCS.TargetClear();
+        _combatCS.CombatActive(false);
+        _patrollCS.PatrollMoveActive(false);
+        SetMoveState(EEnemyMoveState.Dead);
+        DiscriptEvent();
+
+        _agentCS.enabled = false;
+        _trackingCS.enabled = false;
+        _combatCS.enabled = false;
+        _patrollCS.enabled = false;
+        _healthCS.enabled = false;
+        _animCS.TriggerAnim(EEnemyAnimTrigger.Death);
+    }
+    #endregion
+    private void Start()
+    {
+        ReturnPatroll();
+    }
     private void Update()
     {
+        if (_patrollCS == null || _trackingCS == null || _agentCS == null || _animCS == null || _combatCS == null) { return; }
+        if (EnemyMoveState == EEnemyMoveState.Dead) { return; }
+
         switch(EnemyMoveState)
         {
             case EEnemyMoveState.Patroll: PatrollLoop(); break;
@@ -105,8 +143,6 @@ public class Enemy_Controller : MonoBehaviour
     }
     private void PatrollLoop()
     {
-        if (_patrollCS == null || _agentCS == null || _animCS == null) { return; }
-
         _trackingCS.UpdateTarget();
         if (_trackingCS.HasLiveTarget())
         {
@@ -126,8 +162,6 @@ public class Enemy_Controller : MonoBehaviour
     }
     private void TrackingLoop()
     {
-        if (_trackingCS == null || _agentCS == null || _animCS == null) { return; }
-
         if (!_trackingCS.IsTargetTracking())
         {
             ReturnPatroll();
@@ -148,7 +182,28 @@ public class Enemy_Controller : MonoBehaviour
     }
     private void CombatLoop()
     {
+        if (!_trackingCS.IsTargetTracking())
+        {
+            _combatCS.CombatActive(false);
+            ReturnPatroll();
+            return;
+        }
 
+        Transform target = _trackingCS.GetTarget();
+        if (target == null)
+        {
+            _combatCS.CombatActive(false);
+            ReturnPatroll();
+            return;
+        }
+        if (_combatCS.OutOfTarget(target))
+        {
+            _combatCS.CombatActive(false);
+            SetMoveState(EEnemyMoveState.Tracking);
+            return;
+        }
+
+        _combatCS.CombatUpdate(target);
     }
     private void ReturnPatroll()
     {
@@ -163,15 +218,20 @@ public class Enemy_Controller : MonoBehaviour
         _agentCS.SetTargetPos(pos);
         _animCS.SetSpeedParam(anim);
     }
-
-    #region 외부 호출 함수
-    public void SetMoveState(EEnemyMoveState state)
+    private void SetMoveState(EEnemyMoveState state)
     {
         EnemyMoveState = state;
-        if (state == EEnemyMoveState.Dead || state == EEnemyMoveState.Combat)
+        if (EnemyMoveState == EEnemyMoveState.Dead || EnemyMoveState == EEnemyMoveState.Combat)
         {
             _agentCS?.StopMove();
         }
+    }
+    #region 외부 호출 함수
+    public void DeathLastFrame()
+    {
+        _animCS.enabled = false;
+        Destroy(this.gameObject);
+        this.enabled = false;
     }
     #endregion
 }

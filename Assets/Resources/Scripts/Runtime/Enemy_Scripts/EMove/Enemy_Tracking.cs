@@ -122,6 +122,10 @@ public class Enemy_Tracking : MonoBehaviour, ISoundListener
         if (_isSoundTracking) { return _soundPos; }
         return Vector3.zero;
     }
+    public Transform GetTarget()
+    {
+        return _target;
+    }
     public void TargetClear()
     {
         if (_trackingAnimCo != null)

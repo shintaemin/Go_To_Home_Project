@@ -17,21 +17,51 @@ public class Enemy_Combat : MonoBehaviour
     #endregion
 
     #region 내부 변수
-
+    private float _nextAttackTime;
+    private bool _isCombatActive;
     #endregion
 
     #region 이벤트
-    public event Action OnAttack;
+    public event Action OnTryAttack;
     #endregion
 
     #region 외부 호출 함수
-    public void CombatActive()
+    public void CombatActive(bool active)
     {
-
+        _isCombatActive = active;
+        if (_isCombatActive)
+        {
+            _nextAttackTime = Time.time;
+        }
     }
-    public void CombatUpdate()
+    public void CombatUpdate(Transform target)
     {
+        Vector3 targetPos = target.position;
+        Vector3 dir = (targetPos - transform.position).normalized;
+        dir.y = 0;
+        if (dir != Vector3.zero)
+        {
+            Quaternion start = transform.rotation;
+            Quaternion end = Quaternion.LookRotation(dir);
+            float t = 1.0f - Mathf.Exp(-_rotationSpeed * Time.deltaTime);
+            transform.rotation = Quaternion.Slerp(start, end, t);
+        }
 
+        if (!OutOfTarget(target) && Time.time >= _nextAttackTime)
+        {
+            OnTryAttack?.Invoke();
+            
+            _nextAttackTime = Time.time + _attackCoolDown;
+        }
+    }
+    public bool OutOfTarget(Transform target)
+    {
+        float dis = Vector3.Distance(transform.position, target.position);
+        if (dis >= _attackDistance)
+        {
+            return true;
+        }
+        return false;
     }
     #endregion
 

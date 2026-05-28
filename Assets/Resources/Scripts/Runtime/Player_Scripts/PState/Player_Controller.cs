@@ -35,7 +35,7 @@ public class Player_Controller : MonoBehaviour
     [SerializeField] private EMovementState _state;
     [SerializeField] private EControllMode _controlMode;
 
-    [SerializeField] private Player_State _stateCS;
+    [SerializeField] private Player_Health _healthCS;
     [SerializeField] private Player_Move _moveCS;
     [SerializeField] private Player_Anim _animCS;
     [SerializeField] private Player_Sound _soundCS;
@@ -157,9 +157,9 @@ public class Player_Controller : MonoBehaviour
 
     private void Awake()
     {
-        GUtill.TryGetCS(this, ref _stateCS);     GUtill.TryGetCS(this, ref _moveCS);   GUtill.TryGetCS(this, ref _animCS);
-        GUtill.TryGetCS(this, ref _steminaCS);   GUtill.TryGetCS(this, ref _attackCS); GUtill.TryGetCS(this, ref _interactCS);
-        GUtill.TryGetCS(this, ref _rotateCS);    GUtill.TryGetCS(this, ref _finderCS); GUtill.TryGetCS(this, ref _soundCS);
+        GUtill.TryGetCS(this, ref _moveCS);     GUtill.TryGetCS(this, ref _animCS);     GUtill.TryGetCS(this, ref _soundCS);
+        GUtill.TryGetCS(this, ref _steminaCS);  GUtill.TryGetCS(this, ref _attackCS);   GUtill.TryGetCS(this, ref _interactCS);
+        GUtill.TryGetCS(this, ref _rotateCS);   GUtill.TryGetCS(this, ref _finderCS);   GUtill.TryGetCS(this, ref _healthCS);
     }
 
     private void Update()
