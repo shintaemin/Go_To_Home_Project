@@ -60,10 +60,10 @@ public class Enemy_Controller : MonoBehaviour
         if (_trackingCS != null) { _trackingCS.OnSoundTracking += HandleOnSoundTracking; }
         if (_agentCS != null) { _agentCS.OnTargetPosArrival += HandleOnTargetPosArrival; }
         if (_combatCS != null) { _combatCS.OnTryAttack += HandleOnAttack; }
-        if (_healthCS != null) 
-        { 
-            _healthCS.OnDead += HandleOnDead; 
-            // hit 이벤트 구독
+        if (_healthCS != null)
+        {
+            _healthCS.OnHit += HandleOnHit;
+            _healthCS.OnDead += HandleOnDead;
         }
     }
     private void DiscriptEvent()
@@ -71,10 +71,10 @@ public class Enemy_Controller : MonoBehaviour
         if (_trackingCS != null) { _trackingCS.OnSoundTracking -= HandleOnSoundTracking; }
         if (_agentCS != null) { _agentCS.OnTargetPosArrival -= HandleOnTargetPosArrival; }
         if (_combatCS != null) { _combatCS.OnTryAttack -= HandleOnAttack; }
-        if (_healthCS != null) 
-        { 
+        if (_healthCS != null)
+        {
+            _healthCS.OnHit -= HandleOnHit;
             _healthCS.OnDead -= HandleOnDead;
-            // hit 이벤트 구독
         }
     }
     private void HandleOnSoundTracking(Vector3 soundPos)
@@ -89,6 +89,8 @@ public class Enemy_Controller : MonoBehaviour
     }
     private void HandleOnTargetPosArrival()
     {
+        if (EnemyMoveState == EEnemyMoveState.Dead) return;
+
         switch (EnemyMoveState)
         {
             case EEnemyMoveState.Patroll:
@@ -99,6 +101,7 @@ public class Enemy_Controller : MonoBehaviour
                 if (_trackingCS.HasLiveTarget())
                 {
                     SetMoveState(EEnemyMoveState.Combat);
+                    _combatCS.CombatActive(true, _trackingCS.GetTarget());
                 }
                 else
                 {
@@ -113,6 +116,15 @@ public class Enemy_Controller : MonoBehaviour
         if (EnemyMoveState == EEnemyMoveState.Dead) return;
 
         _animCS.TriggerAnim(EEnemyAnimTrigger.Attack);
+    }
+    private void HandleOnHit()
+    {
+        if (EnemyMoveState == EEnemyMoveState.Dead) return;
+
+        _agentCS.StopMove();
+        _combatCS.CombatActive(false);
+        _animCS.TriggerAnim(EEnemyAnimTrigger.Hit);
+        SetMoveState(EEnemyMoveState.Tracking);
     }
     private void HandleOnDead()
     {
@@ -165,11 +177,20 @@ public class Enemy_Controller : MonoBehaviour
         if (_lastPatrollPos != patrollPos)
         {
             _lastPatrollPos = patrollPos;
+            float speed = _animCS.CanFastMove() ? 5f : 3f;
+            _agentCS.SetSpeed(speed);
             AgentMoveUpdeate(_lastPatrollPos, EEnemyMoveAnim.Walk);
         }
     }
     private void TrackingLoop()
     {
+        if (_trackingCS.IsTrackingAnimPlaying()) 
+        {
+            _agentCS.StopMove();
+            _animCS.SetSpeedParam(EEnemyMoveAnim.Idle);
+            return; 
+        }
+
         if (!_trackingCS.IsTargetTracking())
         {
             ReturnPatroll();
@@ -184,6 +205,8 @@ public class Enemy_Controller : MonoBehaviour
             Vector3 currentDest = _agentCS.GetComponent<UnityEngine.AI.NavMeshAgent>().destination;
             if (Vector3.Distance(currentDest, targetPos) > 0.1f)
             {
+                float speed = _animCS.CanFastMove() ? 7f : 5f;
+                _agentCS.SetSpeed(speed);
                 AgentMoveUpdeate(targetPos, EEnemyMoveAnim.Fast);
             }
         }
@@ -206,12 +229,12 @@ public class Enemy_Controller : MonoBehaviour
         }
         if (_combatCS.OutOfTarget(target))
         {
-            _combatCS.CombatActive(false);
+            _combatCS.CombatActive(false, target);
             SetMoveState(EEnemyMoveState.Tracking);
             return;
         }
 
-        _combatCS.CombatUpdate(target);
+        _combatCS.CombatUpdate();
     }
     private void ReturnPatroll()
     {

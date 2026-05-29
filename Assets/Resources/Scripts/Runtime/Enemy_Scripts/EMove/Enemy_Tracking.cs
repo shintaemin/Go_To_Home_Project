@@ -16,7 +16,7 @@ public class Enemy_Tracking : MonoBehaviour, ISoundListener
     [SerializeField] private float _minDistance = 3f;
     [SerializeField] private float _maxDistance = 15f;
     [SerializeField] private LayerMask _searchLayer;
-    [SerializeField] private float _trackingWaitTime = 2f;
+    [SerializeField] private float _trackingWaitTime = 0.5f;
     #endregion
 
     #region 내부 변수
@@ -24,7 +24,7 @@ public class Enemy_Tracking : MonoBehaviour, ISoundListener
     private Vector3 _soundPos;
     private bool _isSoundTracking;
     private Coroutine _trackingAnimCo;
-    private bool _isTrackingAnim;
+    private bool _isTrackingAnim = false;
     #endregion
 
     #region 이벤트
@@ -51,7 +51,7 @@ public class Enemy_Tracking : MonoBehaviour, ISoundListener
             }
         }
         
-        // 여기서 적감지 코루틴 재생 및 빨간 ! 띄우기
+        // 여기서 적감지 빨간 ! 띄우기
 
         return target;
     }
@@ -59,14 +59,28 @@ public class Enemy_Tracking : MonoBehaviour, ISoundListener
     private IEnumerator CoTrackingAnim()
     {
         _isTrackingAnim = true;
-        float t = 0;
+        float time = 0;
 
         // 여기서 ! 노란색 UI띄우기
         GUtill.Log($"[{this.name}] : 사운드 감지!");
 
-        while (t < _trackingWaitTime)
+        while (time < _trackingWaitTime)
         {
-            t += Time.deltaTime;
+            time += Time.deltaTime;
+
+            Vector3 target = _target == null ? _soundPos : _target.position;
+            Vector3 dir = target - transform.position;
+            dir.y = 0;
+
+            if (dir.sqrMagnitude > 0.001f)
+            {
+                dir.Normalize();
+                Quaternion start = transform.rotation;
+                Quaternion end = Quaternion.LookRotation(dir);
+                float t = 1.0f - MathF.Exp(-10f * Time.deltaTime);
+                transform.rotation = Quaternion.Slerp(start, end, t);
+            }
+
             yield return null;
         }
 
@@ -91,7 +105,7 @@ public class Enemy_Tracking : MonoBehaviour, ISoundListener
         if (_isTrackingAnim) { return; }
 
         Transform target = TargetSearch();
-        if (target != null || !_isTrackingAnim)
+        if (target != null)
         {
             _target = target;
             _isSoundTracking = false;
@@ -149,6 +163,10 @@ public class Enemy_Tracking : MonoBehaviour, ISoundListener
     {
         if (_target == null) { return false; }
         return true;
+    }
+    public bool IsTrackingAnimPlaying()
+    {
+        return _isTrackingAnim;
     }
     #endregion
 }

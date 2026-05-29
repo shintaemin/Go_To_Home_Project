@@ -1,3 +1,4 @@
+using Unity.VisualScripting;
 using UnityEngine;
 
 #region 애니메이션
@@ -50,7 +51,9 @@ public class Enemy_Anim : MonoBehaviour
     private int _wakeHash;
     private int _hitHash;
 
+    private bool _canRun;
     private Enemy_Controller _controllerCS;
+    private Enemy_Combat _combatCS;
     #endregion
 
     private void Awake()
@@ -63,13 +66,20 @@ public class Enemy_Anim : MonoBehaviour
         {
             GUtill.TryGetCS(this, ref _controllerCS);
         }
+        if (_combatCS == null)
+        {
+            GUtill.TryGetCS(this, ref _combatCS);
+        }
 
         RuntimeAnimatorController[] controllers = Resources.LoadAll<RuntimeAnimatorController>(_controllersPath);
 
         if (controllers.Length != 0)
         {
             int random = Random.Range(0, controllers.Length);
-            _anim.runtimeAnimatorController = controllers[random];
+            RuntimeAnimatorController selectController = controllers[random];
+            _anim.runtimeAnimatorController = selectController;
+
+            _canRun = selectController.name.Contains("fast");
 
             InjectAnimationEvents();
         }
@@ -102,6 +112,13 @@ public class Enemy_Anim : MonoBehaviour
                 deathLastEvent.functionName = nameof(AnimEvent_DeathLastFrame);
                 clip.AddEvent(deathLastEvent);
             }
+            if (clip.name.Contains("attack"))
+            {
+                AnimationEvent attackHitEvent = new AnimationEvent();
+                attackHitEvent.time = clip.length * 0.45f;
+                attackHitEvent.functionName = nameof(AnimEvent_AttackHit);
+                clip.AddEvent(attackHitEvent);
+            }
         }
     }
     private void Update()
@@ -109,12 +126,13 @@ public class Enemy_Anim : MonoBehaviour
         if (_anim == null) { return; }
         if (Mathf.Approximately(_speed, _targetSpeed)) { return; }
 
-        float start = _speed;
-        float end = _targetSpeed;
-        float t = 1.0f - Mathf.Exp(-_updateSpeed * Time.deltaTime);
-        float current = Mathf.Lerp(start, end, t);
+        _speed = Mathf.Lerp(_speed, _targetSpeed, _updateSpeed * Time.deltaTime);
 
-        _speed = current;
+        if (Mathf.Abs(_speed - _targetSpeed) < 0.01f)
+        {
+            _speed = _targetSpeed;
+        }
+        _speed = Mathf.Clamp01(_speed);
 
         _anim.SetFloat(_speedHash, _speed);
     }
@@ -140,18 +158,12 @@ public class Enemy_Anim : MonoBehaviour
     }
     public void SetSpeedParam(EEnemyMoveAnim anim)
     {
-        if (_anim == null) { return; }
-
-        float speed = 0;
-
         switch(anim)
         {
-            case EEnemyMoveAnim.Idle: speed = 0; break;
-            case EEnemyMoveAnim.Walk: speed = 0.5f; break;
-            case EEnemyMoveAnim.Fast: speed = 1f; break;
+            case EEnemyMoveAnim.Idle: _targetSpeed = 0; break;
+            case EEnemyMoveAnim.Walk: _targetSpeed = 0.5f; break;
+            case EEnemyMoveAnim.Fast: _targetSpeed = 1f; break;
         }
-
-        _targetSpeed = speed;
     }
     public void AnimEvent_DeathLastFrame()
     {
@@ -163,6 +175,21 @@ public class Enemy_Anim : MonoBehaviour
         {
             Destroy(transform.root.gameObject);
         }
+    }
+    public void AnimEvent_AttackHit()
+    {
+        if (_combatCS != null)
+        {
+            _combatCS.AnimEvent_AttackHit();
+        }
+        else
+        {
+            GUtill.Log($"[{this.name}] : Enemy_Combat 컴포넌트를 찾을 수 없어 타격 판정을 스킵합니다.", EDebugType.Warn);
+        }
+    }
+    public bool CanFastMove()
+    {
+        return _canRun;
     }
     #endregion
 }

@@ -42,10 +42,13 @@ public class Enemy_Health : MonoBehaviour
     {
         HP = Mathf.Max(HP - damage, 0);
 
-        OnHit?.Invoke();
         if (HP <= 0)
         {
             OnDead?.Invoke();
+        }
+        else
+        {
+            OnHit?.Invoke();
         }
     }
     #endregion

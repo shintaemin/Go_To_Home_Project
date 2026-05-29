@@ -10,7 +10,6 @@ using UnityEngine;
 */
 #endregion
 
-
 public class Player_Stemina : MonoBehaviour
 {
     public enum ESteminaState
@@ -69,6 +68,12 @@ public class Player_Stemina : MonoBehaviour
                 _decreaseStateTime = 0;
             }
         }
+
+        // 테스트용
+        if (Input.GetKeyDown(KeyCode.O))
+        {
+            AddStemina(_data.GetMaxStemina);
+        }
     }
 
     private ESteminaState TrangitionState(EMovementState moveState)
@@ -114,7 +119,11 @@ public class Player_Stemina : MonoBehaviour
         stemina = Mathf.Clamp(stemina, 0, 100);
 
         _data.Stemina = stemina;
-        GUtill.Log($"[{this.name}] : 현재 증가 현재 : {stemina}");
+
+        if (stemina % 5 == 0)
+        {
+            GUtill.Log($"[{this.name}] : 스테미나 증가 현재 : {_data.Stemina}");
+        }
     }
 
     public void DecreaseStemina(int value)
@@ -135,7 +144,10 @@ public class Player_Stemina : MonoBehaviour
         stemina = Mathf.Clamp(stemina, 0, 100);
 
         _data.Stemina = stemina;
-        GUtill.Log($"[{this.name}] : 현재 감소 현재 : {stemina}");
+        if ( stemina % 5 == 0)
+        {
+            GUtill.Log($"[{this.name}] : 스테미나 감소 현재 : {_data.Stemina}");
+        }
     }
 
     public void SetState(EMovementState moveState)

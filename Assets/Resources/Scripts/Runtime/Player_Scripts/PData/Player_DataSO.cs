@@ -50,6 +50,9 @@ public class Player_DataSO : ScriptableObject
     public int GetSteminaDecreaceCost => _steminaDecreaceCost;
     public int GetSteminaAttackCost => _steminaAttaceCost;
 
+    public int GetMaxHP => _maxHP;
+    public int GetMaxStemina => _maxStemina;
+
     public void InitData()
     {
         HP = Mathf.Clamp(_testStartHP, 0, _maxHP);

@@ -5077,7 +5077,7 @@ PrefabInstance:
     - target: {fileID: 1936453167366925098, guid: ed4b7eb6080d7504da19d900be229dee,
         type: 3}
       propertyPath: m_Layer
-      value: 3
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1937957549344457578, guid: ed4b7eb6080d7504da19d900be229dee,
         type: 3}
@@ -5122,7 +5122,7 @@ PrefabInstance:
     - target: {fileID: 2657301947532617426, guid: ed4b7eb6080d7504da19d900be229dee,
         type: 3}
       propertyPath: m_Layer
-      value: 3
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2806820541587932799, guid: ed4b7eb6080d7504da19d900be229dee,
         type: 3}
@@ -5132,7 +5132,7 @@ PrefabInstance:
     - target: {fileID: 2984173756424729759, guid: ed4b7eb6080d7504da19d900be229dee,
         type: 3}
       propertyPath: m_Layer
-      value: 3
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3003886430246639751, guid: ed4b7eb6080d7504da19d900be229dee,
         type: 3}
@@ -5142,7 +5142,7 @@ PrefabInstance:
     - target: {fileID: 3209214757779912179, guid: ed4b7eb6080d7504da19d900be229dee,
         type: 3}
       propertyPath: m_Layer
-      value: 3
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3219140987837643781, guid: ed4b7eb6080d7504da19d900be229dee,
         type: 3}
@@ -5202,7 +5202,7 @@ PrefabInstance:
     - target: {fileID: 4274230734451944334, guid: ed4b7eb6080d7504da19d900be229dee,
         type: 3}
       propertyPath: m_Layer
-      value: 3
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4495071281522877659, guid: ed4b7eb6080d7504da19d900be229dee,
         type: 3}
@@ -5412,7 +5412,7 @@ PrefabInstance:
     - target: {fileID: 8988468470097224685, guid: ed4b7eb6080d7504da19d900be229dee,
         type: 3}
       propertyPath: m_Layer
-      value: 3
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 9031360011907108745, guid: ed4b7eb6080d7504da19d900be229dee,
         type: 3}
@@ -10598,6 +10598,7 @@ MonoBehaviour:
   _attackCoolDown: 2
   _rotationSpeed: 10
   _attackDistance: 2.5
+  _attackDamage: 20
 --- !u!114 &120896825
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -10615,7 +10616,7 @@ MonoBehaviour:
   _searchLayer:
     serializedVersion: 2
     m_Bits: 8
-  _trackingWaitTime: 2
+  _trackingWaitTime: 0.5
 --- !u!114 &120896826
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -10665,6 +10666,7 @@ MonoBehaviour:
   _attackParam: tAttack
   _deathParam: tDeath
   _wakeParam: tWake
+  _hitParam: tHit
   _updateSpeed: 5
 --- !u!114 &120896829
 MonoBehaviour:
@@ -12840,6 +12842,7 @@ MonoBehaviour:
   _attackCoolDown: 2
   _rotationSpeed: 10
   _attackDistance: 2.5
+  _attackDamage: 20
 --- !u!114 &162196703
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -12857,7 +12860,7 @@ MonoBehaviour:
   _searchLayer:
     serializedVersion: 2
     m_Bits: 8
-  _trackingWaitTime: 2
+  _trackingWaitTime: 0.5
 --- !u!114 &162196704
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -12907,6 +12910,7 @@ MonoBehaviour:
   _attackParam: tAttack
   _deathParam: tDeath
   _wakeParam: tWake
+  _hitParam: tHit
   _updateSpeed: 5
 --- !u!114 &162196707
 MonoBehaviour:
@@ -22904,6 +22908,7 @@ MonoBehaviour:
   _attackCoolDown: 2
   _rotationSpeed: 10
   _attackDistance: 2.5
+  _attackDamage: 20
 --- !u!114 &350562417
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -22921,7 +22926,7 @@ MonoBehaviour:
   _searchLayer:
     serializedVersion: 2
     m_Bits: 8
-  _trackingWaitTime: 2
+  _trackingWaitTime: 0.5
 --- !u!114 &350562418
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -22971,6 +22976,7 @@ MonoBehaviour:
   _attackParam: tAttack
   _deathParam: tDeath
   _wakeParam: tWake
+  _hitParam: tHit
   _updateSpeed: 5
 --- !u!114 &350562421
 MonoBehaviour:
@@ -29240,6 +29246,7 @@ MonoBehaviour:
   _attackCoolDown: 2
   _rotationSpeed: 10
   _attackDistance: 2.5
+  _attackDamage: 20
 --- !u!114 &448548294
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -29257,7 +29264,7 @@ MonoBehaviour:
   _searchLayer:
     serializedVersion: 2
     m_Bits: 8
-  _trackingWaitTime: 2
+  _trackingWaitTime: 0.5
 --- !u!114 &448548295
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -29307,6 +29314,7 @@ MonoBehaviour:
   _attackParam: tAttack
   _deathParam: tDeath
   _wakeParam: tWake
+  _hitParam: tHit
   _updateSpeed: 5
 --- !u!114 &448548298
 MonoBehaviour:
@@ -38547,6 +38555,7 @@ MonoBehaviour:
   _attackCoolDown: 2
   _rotationSpeed: 10
   _attackDistance: 2.5
+  _attackDamage: 20
 --- !u!114 &637305547
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -38564,7 +38573,7 @@ MonoBehaviour:
   _searchLayer:
     serializedVersion: 2
     m_Bits: 8
-  _trackingWaitTime: 2
+  _trackingWaitTime: 0.5
 --- !u!114 &637305548
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -38614,6 +38623,7 @@ MonoBehaviour:
   _attackParam: tAttack
   _deathParam: tDeath
   _wakeParam: tWake
+  _hitParam: tHit
   _updateSpeed: 5
 --- !u!114 &637305551
 MonoBehaviour:
@@ -43411,6 +43421,7 @@ MonoBehaviour:
   _attackCoolDown: 2
   _rotationSpeed: 10
   _attackDistance: 2.5
+  _attackDamage: 20
 --- !u!114 &718575776
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -43428,7 +43439,7 @@ MonoBehaviour:
   _searchLayer:
     serializedVersion: 2
     m_Bits: 8
-  _trackingWaitTime: 2
+  _trackingWaitTime: 0.5
 --- !u!114 &718575777
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -43478,6 +43489,7 @@ MonoBehaviour:
   _attackParam: tAttack
   _deathParam: tDeath
   _wakeParam: tWake
+  _hitParam: tHit
   _updateSpeed: 5
 --- !u!114 &718575780
 MonoBehaviour:
@@ -49317,6 +49329,7 @@ MonoBehaviour:
   _attackCoolDown: 2
   _rotationSpeed: 10
   _attackDistance: 2.5
+  _attackDamage: 20
 --- !u!114 &824014054
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -49334,7 +49347,7 @@ MonoBehaviour:
   _searchLayer:
     serializedVersion: 2
     m_Bits: 8
-  _trackingWaitTime: 2
+  _trackingWaitTime: 0.5
 --- !u!114 &824014055
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -49384,6 +49397,7 @@ MonoBehaviour:
   _attackParam: tAttack
   _deathParam: tDeath
   _wakeParam: tWake
+  _hitParam: tHit
   _updateSpeed: 5
 --- !u!114 &824014058
 MonoBehaviour:
@@ -52718,6 +52732,7 @@ MonoBehaviour:
   _attackCoolDown: 2
   _rotationSpeed: 10
   _attackDistance: 2.5
+  _attackDamage: 20
 --- !u!114 &867511839
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -52735,7 +52750,7 @@ MonoBehaviour:
   _searchLayer:
     serializedVersion: 2
     m_Bits: 8
-  _trackingWaitTime: 2
+  _trackingWaitTime: 0.5
 --- !u!114 &867511840
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -52785,6 +52800,7 @@ MonoBehaviour:
   _attackParam: tAttack
   _deathParam: tDeath
   _wakeParam: tWake
+  _hitParam: tHit
   _updateSpeed: 5
 --- !u!114 &867511843
 MonoBehaviour:
@@ -55014,6 +55030,7 @@ MonoBehaviour:
   _attackCoolDown: 2
   _rotationSpeed: 10
   _attackDistance: 2.5
+  _attackDamage: 20
 --- !u!114 &899178645
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -55031,7 +55048,7 @@ MonoBehaviour:
   _searchLayer:
     serializedVersion: 2
     m_Bits: 8
-  _trackingWaitTime: 2
+  _trackingWaitTime: 0.5
 --- !u!114 &899178646
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -55081,6 +55098,7 @@ MonoBehaviour:
   _attackParam: tAttack
   _deathParam: tDeath
   _wakeParam: tWake
+  _hitParam: tHit
   _updateSpeed: 5
 --- !u!114 &899178649
 MonoBehaviour:
@@ -56132,6 +56150,7 @@ MonoBehaviour:
   _attackCoolDown: 2
   _rotationSpeed: 10
   _attackDistance: 2.5
+  _attackDamage: 20
 --- !u!114 &907212283
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -56149,7 +56168,7 @@ MonoBehaviour:
   _searchLayer:
     serializedVersion: 2
     m_Bits: 8
-  _trackingWaitTime: 2
+  _trackingWaitTime: 0.5
 --- !u!114 &907212284
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -56199,6 +56218,7 @@ MonoBehaviour:
   _attackParam: tAttack
   _deathParam: tDeath
   _wakeParam: tWake
+  _hitParam: tHit
   _updateSpeed: 5
 --- !u!114 &907212287
 MonoBehaviour:
@@ -58151,6 +58171,7 @@ MonoBehaviour:
   _attackCoolDown: 2
   _rotationSpeed: 10
   _attackDistance: 2.5
+  _attackDamage: 20
 --- !u!114 &936281042
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -58168,7 +58189,7 @@ MonoBehaviour:
   _searchLayer:
     serializedVersion: 2
     m_Bits: 8
-  _trackingWaitTime: 2
+  _trackingWaitTime: 0.5
 --- !u!114 &936281043
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -58218,6 +58239,7 @@ MonoBehaviour:
   _attackParam: tAttack
   _deathParam: tDeath
   _wakeParam: tWake
+  _hitParam: tHit
   _updateSpeed: 5
 --- !u!114 &936281046
 MonoBehaviour:
@@ -66052,6 +66074,7 @@ MonoBehaviour:
   _attackCoolDown: 2
   _rotationSpeed: 10
   _attackDistance: 2.5
+  _attackDamage: 20
 --- !u!114 &1059303115
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -66069,7 +66092,7 @@ MonoBehaviour:
   _searchLayer:
     serializedVersion: 2
     m_Bits: 8
-  _trackingWaitTime: 2
+  _trackingWaitTime: 0.5
 --- !u!114 &1059303116
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -66119,6 +66142,7 @@ MonoBehaviour:
   _attackParam: tAttack
   _deathParam: tDeath
   _wakeParam: tWake
+  _hitParam: tHit
   _updateSpeed: 5
 --- !u!114 &1059303119
 MonoBehaviour:
@@ -66505,6 +66529,7 @@ MonoBehaviour:
   _attackParam: tAttack
   _deathParam: tDeath
   _wakeParam: tWake
+  _hitParam: tHit
   _updateSpeed: 5
 --- !u!114 &1071736398
 MonoBehaviour:
@@ -66615,7 +66640,7 @@ MonoBehaviour:
   _searchLayer:
     serializedVersion: 2
     m_Bits: 8
-  _trackingWaitTime: 2
+  _trackingWaitTime: 0.5
 --- !u!114 &1071736408
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -66631,6 +66656,7 @@ MonoBehaviour:
   _attackCoolDown: 2
   _rotationSpeed: 10
   _attackDistance: 2.5
+  _attackDamage: 20
 --- !u!114 &1071736409
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -71181,6 +71207,7 @@ MonoBehaviour:
   _attackCoolDown: 2
   _rotationSpeed: 10
   _attackDistance: 2.5
+  _attackDamage: 20
 --- !u!114 &1151833849
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -71198,7 +71225,7 @@ MonoBehaviour:
   _searchLayer:
     serializedVersion: 2
     m_Bits: 8
-  _trackingWaitTime: 2
+  _trackingWaitTime: 0.5
 --- !u!114 &1151833850
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -71248,6 +71275,7 @@ MonoBehaviour:
   _attackParam: tAttack
   _deathParam: tDeath
   _wakeParam: tWake
+  _hitParam: tHit
   _updateSpeed: 5
 --- !u!114 &1151833853
 MonoBehaviour:
@@ -72326,6 +72354,7 @@ MonoBehaviour:
   _attackCoolDown: 2
   _rotationSpeed: 10
   _attackDistance: 2.5
+  _attackDamage: 20
 --- !u!114 &1163871265
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -72343,7 +72372,7 @@ MonoBehaviour:
   _searchLayer:
     serializedVersion: 2
     m_Bits: 8
-  _trackingWaitTime: 2
+  _trackingWaitTime: 0.5
 --- !u!114 &1163871266
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -72393,6 +72422,7 @@ MonoBehaviour:
   _attackParam: tAttack
   _deathParam: tDeath
   _wakeParam: tWake
+  _hitParam: tHit
   _updateSpeed: 5
 --- !u!114 &1163871269
 MonoBehaviour:
@@ -73154,6 +73184,7 @@ MonoBehaviour:
   _attackCoolDown: 2
   _rotationSpeed: 10
   _attackDistance: 2.5
+  _attackDamage: 20
 --- !u!114 &1172706617
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -73171,7 +73202,7 @@ MonoBehaviour:
   _searchLayer:
     serializedVersion: 2
     m_Bits: 8
-  _trackingWaitTime: 2
+  _trackingWaitTime: 0.5
 --- !u!114 &1172706618
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -73221,6 +73252,7 @@ MonoBehaviour:
   _attackParam: tAttack
   _deathParam: tDeath
   _wakeParam: tWake
+  _hitParam: tHit
   _updateSpeed: 5
 --- !u!114 &1172706621
 MonoBehaviour:
@@ -78583,6 +78615,7 @@ MonoBehaviour:
   _attackCoolDown: 2
   _rotationSpeed: 10
   _attackDistance: 2.5
+  _attackDamage: 20
 --- !u!114 &1299206145
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -78600,7 +78633,7 @@ MonoBehaviour:
   _searchLayer:
     serializedVersion: 2
     m_Bits: 8
-  _trackingWaitTime: 2
+  _trackingWaitTime: 0.5
 --- !u!114 &1299206146
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -78650,6 +78683,7 @@ MonoBehaviour:
   _attackParam: tAttack
   _deathParam: tDeath
   _wakeParam: tWake
+  _hitParam: tHit
   _updateSpeed: 5
 --- !u!114 &1299206149
 MonoBehaviour:
@@ -108840,7 +108874,7 @@ PrefabInstance:
     - target: {fileID: 7168507104643805159, guid: 22299f3644b2f524db5464bdae3c5946,
         type: 3}
       propertyPath: m_Layer
-      value: 3
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7168507104644297671, guid: 22299f3644b2f524db5464bdae3c5946,
         type: 3}
@@ -112863,6 +112897,7 @@ MonoBehaviour:
   _attackCoolDown: 2
   _rotationSpeed: 10
   _attackDistance: 2.5
+  _attackDamage: 20
 --- !u!114 &1871208782
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -112880,7 +112915,7 @@ MonoBehaviour:
   _searchLayer:
     serializedVersion: 2
     m_Bits: 8
-  _trackingWaitTime: 2
+  _trackingWaitTime: 0.5
 --- !u!114 &1871208783
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -112930,6 +112965,7 @@ MonoBehaviour:
   _attackParam: tAttack
   _deathParam: tDeath
   _wakeParam: tWake
+  _hitParam: tHit
   _updateSpeed: 5
 --- !u!114 &1871208786
 MonoBehaviour:
@@ -113472,6 +113508,7 @@ MonoBehaviour:
   _attackCoolDown: 2
   _rotationSpeed: 10
   _attackDistance: 2.5
+  _attackDamage: 20
 --- !u!114 &1871675945
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -113489,7 +113526,7 @@ MonoBehaviour:
   _searchLayer:
     serializedVersion: 2
     m_Bits: 8
-  _trackingWaitTime: 2
+  _trackingWaitTime: 0.5
 --- !u!114 &1871675946
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -113539,6 +113576,7 @@ MonoBehaviour:
   _attackParam: tAttack
   _deathParam: tDeath
   _wakeParam: tWake
+  _hitParam: tHit
   _updateSpeed: 5
 --- !u!114 &1871675949
 MonoBehaviour:
@@ -114271,6 +114309,7 @@ MonoBehaviour:
   _attackCoolDown: 2
   _rotationSpeed: 10
   _attackDistance: 2.5
+  _attackDamage: 20
 --- !u!114 &1878569155
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -114288,7 +114327,7 @@ MonoBehaviour:
   _searchLayer:
     serializedVersion: 2
     m_Bits: 8
-  _trackingWaitTime: 2
+  _trackingWaitTime: 0.5
 --- !u!114 &1878569156
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -114338,6 +114377,7 @@ MonoBehaviour:
   _attackParam: tAttack
   _deathParam: tDeath
   _wakeParam: tWake
+  _hitParam: tHit
   _updateSpeed: 5
 --- !u!114 &1878569159
 MonoBehaviour:
@@ -124796,6 +124836,7 @@ MonoBehaviour:
   _attackCoolDown: 2
   _rotationSpeed: 10
   _attackDistance: 2.5
+  _attackDamage: 20
 --- !u!114 &2088075724
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -124813,7 +124854,7 @@ MonoBehaviour:
   _searchLayer:
     serializedVersion: 2
     m_Bits: 8
-  _trackingWaitTime: 2
+  _trackingWaitTime: 0.5
 --- !u!114 &2088075725
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -124863,6 +124904,7 @@ MonoBehaviour:
   _attackParam: tAttack
   _deathParam: tDeath
   _wakeParam: tWake
+  _hitParam: tHit
   _updateSpeed: 5
 --- !u!114 &2088075728
 MonoBehaviour:

@@ -114,7 +114,7 @@ public class Player_Attack : MonoBehaviour
             Transform tr = targets[i];
             if (tr.TryGetComponent<Enemy_Health>(out Enemy_Health enemy))
             {
-                enemy.TakeDamage(100);
+                enemy.TakeDamage(50);
             }
         }
     }

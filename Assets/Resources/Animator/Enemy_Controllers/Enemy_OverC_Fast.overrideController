@@ -6,7 +6,7 @@ AnimatorOverrideController:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: Enemy_Over(fast)
+  m_Name: Enemy_OverC_Fast
   m_Controller: {fileID: 9100000, guid: a6b00516c12171d4583c32322a1dadd4, type: 2}
   m_Clips:
   - m_OriginalClip: {fileID: 7400000, guid: 3cd3795c6ff6dc14d90942d0dc5f2b00, type: 3}
