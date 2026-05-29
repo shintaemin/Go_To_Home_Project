@@ -56,14 +56,22 @@ public class HealItemSO : AvailableDataSO
 
     public override void Use(GameObject obj)
     {
-        if (obj == null || Player_DataManager.Instance == null) { return; }
+        if (obj == null) { return; }
 
-        Player_DataSO pData = Player_DataManager.Instance.GetDataSO;
-        
         switch(_healType)
         {
-            case EHealingType.HP: pData.HP += _value; break;
-            case EHealingType.Stemina: pData.Stemina += _value; break;
+            case EHealingType.HP:
+                if (obj.TryGetComponent<Player_Health>(out var hp))
+                {
+                    hp.AddHP(_value);
+                }
+                break;
+            case EHealingType.Stemina:
+                if (obj.TryGetComponent<Player_Stemina>(out var stemina))
+                {
+                    stemina.AddStemina(_value);
+                }
+                break;
         }
     }
 	#endregion

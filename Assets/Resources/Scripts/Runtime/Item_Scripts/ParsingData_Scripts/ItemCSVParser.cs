@@ -108,6 +108,7 @@ public class ItemCSVParser : MonoBehaviour
         switch (type)
         {
             case EAvailableType.Healing: ParseHealingItem(cols); break;
+            case EAvailableType.SoundItem: ParseSoundItem(cols); break;
                 // 타입이 추가되면 case 추가
         }
 
@@ -137,6 +138,32 @@ public class ItemCSVParser : MonoBehaviour
         healItemSO.SetUp(id, name, type, isInteract, isStackable, maxStackCount, icon, info, availableType, healType, value, dur, cooldown, prefab);
 #if UNITY_EDITOR
         UnityEditor.EditorUtility.SetDirty(healItemSO);
+#endif
+    }
+    // 사운드 아이템 파싱
+    private void ParseSoundItem(string[] cols)
+    {
+        string filePath = _availableSOSavePath;
+        string itemFileName = cols[0];
+        int id = int.Parse(cols[1]);
+        string name = cols[2];
+        EItemType type = (EItemType)Enum.Parse(typeof(EItemType), cols[3].Trim());
+        int isInteract = int.Parse(cols[4]);
+        int isStackable = int.Parse(cols[5]);
+        int maxStackCount = int.Parse(cols[6]);
+        Sprite icon = Resources.Load<Sprite>(cols[7]);
+        string info = cols[8];
+        EAvailableType availableType = (EAvailableType)Enum.Parse(typeof(EAvailableType), cols[9].Trim());
+        EThrowingSoundType trowingSoundType = (EThrowingSoundType)Enum.Parse(typeof(EThrowingSoundType), cols[10].Trim());
+        int isThrowingable = int.Parse(cols[11]);
+        float soundRange = float.Parse(cols[12]);
+        float throwDistance = float.Parse(cols[13]);
+        GameObject prefab = Resources.Load<GameObject>(cols[14]);
+
+        SoundItemSO soundItemSO = CreateSO<SoundItemSO>(id, itemFileName, filePath);
+        soundItemSO.SetUp(id, name, type, isInteract, isStackable, maxStackCount, icon, info, availableType, trowingSoundType, isThrowingable, soundRange, throwDistance, prefab);
+#if UNITY_EDITOR
+        UnityEditor.EditorUtility.SetDirty(soundItemSO);
 #endif
     }
 

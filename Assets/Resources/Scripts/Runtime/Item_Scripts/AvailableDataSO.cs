@@ -11,6 +11,7 @@ public enum EAvailableType
 {
     None,
     Healing,
+    SoundItem,
     Buff,
 }
 
