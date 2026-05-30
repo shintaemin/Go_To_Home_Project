@@ -91,7 +91,7 @@ public class SlotData
         }
 
         _item = item;
-        _count = count != 0  ? count : 0;
+        _count = count > 0 ? count : 0;
         _slotIndex = index;
     }
 

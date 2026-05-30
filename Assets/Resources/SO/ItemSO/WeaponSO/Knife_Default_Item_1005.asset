@@ -27,4 +27,3 @@ MonoBehaviour:
   _maxDurability: 100
   _attackCost: 3
   _attackSoundType: 2
-  _currentDurability: 0

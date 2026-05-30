@@ -132,7 +132,7 @@ public class ItemCSVParser : MonoBehaviour
         float dur = float.Parse(cols[12]);
         float cooldown = float.Parse(cols[13]);
         string filePath = _availableSOSavePath;
-        GameObject prefab = Resources.Load<GameObject>(cols[14]);
+        GameObject prefab = Resources.Load<GameObject>(cols[14].Trim());
 
         HealItemSO healItemSO = CreateSO<HealItemSO>(id, itemFileName, filePath);
         healItemSO.SetUp(id, name, type, isInteract, isStackable, maxStackCount, icon, info, availableType, healType, value, dur, cooldown, prefab);
@@ -158,7 +158,7 @@ public class ItemCSVParser : MonoBehaviour
         int isThrowingable = int.Parse(cols[11]);
         float soundRange = float.Parse(cols[12]);
         float throwDistance = float.Parse(cols[13]);
-        GameObject prefab = Resources.Load<GameObject>(cols[14]);
+        GameObject prefab = Resources.Load<GameObject>(cols[14].Trim());
 
         SoundItemSO soundItemSO = CreateSO<SoundItemSO>(id, itemFileName, filePath);
         soundItemSO.SetUp(id, name, type, isInteract, isStackable, maxStackCount, icon, info, availableType, trowingSoundType, isThrowingable, soundRange, throwDistance, prefab);

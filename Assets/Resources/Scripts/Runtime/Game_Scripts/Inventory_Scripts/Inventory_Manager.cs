@@ -95,31 +95,34 @@ public class Inventory_Manager : MonoBehaviour
 
         if (isStack)
         {
-            if (index >= 0 && index < _maxStorege && _itemList[index].GetItem == item)
+            if (_itemList[index].GetItem == item)
             {
-                amount = _itemList[index].AddCount(amount);
-
-                if (UI_Manager.Instance != null)
+                if (index >= 0 && index < _maxStorege)
                 {
-                    UI_Manager.Instance.InventorySlotUpdate(index, _itemList[index]);
+                    amount = _itemList[index].AddCount(amount);
+
+                    if (UI_Manager.Instance != null)
+                    {
+                        UI_Manager.Instance.InventorySlotUpdate(index, _itemList[index]);
+                    }
+
+                    if (amount == 0) { return true; }
                 }
 
-                if (amount == 0) { return true; }
-            }
-
-            for (int i = 0; i < _itemList.Count; i++)
-            {
-                if (_itemList[i] == null) { continue; }
-                if (_itemList[i].GetItem != item) { continue; }
-                
-                amount = _itemList[i].AddCount(amount); // 아이템 갯수 추가후 남는 값 반환
-
-                if (UI_Manager.Instance != null)
+                for (int i = 0; i < _itemList.Count; i++)
                 {
-                    UI_Manager.Instance.InventorySlotUpdate(i, _itemList[i]);
-                }
+                    if (_itemList[i] == null) { continue; }
+                    if (_itemList[i].GetItem != item) { continue; }
 
-                if (amount == 0) { return true; }// 남은 갯수가 0 이면 함수종료
+                    amount = _itemList[i].AddCount(amount); // 아이템 갯수 추가후 남는 값 반환
+
+                    if (UI_Manager.Instance != null)
+                    {
+                        UI_Manager.Instance.InventorySlotUpdate(i, _itemList[i]);
+                    }
+
+                    if (amount == 0) { return true; }// 남은 갯수가 0 이면 함수종료
+                }
             }
         }
 

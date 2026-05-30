@@ -14,6 +14,7 @@ public class Inventory_UI : MonoBehaviour
     #region 인스펙터
     [SerializeField] private List<Slot_UI> _slotList;
     [SerializeField] private GameObject _inventoryRoot;
+    [SerializeField] private GameObject _currentSlot_Root;
     [SerializeField] private bool _isActive = false;    // 테스트 및 정보 매칭 확인용
 
     [Header("생성 시킬 슬롯 프리펩")]
@@ -25,6 +26,7 @@ public class Inventory_UI : MonoBehaviour
 
     #region 내부 변수
     private Player_InventoryAnim _invenAnim;
+    private CurrentSlot_UI _currentSlotUICS;
     #endregion
 
     private void Awake()
@@ -47,6 +49,11 @@ public class Inventory_UI : MonoBehaviour
         if (_invenAnim == null)
         {
             _invenAnim = FindFirstObjectByType<Player_InventoryAnim>();
+        }
+
+        if (_currentSlot_Root != null)
+        {
+            GUtill.TryGetCS(_currentSlot_Root, ref _currentSlotUICS);
         }
     }
 
@@ -82,6 +89,8 @@ public class Inventory_UI : MonoBehaviour
     {
         _isActive = active;
         _inventoryRoot.SetActive(_isActive);
+
+        if (_currentSlot_Root != null && _currentSlot_Root.activeSelf) { _currentSlot_Root.SetActive(false); }
     }
 
     public void OnClickCloseButton()
@@ -107,6 +116,20 @@ public class Inventory_UI : MonoBehaviour
     public void SlotUpdate(int index, SlotData slot)
     {
         _slotList[index].Data = slot;
+    }
+
+    public void CurrentSlotUIUpdate(SlotData slot)
+    {
+        if (_currentSlotUICS == null || slot.GetItem == null) { return; }
+
+        ItemDataSO item = slot.GetItem;
+        Sprite icon = item != null ? item.Icon : null;
+        string name = item != null ? item.Name : string.Empty;
+        string info = item != null ? item.Info : string.Empty;
+
+        if (icon != null) { _currentSlotUICS.SetIcon(icon); }
+        if (name != string.Empty) { _currentSlotUICS.SetName(name); }
+        if (info != string.Empty) { _currentSlotUICS.SetInfo(info); }
     }
     #endregion
 }

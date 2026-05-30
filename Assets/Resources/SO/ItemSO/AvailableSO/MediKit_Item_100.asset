@@ -19,8 +19,8 @@ MonoBehaviour:
   _isStackable: 1
   _maxStackCount: 3
   _icon: {fileID: 21300000, guid: e007091e4fcadbc40a924c67fbb64bd8, type: 3}
-  _info: "\uCCB4\uB825\uC744 30 \uB9CC\uD07C 30\uCD08\uAC04 \uD68C\uBCF5"
-  _prefab: {fileID: 0}
+  _info: "\uCCB4\uB825\uC744 30 \uB9CC\uD07C \uD68C\uBCF5"
+  _prefab: {fileID: 307774420219124244, guid: 7e429cf729333d14c9a3910366f685b8, type: 3}
   _availableType: 1
   _healType: 1
   _value: 30

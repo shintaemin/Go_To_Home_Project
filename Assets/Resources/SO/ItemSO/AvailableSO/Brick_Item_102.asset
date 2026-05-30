@@ -1,0 +1,28 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 63991737ac463264ab7e3dfff778141b, type: 3}
+  m_Name: Brick_Item_102
+  m_EditorClassIdentifier: 
+  _id: 102
+  _name: "\uBCBD\uB3CC"
+  _itemType: 2
+  _isInteractable: 1
+  _isStackable: 1
+  _maxStackCount: 3
+  _icon: {fileID: 21300000, guid: ed499f5208098404dbaeb8310663e0ef, type: 2}
+  _info: "\uB358\uC9C0\uBA74 \uC18C\uB9AC\uAC00 \uB0A0\uC9C0\uB3C4..."
+  _prefab: {fileID: 4199171100039208935, guid: ef9233623ec67d34193a1049e627c1b3, type: 3}
+  _availableType: 2
+  _trowingSoundType: 1
+  _isThrowingable: 1
+  _soundRange: 10
+  _throwDistance: 10

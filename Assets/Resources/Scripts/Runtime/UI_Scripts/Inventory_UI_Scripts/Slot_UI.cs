@@ -35,6 +35,7 @@ public class Slot_UI : MonoBehaviour, IPointerClickHandler, IBeginDragHandler, I
 
     #region 내부 변수
     private Sprite _nullIcon;
+    private UI_SlotMove_Manager _uiSlotManager;
     #endregion
     private void Awake()
     {
@@ -49,6 +50,13 @@ public class Slot_UI : MonoBehaviour, IPointerClickHandler, IBeginDragHandler, I
         }
 
         _nullIcon = _image.sprite;
+    }
+    private void Start()
+    {
+        if (UI_SlotMove_Manager.Instance != null)
+        {
+            _uiSlotManager = UI_SlotMove_Manager.Instance;
+        }
     }
 
     private void UpdateSlot(SlotData slotData)
@@ -84,35 +92,47 @@ public class Slot_UI : MonoBehaviour, IPointerClickHandler, IBeginDragHandler, I
     // 드래그 시작
     public void OnBeginDrag(PointerEventData eventData)
     {
-        if (UI_SlotMove_Manager.Instance == null) { return; }
+        if (_uiSlotManager == null && UI_SlotMove_Manager.Instance != null)
+        {
+            _uiSlotManager = UI_SlotMove_Manager.Instance;
+        }
 
-        UI_SlotMove_Manager.Instance.Begin(this);
+        _uiSlotManager.Begin(this);
     }
 
     // 드래그중 
     public void OnDrag(PointerEventData eventData)
     {
-        if (UI_SlotMove_Manager.Instance == null) { return; }
+        if (_uiSlotManager == null && UI_SlotMove_Manager.Instance != null)
+        {
+            _uiSlotManager = UI_SlotMove_Manager.Instance;
+        }
 
-        UI_SlotMove_Manager.Instance.Drag();
+        _uiSlotManager.Drag();
     }
 
     // 드래그 종료
     public void OnEndDrag(PointerEventData eventData)
     {
-        if (UI_SlotMove_Manager.Instance == null) { return; }
+        if (_uiSlotManager == null && UI_SlotMove_Manager.Instance != null)
+        {
+            _uiSlotManager = UI_SlotMove_Manager.Instance;
+        }
 
-        UI_SlotMove_Manager.Instance.DragEnd();
+        _uiSlotManager.DragEnd();
     }
 
     // 현재 슬롯에 드랍
     public void OnDrop(PointerEventData eventData)
     {
-        if (UI_SlotMove_Manager.Instance == null) { return; }
+        if (_uiSlotManager == null && UI_SlotMove_Manager.Instance != null)
+        {
+            _uiSlotManager = UI_SlotMove_Manager.Instance;
+        }
 
         // 이동중인 데이터 와 UI 를 확인
-        SlotData dropData = UI_SlotMove_Manager.Instance.GetDragData;
-        Slot_UI slotUI = UI_SlotMove_Manager.Instance.GetDragUI;
+        SlotData dropData = _uiSlotManager.GetDragData;
+        Slot_UI slotUI = _uiSlotManager.GetDragUI;
 
         GUtill.Log($"[{this.name}] : 드롭 성공 {PathType} 로 이동", EDebugType.Warn);
         // Drop 한 슬롯의 type 을 확인
@@ -121,7 +141,7 @@ public class Slot_UI : MonoBehaviour, IPointerClickHandler, IBeginDragHandler, I
             case ESlotPathType.Inventory: // 인벤토리에 아이템 추가
                 Inventory_Manager.Instance.AddItem(dropData, Index); break;
             case ESlotPathType.Container: // 컨테이너에 아이템 추가
-                UI_SlotMove_Manager.Instance.GetContainer.AddItem(dropData, Index); break;
+                _uiSlotManager.GetContainer.AddItem(dropData, Index); break;
         }
 
         GUtill.Log($"[{this.name}] : 이동 성공 {slotUI.PathType} 의 데이터 삭제", EDebugType.Warn);
@@ -131,9 +151,9 @@ public class Slot_UI : MonoBehaviour, IPointerClickHandler, IBeginDragHandler, I
             case ESlotPathType.Inventory: // 인벤토리아이템 삭제
                 Inventory_Manager.Instance.RemoveSlotData(dropData); break;
             case ESlotPathType.Container: // 컨테이너 아이템 삭제
-                UI_SlotMove_Manager.Instance.GetContainer.RemoveItem(dropData); break;
+                _uiSlotManager.GetContainer.RemoveItem(dropData); break;
         }
-        UI_SlotMove_Manager.Instance.DataMoveEnd();
+        _uiSlotManager.DataMoveEnd();
         GUtill.Log($"[{this.name}] : 슬롯데이터 이동완료 {slotUI.PathType} -> {PathType}", EDebugType.Warn);
     }
     #endregion  -> 드래그 드랍 End
