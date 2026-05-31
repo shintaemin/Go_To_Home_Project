@@ -22,6 +22,7 @@ public class ItemDataSO : ScriptableObject
     [SerializeField] private EItemType _itemType;
     [SerializeField] private bool _isInteractable;
     [SerializeField] private bool _isStackable;
+    [SerializeField] private bool _isEquipable;
     [SerializeField] private int _maxStackCount;
     [SerializeField] private Sprite _icon;
     [SerializeField] private string _info;
@@ -48,6 +49,7 @@ public class ItemDataSO : ScriptableObject
     public EItemType Type => _itemType;
     public bool IsInteractable => _isInteractable;
     public bool IsStackable => _isStackable;
+    public bool IsEquipable => _isEquipable;
     public int MaxStack => _maxStackCount;
     public Sprite Icon => _icon;
     public string Info => _info;

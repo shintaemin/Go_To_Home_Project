@@ -68,6 +68,13 @@ public class UI_Manager : MonoBehaviour
         _invenUI.Active(active);
     }
 
+    public void CurrentSlotUIUpdate(SlotData slot)
+    {
+        if (_invenUI == null) { return; }
+
+        _invenUI.CurrentSlotUIUpdate(slot);
+    }
+
     public void ContainerActive(bool active)
     {
         if (_invenUI == null || _containerUI == null) { return; }

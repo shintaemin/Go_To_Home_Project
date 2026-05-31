@@ -1,7 +1,4 @@
-using System.Collections;
-using System.Collections.Generic;
 using TMPro;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -16,7 +13,7 @@ public class CurrentSlot_UI : MonoBehaviour
 	#region 외부 호출 함수 
 	public void SetIcon(Sprite icon)
 	{
-		if (_currentImage == null) { return; }
+		if (_currentImage == null || icon == null) { return; }
 		
 		_currentImage.sprite = icon;
 	}

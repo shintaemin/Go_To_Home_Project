@@ -36,6 +36,7 @@ public class Slot_UI : MonoBehaviour, IPointerClickHandler, IBeginDragHandler, I
     #region 내부 변수
     private Sprite _nullIcon;
     private UI_SlotMove_Manager _uiSlotManager;
+    private UI_Manager _uiManger;
     #endregion
     private void Awake()
     {
@@ -56,6 +57,10 @@ public class Slot_UI : MonoBehaviour, IPointerClickHandler, IBeginDragHandler, I
         if (UI_SlotMove_Manager.Instance != null)
         {
             _uiSlotManager = UI_SlotMove_Manager.Instance;
+        }
+        if (UI_Manager.Instance != null)
+        {
+            _uiManger = UI_Manager.Instance;
         }
     }
 
@@ -86,7 +91,12 @@ public class Slot_UI : MonoBehaviour, IPointerClickHandler, IBeginDragHandler, I
     #region 클릭, 드래그, 드랍 인터페이스
     public void OnPointerClick(PointerEventData eventData)
     {
+        if (_uiManger == null && UI_Manager.Instance != null)
+        {
+            _uiManger = UI_Manager.Instance;
+        }
 
+        _uiManger.CurrentSlotUIUpdate(_slotData);
     }
 
     // 드래그 시작

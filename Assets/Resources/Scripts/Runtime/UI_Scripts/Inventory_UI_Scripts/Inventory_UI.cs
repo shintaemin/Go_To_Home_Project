@@ -122,14 +122,22 @@ public class Inventory_UI : MonoBehaviour
     {
         if (_currentSlotUICS == null || slot.GetItem == null) { return; }
 
+        if (!_currentSlot_Root.activeSelf)
+        {
+            _currentSlot_Root.SetActive(true);
+        }
+
         ItemDataSO item = slot.GetItem;
         Sprite icon = item != null ? item.Icon : null;
         string name = item != null ? item.Name : string.Empty;
         string info = item != null ? item.Info : string.Empty;
 
-        if (icon != null) { _currentSlotUICS.SetIcon(icon); }
-        if (name != string.Empty) { _currentSlotUICS.SetName(name); }
-        if (info != string.Empty) { _currentSlotUICS.SetInfo(info); }
+        if (icon != null && name != string.Empty && info != string.Empty)
+        {
+            _currentSlotUICS.SetIcon(icon);
+            _currentSlotUICS.SetName(name);
+            _currentSlotUICS.SetInfo(info);
+        }
     }
     #endregion
 }
