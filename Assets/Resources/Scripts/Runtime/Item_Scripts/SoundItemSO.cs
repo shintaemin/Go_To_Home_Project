@@ -31,6 +31,7 @@ public class SoundItemSO : AvailableDataSO
         EItemType itemType,
         int isInteract,
         int isStackable,
+        int isEquipable,
         int maxStackCount,
         Sprite icon,
         string info,
@@ -42,7 +43,7 @@ public class SoundItemSO : AvailableDataSO
         GameObject prefab
         )
     {
-        base.SetUp(id, name, itemType, isInteract, isStackable, maxStackCount, icon, info, availableType, prefab);
+        base.SetUp(id, name, itemType, isInteract, isStackable, isEquipable, maxStackCount, icon, info, availableType, prefab);
         _trowingSoundType = trowingSoundType;
         _isThrowingable = isThrowingable == 1;
         _soundRange = soundRange;

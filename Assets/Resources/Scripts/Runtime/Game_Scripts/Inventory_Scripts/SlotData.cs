@@ -13,7 +13,7 @@ public class SlotData
     #region ÀÎ½ºÆåÅÍ
     [SerializeField] private ItemDataSO _item;
     [SerializeField] private int _slotIndex;
-    [SerializeField] private float _curentDur;
+    [SerializeField] private int _curentDur;
     [SerializeField] private int _count;
     #endregion
 
@@ -24,7 +24,7 @@ public class SlotData
         set { _slotIndex = value; }
     }
 
-    public float Dur
+    public int Dur
     {
         get { return _curentDur; }
         set { _curentDur = Mathf.Clamp(value, 0, 100); }
@@ -72,8 +72,10 @@ public class SlotData
         _curentDur = 0;
     }
 
-    public void DecreseCount(int count)
+    public void DecreseCount(int count = 1)
     {
+        if (_item == null || _item is WeaponDataSO) { return; }
+
         if (count > Count)
         {
             count = Count;
@@ -83,11 +85,11 @@ public class SlotData
         if (Count < 0) { Count = 0; }
     }
 
-    public void SetItem(ItemDataSO item, int index, int count = 0, float dur = -0.1f)
+    public void SetItem(ItemDataSO item, int index, int count = 0, int dur = -1)
     {
         if (item is WeaponDataSO weapon)
         {
-            _curentDur = dur == -0.1f ? weapon.MaxDur : dur;
+            _curentDur = dur == -1 ? weapon.MaxDur : dur;
         }
 
         _item = item;
@@ -95,15 +97,15 @@ public class SlotData
         _slotIndex = index;
     }
 
-    public void DecreaseDur(float value)
+    public void DecreaseDur()
     {
-        if (value > 100)
-        {
-            value = 100;
-        }
+        if (_item == null) { return; }
 
-        float current = Dur - value;
-        Dur = Mathf.Max(0, current);
+        if (_item is WeaponDataSO weapon)
+        {
+            int result = Dur - weapon.AttackSteminaCost;
+            Dur = Mathf.Max(0, result);
+        }
     }
 
     public void Repair()

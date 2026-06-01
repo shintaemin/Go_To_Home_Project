@@ -15,6 +15,7 @@ public enum EMovementState
     Walk,
     Run,
     Attack,
+    Throwing,
     Interact,
 }
 
@@ -26,6 +27,7 @@ public enum EControllMode
     Run,
     Inventory,
     Attack,
+    Throwing,
     AllLock,
 }
 
@@ -44,6 +46,7 @@ public class Player_Controller : MonoBehaviour
     [SerializeField] private Player_LoockMousePointer _rotateCS;
     [SerializeField] private Player_InteractFinder _finderCS;
     [SerializeField] private Player_Interact _interactCS;
+    [SerializeField] private Player_ItemEquip _itemEquipCS;
     [SerializeField] private Inventory_Manager _inventoryCS;
     #endregion
 
@@ -112,12 +115,8 @@ public class Player_Controller : MonoBehaviour
 
     private void AttackInput()
     {
-        if (!CanAttack) { return; }
-        if (_attackCS == null)
-        {
-            GUtill.Log($"[{this.name}] : 공격 스크립트 없음", EDebugType.Warn);
-            return;
-        }
+        if (!CanAttack|| _attackCS == null) { return; }
+        if (_itemEquipCS == null || !_itemEquipCS.IsAttackable()) { return; }
 
         _attackCS.TryAttack();
     }
@@ -160,6 +159,7 @@ public class Player_Controller : MonoBehaviour
         GUtill.TryGetCS(this, ref _moveCS);     GUtill.TryGetCS(this, ref _animCS);     GUtill.TryGetCS(this, ref _soundCS);
         GUtill.TryGetCS(this, ref _steminaCS);  GUtill.TryGetCS(this, ref _attackCS);   GUtill.TryGetCS(this, ref _interactCS);
         GUtill.TryGetCS(this, ref _rotateCS);   GUtill.TryGetCS(this, ref _finderCS);   GUtill.TryGetCS(this, ref _healthCS);
+        GUtill.TryGetCS(this, ref _itemEquipCS);
     }
 
     private void Update()
@@ -200,10 +200,13 @@ public class Player_Controller : MonoBehaviour
         EControllMode mode = EControllMode.Playing;
         switch (state)
         {
-            case EMovementState.Attack: mode = EControllMode.Attack; break;
-            case EMovementState.Run: mode = EControllMode.Run; break;
-            case EMovementState.Idle:case EMovementState.Walk:
-            case EMovementState.Crouch:
+            case EMovementState.Attack: 
+                mode = EControllMode.Attack; break;
+            case EMovementState.Run: 
+                mode = EControllMode.Run; break;
+            case EMovementState.Throwing: 
+                mode = EControllMode.Throwing; break;
+            case EMovementState.Idle: case EMovementState.Crouch: case EMovementState.Walk: 
                 mode = EControllMode.Playing; break;
         }
 
@@ -222,7 +225,9 @@ public class Player_Controller : MonoBehaviour
 
             case EControllMode.Run:       CanMove = true; CanRotate = false; CanAttack = true;   break;
 
-            case EControllMode.Attack:    CanMove = false; CanRotate = false; CanAttack = true;   break;
+            case EControllMode.Attack:    CanMove = false; CanRotate = true; CanAttack = true;   break;
+
+            case EControllMode.Throwing:  CanMove = true; CanRotate = true; CanAttack = true; break;
 
             case EControllMode.Inventory: CanMove = false; CanRotate = false; CanAttack = false; break;
 

@@ -18,6 +18,7 @@ public class Player_Anim : MonoBehaviour
 	[SerializeField] private string _speedParam = "fSpeed";
 	[SerializeField] private string _attackParam = "tAttack";
 	[SerializeField] private string _inventoryParam = "bInventory";
+	[SerializeField] private string _attackSpeedParam = "fAttackSpeed";
 
 	[Header("옵션")]
 	[SerializeField] private float _paramUpdatespeed = 1.0f;
@@ -26,18 +27,51 @@ public class Player_Anim : MonoBehaviour
 	#region 내부 변수
 	private int _hashSpeed;
 	private int _hashAttack;
-	private float _targerSpeed;
 	private int _hashInventory;
+	private int _hashAttackSpeedParam;
+    private float _targerSpeed;
+	private Player_ItemEquip _itemEquipCS;
     #endregion
 
     private void Awake()
     {
 		GUtill.TryGetCS(this, ref _anim);
+        GUtill.TryGetCS(this, ref _itemEquipCS);
 
         _hashSpeed = Animator.StringToHash(_speedParam);
         _hashAttack = Animator.StringToHash(_attackParam);
         _hashInventory = Animator.StringToHash(_inventoryParam);
+        _hashAttackSpeedParam = Animator.StringToHash(_attackSpeedParam);
     }
+    #region 아이템 장착 이벤트 구독
+    private void Start()
+    {
+        if (_itemEquipCS != null)
+        {
+            _itemEquipCS.OnItemEquip += OnEquipItem;
+        }
+    }
+
+    private void OnDestroy()
+    {
+        if (_itemEquipCS != null)
+        {
+            _itemEquipCS.OnItemEquip -= OnEquipItem;
+        }
+    }
+
+    private void OnEquipItem(ItemDataSO item)
+    {
+        if (item == null) { return; }
+
+        if (item is WeaponDataSO weapon)
+        {
+            float attackSpeed = weapon.AttackSpeedRatio;
+            _anim.SetFloat(_hashAttackSpeedParam, attackSpeed);
+        }
+    }
+    #endregion
+
 
     private void Update()
     {

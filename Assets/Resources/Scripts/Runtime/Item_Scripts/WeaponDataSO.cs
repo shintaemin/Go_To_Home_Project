@@ -29,8 +29,9 @@ public class WeaponDataSO : ItemDataSO
     [SerializeField] private EWeaponType _weapontype;
     [SerializeField] private int _damage;
     [SerializeField] private float _attackSpeedRatio;
-    [SerializeField] private float _maxDurability;
-    [SerializeField] private float _attackCost;
+    [SerializeField] private int _maxDurability;
+    [SerializeField] private int _attackDurabilityCost;
+    [SerializeField] private int _attackSteminaCost;
     [SerializeField] private EAttackSoundType _attackSoundType;
 
     #region 파싱시 셋업 함수
@@ -41,25 +42,28 @@ public class WeaponDataSO : ItemDataSO
         EItemType itemType,
         int isInteract,
         int isStackable,
+        int isEquipable,
         int maxStackCount,
         Sprite icon,
         string info,
         EWeaponType weaponType,
         int damage,
         float speed,
-        float dur,
-        float cost,
+        int dur,
+        int cost,
+        int steminaCost,
         EAttackSoundType soundType,
         GameObject prefab
         )
     {
-        base.SetUp(id, name, itemType, isInteract, isStackable, maxStackCount, icon, info, prefab);
+        base.SetUp(id, name, itemType, isInteract, isStackable, isEquipable,maxStackCount, icon, info, prefab);
 
         _weapontype = weaponType;
         _damage = damage;
         _attackSpeedRatio = speed;
         _maxDurability = dur;
-        _attackCost = cost;
+        _attackDurabilityCost = cost;
+        _attackSteminaCost = steminaCost;
         _attackSoundType = soundType;
     }
     #endregion
@@ -68,8 +72,9 @@ public class WeaponDataSO : ItemDataSO
     public EWeaponType WeaponType => _weapontype;
     public int Damage => _damage;
     public float AttackSpeedRatio => _attackSpeedRatio;
-    public float MaxDur => _maxDurability;
-    public float AttackCost => _attackCost;
+    public int MaxDur => _maxDurability;
+    public int AttackCost => _attackDurabilityCost;
+    public int AttackSteminaCost => _attackSteminaCost;
     public EAttackSoundType AttackSoundType => _attackSoundType;
     #endregion
 }

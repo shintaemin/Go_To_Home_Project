@@ -27,6 +27,7 @@ public class Inventory_UI : MonoBehaviour
     #region 내부 변수
     private Player_InventoryAnim _invenAnim;
     private CurrentSlot_UI _currentSlotUICS;
+    private Player_ItemEquip _equipCS;
     #endregion
 
     private void Awake()
@@ -54,6 +55,10 @@ public class Inventory_UI : MonoBehaviour
         if (_currentSlot_Root != null)
         {
             GUtill.TryGetCS(_currentSlot_Root, ref _currentSlotUICS);
+        }
+        if (_equipCS == null)
+        {
+            _equipCS = FindFirstObjectByType<Player_ItemEquip>();
         }
     }
 
@@ -120,7 +125,7 @@ public class Inventory_UI : MonoBehaviour
 
     public void CurrentSlotUIUpdate(SlotData slot)
     {
-        if (_currentSlotUICS == null || slot.GetItem == null) { return; }
+        if (_currentSlotUICS == null || slot.GetItem == null || _equipCS == null) { return; }
 
         if (!_currentSlot_Root.activeSelf)
         {
@@ -137,6 +142,7 @@ public class Inventory_UI : MonoBehaviour
             _currentSlotUICS.SetIcon(icon);
             _currentSlotUICS.SetName(name);
             _currentSlotUICS.SetInfo(info);
+            _equipCS.SetBackUpItem(slot);
         }
     }
     #endregion

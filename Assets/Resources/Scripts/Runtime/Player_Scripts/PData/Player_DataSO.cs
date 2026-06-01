@@ -17,6 +17,7 @@ public class Player_DataSO : ScriptableObject
 	[SerializeField] private float _moveSpeed = 5.0f;
 	[SerializeField] private int _hp = 100;
 	[SerializeField] private int _stemina = 100;
+    [SerializeField] private int _attackDamage = 10;
 
     [Header("스피드 옵션")]
     [SerializeField] private float _maxSpeed = 10;
@@ -31,9 +32,11 @@ public class Player_DataSO : ScriptableObject
     [SerializeField] private int _steminaAttaceCost = 10;
 
 
+    [SerializeField] private int _testStartAttackDamage = 10;
     [SerializeField] private float _testStartSpeed = 5;
     [SerializeField] private int _testStartHP = 100;
     [SerializeField] private int _testStartStemina = 100;
+    [SerializeField] private int _testAttackSteminaCost = 5;
 	#endregion
 
 	#region 이벤트
@@ -48,7 +51,6 @@ public class Player_DataSO : ScriptableObject
 
     public int GetSteminaAddAmount => _steminaAddAmount;
     public int GetSteminaDecreaceCost => _steminaDecreaceCost;
-    public int GetSteminaAttackCost => _steminaAttaceCost;
 
     public int GetMaxHP => _maxHP;
     public int GetMaxStemina => _maxStemina;
@@ -58,7 +60,8 @@ public class Player_DataSO : ScriptableObject
         HP = Mathf.Clamp(_testStartHP, 0, _maxHP);
         Stemina = Mathf.Clamp(_testStartStemina, 0, _maxStemina);
         _moveSpeed = Mathf.Clamp(_testStartSpeed, 0, _maxSpeed);
-
+        _attackDamage = _testStartAttackDamage;
+        AttackSteminaCost = _testAttackSteminaCost;
         GUtill.Log($"[{this.name}] : 초기 설정 완료 [ 체력 : {HP}, 스테미너 : {Stemina}, 이동속도 : {_moveSpeed} ]");
     }
     #endregion
@@ -82,6 +85,16 @@ public class Player_DataSO : ScriptableObject
             _stemina = value;
             OnSteminaUpdate?.Invoke(_stemina);
         }
+    }
+    public int AttackSteminaCost
+    {
+        get { return _steminaAttaceCost; }
+        set { _steminaAttaceCost = value; }
+    }
+    public int AttackDamage
+    {
+        get { return _attackDamage; }
+        set { _attackDamage = value; }
     }
     #endregion
 }

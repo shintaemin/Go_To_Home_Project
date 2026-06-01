@@ -160,7 +160,7 @@ public class Player_Stemina : MonoBehaviour
         
         if (_state == ESteminaState.Attack)
         {
-            DecreaseStemina(_data.GetSteminaAttackCost);
+            DecreaseStemina(_data.AttackSteminaCost);
         }
 
         GUtill.Log($"[{this.name}] : 상태 변경 = {_state}");

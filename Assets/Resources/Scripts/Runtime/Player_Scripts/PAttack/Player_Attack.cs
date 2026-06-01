@@ -1,4 +1,4 @@
-using System.Collections;
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -30,6 +30,10 @@ public class Player_Attack : MonoBehaviour
     private Player_DataSO _dataSO;
     #endregion
 
+    #region 이벤트
+    public event Action OnSuccessAttack;
+    #endregion
+
     private void Awake()
     {
         if (_controllCS == null)
@@ -53,28 +57,19 @@ public class Player_Attack : MonoBehaviour
     {
         List<Transform> validTargets = new List<Transform>();
 
-        // 확실하게 캐릭터 최상위 본체(Root)의 위치와 회전값을 기준으로 잡습니다.
         Transform rootTransform = transform.root;
 
-        // 1. 박스 판정의 중심점(Center)을 구합니다. 
-        // 플레이어 정중앙이 아니라, 플레이어 위치에서 정면(forward)으로 깊이의 절반만큼 앞으로 밀어주어야 '내 앞의 범위'가 됩니다.
         Vector3 boxCenter = rootTransform.position + (rootTransform.forward * (_attackDepth * 0.5f));
         boxCenter.y += 1.0f; // 높이 차이 오차 방지를 위해 캐릭터 배꼽 높이 정도로 보정
-
-        // 2. OverlapBox에 들어갈 Extents(반지름 크기)를 계산합니다. 
-        // 유니티의 박스 크기는 Half-Extents(반값) 기준이므로 인스펙터 입력값의 절반을 넣습니다.
         Vector3 boxHalfSize = new Vector3(_attackWidth * 0.5f, 1.5f, _attackDepth * 0.5f);
 
-        // 3. 내 정면 각도(Rotation)를 그대로 반영하여 정면 직사각형 영역의 컬라이더들을 긁어옵니다.
         Collider[] targetsInBox = Physics.OverlapBox(boxCenter, boxHalfSize, rootTransform.rotation, _targetLayer);
-
         if (targetsInBox.Length == 0) return validTargets;
-
+        
         for (int i = 0; i < targetsInBox.Length; i++)
         {
             Transform targetRoot = targetsInBox[i].transform.root;
 
-            // 중복 적재 방지 (콜라이더가 몸통, 머리 여러 개 붙어있는 적 예외 처리)
             if (!validTargets.Contains(targetRoot))
             {
                 validTargets.Add(targetRoot);
@@ -91,7 +86,7 @@ public class Player_Attack : MonoBehaviour
             _dataSO = Player_DataManager.Instance.GetDataSO;
         }
 
-        if (_dataSO.Stemina < _dataSO.GetSteminaAttackCost)
+        if (_dataSO.Stemina < _dataSO.AttackSteminaCost)
         {
             GUtill.Log($"[{this.name}] : 스테미너 부족 공격 불가");
             return;
@@ -99,9 +94,6 @@ public class Player_Attack : MonoBehaviour
 
         _controllCS.MovementState = EMovementState.Attack;
         _anim.SetTreggerAnim(_controllCS.MovementState);
-
-        
-        GUtill.Log($"[{this.name}] : 공격 시작!");
     }
     public void AnimEvent_HitCheck()
     {
@@ -114,7 +106,9 @@ public class Player_Attack : MonoBehaviour
             Transform tr = targets[i];
             if (tr.TryGetComponent<Enemy_Health>(out Enemy_Health enemy))
             {
-                enemy.TakeDamage(50);
+                int damage = _dataSO.AttackDamage;
+                enemy.TakeDamage(damage);
+                OnSuccessAttack?.Invoke();
             }
         }
     }

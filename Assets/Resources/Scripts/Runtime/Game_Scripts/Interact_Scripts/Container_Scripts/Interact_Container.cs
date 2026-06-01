@@ -118,7 +118,7 @@ public class Interact_Container : MonoBehaviour, IInteract
         ItemDataSO item = slot.GetItem; // 슬롯의 아이템
         int amount = slot.Count;     // 추가할 슬롯의 아이템 갯수
         bool isStack = item.IsStackable; // 아이템 스택유무
-        float dur = slot.Dur;
+        int dur = slot.Dur;
 
         if (isStack)
         {

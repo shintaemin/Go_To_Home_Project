@@ -30,6 +30,11 @@ public class ItemCSVParser : MonoBehaviour
         if (_reader == null)
         {
             _reader = FindFirstObjectByType<ItemCSVReader>();
+            if (_reader == null )
+            {
+                Debug.LogError($"[{this.name}] : 하이어라키에 CSVReader 가 없음");
+                return;
+            }
         }
 
         CSVParsing();
@@ -79,21 +84,23 @@ public class ItemCSVParser : MonoBehaviour
         EItemType type = (EItemType)Enum.Parse(typeof(EItemType), cols[3].Trim());
         int isInteract = int.Parse(cols[4]);
         int isStackable = int.Parse(cols[5]);
-        int maxStackCount = int.Parse(cols[6]);
-        Sprite icon = Resources.Load<Sprite>(cols[7]);
-        string info = cols[8];
-        EWeaponType weaponType = (EWeaponType)Enum.Parse(typeof(EWeaponType), cols[9].Trim());
-        int damage = int.Parse(cols[10]);
-        float speed = float.Parse(cols[11]);
-        float dur = float.Parse(cols[12]);
-        float cost = float.Parse(cols[13]);
-        EAttackSoundType soundType = (EAttackSoundType)Enum.Parse(typeof(EAttackSoundType), cols[14].Trim());
-        GameObject prefab = Resources.Load<GameObject>(cols[15].Trim());
+        int isEquipable = int.Parse(cols[6]);
+        int maxStackCount = int.Parse(cols[7]);
+        Sprite icon = Resources.Load<Sprite>(cols[8]);
+        string info = cols[9];
+        EWeaponType weaponType = (EWeaponType)Enum.Parse(typeof(EWeaponType), cols[10].Trim());
+        int damage = int.Parse(cols[11]);
+        float speed = float.Parse(cols[12]);
+        int dur = int.Parse(cols[13]);
+        int cost = int.Parse(cols[14]);
+        int steminaCost = int.Parse(cols[15]);
+        EAttackSoundType soundType = (EAttackSoundType)Enum.Parse(typeof(EAttackSoundType), cols[16].Trim());
+        GameObject prefab = Resources.Load<GameObject>(cols[17].Trim());
         string filePath = _weaponSoSavePath;
-
+        
         // 실제 SO 생성 후 SetUp을 호출
         WeaponDataSO weaponSO = CreateSO<WeaponDataSO>(id, itemFileName, filePath);
-        weaponSO.SetUp(id, name, type, isInteract, isStackable, maxStackCount, icon, info, weaponType, damage, speed, dur, cost, soundType, prefab);
+        weaponSO.SetUp(id, name, type, isInteract, isStackable, isEquipable ,maxStackCount, icon, info, weaponType, damage, speed, dur, cost, steminaCost, soundType, prefab);
 #if UNITY_EDITOR
         UnityEditor.EditorUtility.SetDirty(weaponSO); // 저장을 위함 에디터에 SO 정보가 바뀌었음을 저장한다.
 #endif
@@ -102,7 +109,7 @@ public class ItemCSVParser : MonoBehaviour
     // 사용 가능 아이템 분기
     private void ParseAvailable(string[] cols)
     {
-        EAvailableType type = (EAvailableType)Enum.Parse(typeof(EAvailableType), cols[9].Trim());
+        EAvailableType type = (EAvailableType)Enum.Parse(typeof(EAvailableType), cols[10].Trim());
 
         // 사용가능아이템은 물건던지기 등의 다양한 아이템이 들어 올 수 있으므로 분기가 가능하도록
         switch (type)
@@ -123,19 +130,20 @@ public class ItemCSVParser : MonoBehaviour
         EItemType type = (EItemType)Enum.Parse(typeof(EItemType), cols[3].Trim());
         int isInteract = int.Parse(cols[4]);
         int isStackable = int.Parse(cols[5]);
-        int maxStackCount = int.Parse(cols[6]);
-        Sprite icon = Resources.Load<Sprite>(cols[7]);
-        string info = cols[8];
-        EAvailableType availableType = (EAvailableType)Enum.Parse(typeof(EAvailableType), cols[9].Trim());
-        EHealingType healType = (EHealingType)Enum.Parse(typeof (EHealingType), cols[10].Trim());
-        int value = int.Parse(cols[11]);
-        float dur = float.Parse(cols[12]);
-        float cooldown = float.Parse(cols[13]);
+        int isEquipable = int.Parse(cols[6]);
+        int maxStackCount = int.Parse(cols[7]);
+        Sprite icon = Resources.Load<Sprite>(cols[8]);
+        string info = cols[9];
+        EAvailableType availableType = (EAvailableType)Enum.Parse(typeof(EAvailableType), cols[10].Trim());
+        EHealingType healType = (EHealingType)Enum.Parse(typeof (EHealingType), cols[11].Trim());
+        int value = int.Parse(cols[12]);
+        float dur = float.Parse(cols[13]);
+        float cooldown = float.Parse(cols[14]);
         string filePath = _availableSOSavePath;
-        GameObject prefab = Resources.Load<GameObject>(cols[14].Trim());
+        GameObject prefab = Resources.Load<GameObject>(cols[15].Trim());
 
         HealItemSO healItemSO = CreateSO<HealItemSO>(id, itemFileName, filePath);
-        healItemSO.SetUp(id, name, type, isInteract, isStackable, maxStackCount, icon, info, availableType, healType, value, dur, cooldown, prefab);
+        healItemSO.SetUp(id, name, type, isInteract, isStackable, isEquipable, maxStackCount, icon, info, availableType, healType, value, dur, cooldown, prefab);
 #if UNITY_EDITOR
         UnityEditor.EditorUtility.SetDirty(healItemSO);
 #endif
@@ -150,18 +158,19 @@ public class ItemCSVParser : MonoBehaviour
         EItemType type = (EItemType)Enum.Parse(typeof(EItemType), cols[3].Trim());
         int isInteract = int.Parse(cols[4]);
         int isStackable = int.Parse(cols[5]);
-        int maxStackCount = int.Parse(cols[6]);
-        Sprite icon = Resources.Load<Sprite>(cols[7]);
-        string info = cols[8];
-        EAvailableType availableType = (EAvailableType)Enum.Parse(typeof(EAvailableType), cols[9].Trim());
-        EThrowingSoundType trowingSoundType = (EThrowingSoundType)Enum.Parse(typeof(EThrowingSoundType), cols[10].Trim());
-        int isThrowingable = int.Parse(cols[11]);
-        float soundRange = float.Parse(cols[12]);
-        float throwDistance = float.Parse(cols[13]);
-        GameObject prefab = Resources.Load<GameObject>(cols[14].Trim());
+        int isEquipable = int.Parse(cols[6]);
+        int maxStackCount = int.Parse(cols[7]);
+        Sprite icon = Resources.Load<Sprite>(cols[8]);
+        string info = cols[9];
+        EAvailableType availableType = (EAvailableType)Enum.Parse(typeof(EAvailableType), cols[10].Trim());
+        EThrowingSoundType trowingSoundType = (EThrowingSoundType)Enum.Parse(typeof(EThrowingSoundType), cols[11].Trim());
+        int isThrowingable = int.Parse(cols[12]);
+        float soundRange = float.Parse(cols[13]);
+        float throwDistance = float.Parse(cols[14]);
+        GameObject prefab = Resources.Load<GameObject>(cols[15].Trim());
 
         SoundItemSO soundItemSO = CreateSO<SoundItemSO>(id, itemFileName, filePath);
-        soundItemSO.SetUp(id, name, type, isInteract, isStackable, maxStackCount, icon, info, availableType, trowingSoundType, isThrowingable, soundRange, throwDistance, prefab);
+        soundItemSO.SetUp(id, name, type, isInteract, isStackable, isEquipable, maxStackCount, icon, info, availableType, trowingSoundType, isThrowingable, soundRange, throwDistance, prefab);
 #if UNITY_EDITOR
         UnityEditor.EditorUtility.SetDirty(soundItemSO);
 #endif

@@ -29,7 +29,8 @@ public class HealItemSO : AvailableDataSO
         string name, 
         EItemType itemType, 
         int isInteract, 
-        int isStackable, 
+        int isStackable,
+        int isEquipable,
         int maxStackCount, 
         Sprite icon, 
         string info, 
@@ -41,7 +42,7 @@ public class HealItemSO : AvailableDataSO
         GameObject prefab
         )
     {
-        base.SetUp(id, name, itemType, isInteract, isStackable, maxStackCount, icon, info, availableType, prefab);
+        base.SetUp(id, name, itemType, isInteract, isStackable, isEquipable, maxStackCount, icon, info, availableType, prefab);
         _healType = healType;
         _value = value;
         _duration = dur;

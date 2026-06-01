@@ -17,6 +17,7 @@ MonoBehaviour:
   _itemType: 2
   _isInteractable: 1
   _isStackable: 0
+  _isEquipable: 0
   _maxStackCount: 1
   _icon: {fileID: 21300000, guid: 8395f5952e89e6a43803d32c64d96322, type: 3}
   _info: "\uC2A4\uD14C\uBBF8\uB108\uB97C 30\uB9CC\uD07C \uD68C\uBCF5"

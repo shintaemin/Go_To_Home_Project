@@ -20,9 +20,22 @@ public abstract class AvailableDataSO : ItemDataSO
     [SerializeField] private EAvailableType _availableType;
 
     #region 파싱 시 호출 함수
-    public void SetUp(int id, string name, EItemType itemType, int isInteract, int isStackable, int maxStackCount, Sprite icon, string info, EAvailableType type, GameObject prefab)
+    public void SetUp
+        (
+        int id, 
+        string name, 
+        EItemType itemType, 
+        int isInteract, 
+        int isStackable, 
+        int isEquipable, 
+        int maxStackCount, 
+        Sprite icon, 
+        string info, 
+        EAvailableType type, 
+        GameObject prefab
+        )
     {
-        base.SetUp(id, name, itemType, isInteract, isStackable, maxStackCount, icon, info, prefab);
+        base.SetUp(id, name, itemType, isInteract, isStackable, isEquipable, maxStackCount, icon, info, prefab);
 
         _availableType = type;
     }

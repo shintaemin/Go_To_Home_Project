@@ -90,7 +90,7 @@ public class Inventory_Manager : MonoBehaviour
         ItemDataSO item = slot.GetItem;  // 슬롯의 아이템
         int amount = slot.Count;         // 추가할 슬롯의 아이템 갯수
         bool isStack = item.IsStackable; // 아이템 스택유무
-        float dur = slot.Dur;
+        int dur = slot.Dur;
 
         if (isStack)
         {
@@ -141,7 +141,7 @@ public class Inventory_Manager : MonoBehaviour
         return true;
     } // <- AddItem End
 
-    public SlotData GetSlotData(int index) // 아이디를 통해 슬롯데이터 획득
+    public SlotData GetSlotData(int index) // 인덱스 를 통해 슬롯데이터 획득
     {
         if (index < 0 || index >= _itemList.Count) { return null; }
 
@@ -166,7 +166,7 @@ public class Inventory_Manager : MonoBehaviour
 
         if (slot == null || slot.GetItem == null) { return null; }
 
-        float duration = slot.Dur;   // 해당 아이템의 내구도 가져오기
+        int duration = slot.Dur;   // 해당 아이템의 내구도 가져오기
         SlotData outSlot = new SlotData(); // 반환시킬 슬롯 생성
 
         outSlot.SetItem(slot.GetItem, -1, count); // 기존 슬롯 데이터 복사
@@ -203,5 +203,7 @@ public class Inventory_Manager : MonoBehaviour
 
         _inventoryAnim.TryInventoryOpen();
     }
+
+    public int GetInventoryCount() => _itemList.Count;
     #endregion
 }

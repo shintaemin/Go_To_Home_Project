@@ -17,13 +17,15 @@ MonoBehaviour:
   _itemType: 1
   _isInteractable: 1
   _isStackable: 0
+  _isEquipable: 1
   _maxStackCount: 1
   _icon: {fileID: 21300000, guid: 41428037df562ac458bbb201261ab6c1, type: 3}
   _info: "\uD478\uC289"
   _prefab: {fileID: 1162350040268033467, guid: cbbeb3ee79441ab49a9177a25bd71e10, type: 3}
   _weapontype: 3
   _damage: 30
-  _attackSpeedRatio: 2
+  _attackSpeedRatio: 2.5
   _maxDurability: 100
-  _attackCost: 3
+  _attackDurabilityCost: 3
+  _attackSteminaCost: 10
   _attackSoundType: 2

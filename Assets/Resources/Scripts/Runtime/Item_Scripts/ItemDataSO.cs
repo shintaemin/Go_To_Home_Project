@@ -29,13 +29,14 @@ public class ItemDataSO : ScriptableObject
     [SerializeField] private GameObject _prefab;
 
     #region 파싱시 셋업 함수
-    public void SetUp(int id, string name, EItemType type, int isInteract, int isStackable, int maxStackCount, Sprite icon, string info, GameObject prefab)
+    public void SetUp(int id, string name, EItemType type, int isInteract, int isStackable, int isEquipable, int maxStackCount, Sprite icon, string info, GameObject prefab)
     {
         _id = id;
         _name = name;
         _itemType = type;
         _isInteractable = isInteract == 1;
         _isStackable = isStackable == 1;
+        _isEquipable = isEquipable == 1;
         _maxStackCount = _isStackable ? maxStackCount : 1;
         _icon = icon;
         _info = info;
