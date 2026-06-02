@@ -31,8 +31,14 @@ public class CurrentSlot_UI : MonoBehaviour
 
 		_infoText.text = info;
 	}
-	public void SetButton(bool equip = false)
+	public void SetButton(bool equip = false, bool all = false)
 	{
+		if (all)
+		{
+            _equipButton.SetActive(false);
+            _useButton.SetActive(false);
+        }
+
 		if (equip)
 		{
 			_equipButton.SetActive(true);

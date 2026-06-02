@@ -95,6 +95,7 @@ public class Slot_UI : MonoBehaviour, IPointerClickHandler, IBeginDragHandler, I
         {
             _uiManger = UI_Manager.Instance;
         }
+        if (_pathType == ESlotPathType.Container) { return; }
 
         _uiManger.CurrentSlotUIUpdate(_slotData);
     }
@@ -151,9 +152,23 @@ public class Slot_UI : MonoBehaviour, IPointerClickHandler, IBeginDragHandler, I
         switch (PathType)
         {
             case ESlotPathType.Inventory: // 인벤토리에 아이템 추가
-                Inventory_Manager.Instance.AddItem(dropData, Index); break;
+                if (Inventory_Manager.Instance.AddItem(dropData, Index))
+                {
+                    break;
+                }
+                else
+                {
+                    return;
+                }
             case ESlotPathType.Container: // 컨테이너에 아이템 추가
-                _uiSlotManager.GetContainer.AddItem(dropData, Index); break;
+                if (_uiSlotManager.GetContainer.AddItem(dropData, Index))
+                {
+                    break;
+                }
+                else
+                {
+                    return;
+                }
         }
 
         GUtill.Log($"[{this.name}] : 이동 성공 {slotUI.PathType} 의 데이터 삭제", EDebugType.Warn);

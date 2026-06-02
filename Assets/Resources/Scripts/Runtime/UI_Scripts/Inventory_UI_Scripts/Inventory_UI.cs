@@ -137,7 +137,7 @@ public class Inventory_UI : MonoBehaviour
         Sprite icon = item != null ? item.Icon : null;
         string name = item != null ? item.Name : string.Empty;
         string info = item != null ? item.Info : string.Empty;
-        bool equip = item.IsEquipable;
+        bool equip = item != null ? item.IsEquipable : false;
         if (slot.Count <= 0) 
         { 
             icon = null; 
