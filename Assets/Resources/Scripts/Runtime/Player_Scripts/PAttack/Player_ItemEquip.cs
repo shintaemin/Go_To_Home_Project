@@ -33,19 +33,22 @@ public class Player_ItemEquip : MonoBehaviour
 
     private ItemDataSO _equipItem;
     private float _equipItemDur;
-    private float _equipItemCount;
+    private int _equipItemCount;
     #endregion
 
     #region 이벤트
-    public event Action<ItemDataSO> OnItemEquip; 
+    public event Action<SlotData> OnItemEquip; 
     #endregion
     private void Start()
     {
         Player_Attack attack = null;
+        Player_Throwing throwing = null;
         GUtill.TryGetCS(this, ref attack);
-        if (attack != null)
+        GUtill.TryGetCS(this, ref throwing);
+        if (attack != null && throwing != null)
         {
             attack.OnSuccessAttack += OnSuccessAttack;
+            throwing.OnSuccessThrowing += OnSuccessThrowing;
         }
     }
 
@@ -53,10 +56,13 @@ public class Player_ItemEquip : MonoBehaviour
     {
         _backupItem = null;
         Player_Attack attack = null;
+        Player_Throwing throwing = null;
         GUtill.TryGetCS(this, ref attack);
-        if (attack != null)
+        GUtill.TryGetCS(this, ref throwing);
+        if (attack != null && throwing != null)
         {
             attack.OnSuccessAttack -= OnSuccessAttack;
+            throwing.OnSuccessThrowing -= OnSuccessThrowing;
         }
     }
 
@@ -108,6 +114,39 @@ public class Player_ItemEquip : MonoBehaviour
         GUtill.Log($"[{this.name}] : 내구도 감소 완료 : [{_currentSlotItem.Dur}]");
     }
 
+    private void OnSuccessThrowing()
+    {
+        if (_currentSlotItem == null || Inventory_Manager.Instance == null) { return; }
+
+        SlotData currentSlot = Inventory_Manager.Instance.GetSlotData(_currentSlotIndex);
+        ItemDataSO currentItem = _currentSlotItem.GetItem;
+        int currentCount = _currentSlotItem.Count;
+
+        if (currentItem != _equipItem || currentCount != _equipItemCount)
+        {
+            currentSlot = CheckSlotItem(_equipItem, _equipItemDur, _equipItemCount);
+        }
+
+        _currentSlotItem = currentSlot;
+        _currentSlotIndex = currentSlot.Index;
+        _currentSlotItem.DecreseCount(1);
+
+        _equipItem = _currentSlotItem.GetItem;
+        _equipItemCount = _currentSlotItem.Count;
+
+        if (_currentSlotItem.Count <= 0)
+        {
+            _currentSlotItem.RemoveItemData();
+            ReleaseItem();
+        }
+        if (UI_Manager.Instance != null)
+        {
+            UI_Manager.Instance.InventorySlotUpdate(_currentSlotItem.Index, _currentSlotItem);
+        }
+
+        GUtill.Log($"[{this.name}] : 갯수 감소 완료 : [{_currentSlotItem.Count}]");
+    }
+
     #region 외부 호출 함수
     public void SetBackUpItem(SlotData item)
     {
@@ -128,12 +167,14 @@ public class Player_ItemEquip : MonoBehaviour
         }
         if (item != null)
         {
+            _currentSlotItem = _backupItem;
+            if (_currentSlotItem.Count <= 0 || (item is WeaponDataSO && _currentSlotItem.Dur <= 0)) { return; }
+
             GameObject go = Instantiate(item.Prefab);
             go.transform.SetParent(_handTr);
             go.transform.localPosition = Vector3.zero;
             go.transform.localRotation = Quaternion.identity;
             _currentItem = go;
-            _currentSlotItem = _backupItem;
             _currentSlotIndex = _currentSlotItem.Index;
             if (item is WeaponDataSO weapon && Player_DataManager.Instance != null)
             {
@@ -142,20 +183,34 @@ public class Player_ItemEquip : MonoBehaviour
                 data.AttackSteminaCost = attackSteminaCost;
                 data.AttackDamage = weapon.Damage;
             }
+            
             _equipItem = item;
             _equipItemDur = _currentSlotItem.Dur;
             _equipItemCount = _currentSlotItem.Count;
-            OnItemEquip?.Invoke(item);
+            OnItemEquip?.Invoke(_currentSlotItem);
         }
     }
     public void ReleaseItem()
     {
         Destroy(_currentItem);
         _currentItem = null;
+        _equipItem = null;
+        _equipItemDur = 0;
+        _equipItemCount = 0;
     }
     public bool IsAttackable()
     {
         return _currentItem != null && _equipItem is WeaponDataSO;
+    }
+    public bool IsTrowingable()
+    {
+        return _currentItem != null && _equipItem is SoundItemSO;
+    }
+    public SlotData GetEqupiSlot()
+    {
+        if (_currentSlotItem == null) { return null; }
+
+        return _currentSlotItem;
     }
     #endregion
 }

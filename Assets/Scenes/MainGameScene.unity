@@ -17345,11 +17345,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _handPos: {fileID: 1551290207}
-  _throwingCS: {fileID: 0}
-  _endPosPrefab: {fileID: 0}
   _groundLayer:
     serializedVersion: 2
     m_Bits: 2684354560
+  _endPosPrefab: {fileID: 1727283098550728653, guid: fcfd0673fb102d943a55b467daf61ead,
+    type: 3}
 --- !u!1 &255723873 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 695479363082361370, guid: 877bead24b64f3a4aaa3c450611fb93c,
@@ -32219,6 +32219,8 @@ MonoBehaviour:
   _currentImage: {fileID: 2078296657}
   _nameText: {fileID: 1945017206}
   _infoText: {fileID: 1336841099}
+  _useButton: {fileID: 1842840400}
+  _equipButton: {fileID: 935992887}
 --- !u!1001 &499168669
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -37574,7 +37576,7 @@ MonoBehaviour:
   m_Center: {x: 0, y: 2, z: 0}
   m_LayerMask:
     serializedVersion: 2
-    m_Bits: 838860801
+    m_Bits: 1912602625
   m_UseGeometry: 0
   m_DefaultArea: 0
   m_GenerateLinks: 0

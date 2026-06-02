@@ -62,6 +62,8 @@ public class UI_SlotMove_Manager : MonoBehaviour
     // 드래그 시작
     public void Begin(Slot_UI slotUI)
     {
+        if (slotUI.Data.GetItem == null) { return; }
+
         _dragSlot = slotUI; // 이동시킬 슬롯UI 지정
         _dragData = _dragSlot.Data; // 이동시킬 데이터 지정
         _drageImage.sprite = _dragSlot.SlotIcon; // 이동시 보여줄 이미지 지정

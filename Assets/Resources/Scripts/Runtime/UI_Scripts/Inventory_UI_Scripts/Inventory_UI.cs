@@ -114,13 +114,14 @@ public class Inventory_UI : MonoBehaviour
         {
             if (_slotList[i] == null) { continue; }
 
-            _slotList[i].Data = slotList[i];
+            SlotUpdate(i, slotList[i]);
         }
     }
 
     public void SlotUpdate(int index, SlotData slot)
     {
         _slotList[index].Data = slot;
+        CurrentSlotUIUpdate(slot);
     }
 
     public void CurrentSlotUIUpdate(SlotData slot)
@@ -136,14 +137,17 @@ public class Inventory_UI : MonoBehaviour
         Sprite icon = item != null ? item.Icon : null;
         string name = item != null ? item.Name : string.Empty;
         string info = item != null ? item.Info : string.Empty;
-
-        if (icon != null && name != string.Empty && info != string.Empty)
-        {
-            _currentSlotUICS.SetIcon(icon);
-            _currentSlotUICS.SetName(name);
-            _currentSlotUICS.SetInfo(info);
-            _equipCS.SetBackUpItem(slot);
+        bool equip = item.IsEquipable;
+        if (slot.Count <= 0) 
+        { 
+            icon = null; 
         }
+
+        _currentSlotUICS.SetButton(equip);
+        _currentSlotUICS.SetIcon(icon);
+        _currentSlotUICS.SetName(name);
+        _currentSlotUICS.SetInfo(info);
+        _equipCS.SetBackUpItem(slot);
     }
     #endregion
 }

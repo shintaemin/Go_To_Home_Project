@@ -44,11 +44,11 @@ public class PlayerInputManager : MonoBehaviour
     #region 프로퍼티
     public bool RunInput { get; private set; } // 달리기 입력 프로퍼티
     public bool CrouchInput { get; private set; } // 웅크리기 입력 프로퍼티
+    public bool ThrowingInput { get; private set; } // 던지기 입력 프로퍼티
     #endregion
 
     #region 이벤트
     public event Action OnAttack;   // 공격 이벤트
-    public event Action OnThrowing; // 던지기 이벤트
     public event Action OnInventory; // 인벤토리 이벤트
     public event Action OnInteract;
     #endregion
@@ -95,6 +95,10 @@ public class PlayerInputManager : MonoBehaviour
         // 토글 bool 값 전달 및 구독 진행
         RunToggleSetting(_isRunToggle); // 달리기 구독
         CrouchToggleSetting(_isCrouchToggle); // 웅크리기 구독
+
+        _actions.Player.Throwing.started += OnThrowingStarted;
+        _actions.Player.Throwing.canceled += OnThrowingCanceled;
+
         _actions.Player.Attack.performed += OnAttackInput; // 공격 구독
         _actions.Player.Inventory.performed += OnInventoryInput; // 인벤토리 구독
         _actions.Player.Interact.performed += OnInteractInput; // 상호작용 구독
@@ -109,6 +113,9 @@ public class PlayerInputManager : MonoBehaviour
         _actions.Player.Run.performed -= OnRunToggle;
         _actions.Player.Run.started -= OnRunStarted;
         _actions.Player.Run.canceled -= OnRunCanceled;
+
+        _actions.Player.Throwing.started -= OnThrowingStarted;
+        _actions.Player.Throwing.canceled -= OnThrowingCanceled;
 
         _actions.Player.Attack.performed -= OnAttackInput;
         _actions.Player.Inventory.performed -= OnInventoryInput;
@@ -173,6 +180,10 @@ public class PlayerInputManager : MonoBehaviour
     private void OnCrouchStarted(InputAction.CallbackContext ctx) => CrouchInput = true;
     private void OnCrouchCanceled(InputAction.CallbackContext ctx) => CrouchInput = false;
     #endregion
+    #region 던지기 이벤트
+    private void OnThrowingStarted(InputAction.CallbackContext ctx) => ThrowingInput = true;
+    private void OnThrowingCanceled(InputAction.CallbackContext ctx) => ThrowingInput = false;
+    #endregion
     #region 공격, 인벤토리, 상호작용 이벤트
     private void OnAttackInput(InputAction.CallbackContext ctx) => OnAttack?.Invoke();
     private void OnInventoryInput(InputAction.CallbackContext ctx) => OnInventory?.Invoke();
@@ -184,6 +195,7 @@ public class PlayerInputManager : MonoBehaviour
     public Vector2 GetMousePos => _actions.Player.MousePosition.ReadValue<Vector2>();
     public bool GetRunInput => RunInput;
     public bool GetCrouchInput => CrouchInput;
+    public bool GetThrowingInput => ThrowingInput;
 
     /// <summary> 이후 옵션 매니저 생성하여 게임옵션 설정때에 사용할 함수 미리 사용 </summary>
     /// <param name="toggle"> 토글 사용 유무 On / Off </param>

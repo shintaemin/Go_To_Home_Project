@@ -144,6 +144,8 @@ public class Slot_UI : MonoBehaviour, IPointerClickHandler, IBeginDragHandler, I
         SlotData dropData = _uiSlotManager.GetDragData;
         Slot_UI slotUI = _uiSlotManager.GetDragUI;
 
+        if (dropData == null || slotUI == null) { return; }
+
         GUtill.Log($"[{this.name}] : 드롭 성공 {PathType} 로 이동", EDebugType.Warn);
         // Drop 한 슬롯의 type 을 확인
         switch (PathType)

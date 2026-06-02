@@ -53,6 +53,7 @@ public class Player_Controller : MonoBehaviour
 
     #region 내부 변수
     private PlayerInputManager _im;
+    private bool _waitAttack = false;
     #endregion
 
     #region 프로퍼티
@@ -116,10 +117,19 @@ public class Player_Controller : MonoBehaviour
 
     private void AttackInput()
     {
-        if (!CanAttack|| _attackCS == null) { return; }
-        if (_itemEquipCS == null || !_itemEquipCS.IsAttackable()) { return; }
+        if (!CanAttack) { return; }
+        if (_itemEquipCS == null || _attackCS == null || _throwingCS == null) { return; }
 
-        _attackCS.TryAttack();
+
+        if (_waitAttack)
+        {
+            _throwingCS.OnTrowing();
+        }
+        else
+        {
+            if (!_itemEquipCS.IsAttackable()) { return; }
+            _attackCS.TryAttack();
+        }
     }
 
     private void InventoryInput()
@@ -165,13 +175,38 @@ public class Player_Controller : MonoBehaviour
 
     private void Update()
     {
+        ThrowingUpdate();
         MoveUpdate(); // 이동 업데이트
         RotateUpdate(); // 회전 업데이트
         _steminaCS?.SetState(_state);    // 스테미너 업데이트
         _soundCS?.SetSoundDistatce(_state);
         _finderCS?.Find();
     }
+    private void ThrowingUpdate()
+    {
+        if (_throwingCS == null || _im == null || _itemEquipCS == null || !_itemEquipCS.IsTrowingable() || _controlMode == EControllMode.Inventory)
+        {
+            if (_waitAttack) 
+            { 
+                _waitAttack = false;
+                _throwingCS?.OffThrowing();
+            }
+            return; 
+        }
 
+        bool aiming = _im.GetThrowingInput;
+
+        if (aiming)
+        {
+            _waitAttack = true;
+            _throwingCS.TrowingPosUpdate(_im.GetMousePos);
+        }
+        else
+        {
+            _waitAttack = false;
+            _throwingCS.OffThrowing();
+        }
+    }
     private void MoveUpdate()
     {
         if (!CanMove || _im == null) { return; }

@@ -60,18 +60,17 @@ public class Player_Anim : MonoBehaviour
         }
     }
 
-    private void OnEquipItem(ItemDataSO item)
+    private void OnEquipItem(SlotData slot)
     {
-        if (item == null) { return; }
+        if (slot == null) { return; }
 
-        if (item is WeaponDataSO weapon)
+        if (slot.GetItem is WeaponDataSO weapon)
         {
             float attackSpeed = weapon.AttackSpeedRatio;
             _anim.SetFloat(_hashAttackSpeedParam, attackSpeed);
         }
     }
     #endregion
-
 
     private void Update()
     {
@@ -107,7 +106,6 @@ public class Player_Anim : MonoBehaviour
 			case EMovementState.Attack: _anim.SetTrigger(_hashAttack); break;
 				// 상호 작용 사망 등을 여기서 처리
         }
-		
 	}
 
 	public void OnInventoryAnim()

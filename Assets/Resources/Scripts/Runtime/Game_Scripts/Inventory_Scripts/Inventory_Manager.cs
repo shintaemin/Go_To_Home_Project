@@ -87,6 +87,8 @@ public class Inventory_Manager : MonoBehaviour
     #region 외부 호출 함수
     public bool AddItem(SlotData slot, int index) // 아이템 추가 SlotData 를 통한 추가
     {
+        if (slot == null) { return false; }
+
         ItemDataSO item = slot.GetItem;  // 슬롯의 아이템
         int amount = slot.Count;         // 추가할 슬롯의 아이템 갯수
         bool isStack = item.IsStackable; // 아이템 스택유무
@@ -205,5 +207,6 @@ public class Inventory_Manager : MonoBehaviour
     }
 
     public int GetInventoryCount() => _itemList.Count;
+    public List<SlotData> GetInventoryItems() => _itemList;
     #endregion
 }

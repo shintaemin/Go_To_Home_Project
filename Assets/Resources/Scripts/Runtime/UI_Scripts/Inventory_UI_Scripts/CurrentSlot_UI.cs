@@ -8,10 +8,12 @@ public class CurrentSlot_UI : MonoBehaviour
 	[SerializeField] private Image _currentImage;
 	[SerializeField] private TextMeshProUGUI _nameText;
     [SerializeField] private TextMeshProUGUI _infoText;
-	#endregion
+	[SerializeField] private GameObject _useButton;
+    [SerializeField] private GameObject _equipButton;
+    #endregion
 
-	#region 외부 호출 함수 
-	public void SetIcon(Sprite icon)
+    #region 외부 호출 함수 
+    public void SetIcon(Sprite icon)
 	{
 		if (_currentImage == null || icon == null) { return; }
 		
@@ -29,5 +31,18 @@ public class CurrentSlot_UI : MonoBehaviour
 
 		_infoText.text = info;
 	}
+	public void SetButton(bool equip = false)
+	{
+		if (equip)
+		{
+			_equipButton.SetActive(true);
+			_useButton.SetActive(false);
+		}
+		else
+        {
+            _equipButton.SetActive(false);
+            _useButton.SetActive(true);
+        }
+    }
 	#endregion
 }
