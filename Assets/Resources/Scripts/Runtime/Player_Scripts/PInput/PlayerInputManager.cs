@@ -48,6 +48,7 @@ public class PlayerInputManager : MonoBehaviour
 
     #region 이벤트
     public event Action OnAttack;   // 공격 이벤트
+    public event Action OnThrowing; // 던지기 이벤트
     public event Action OnInventory; // 인벤토리 이벤트
     public event Action OnInteract;
     #endregion

@@ -43,6 +43,7 @@ public class Player_Controller : MonoBehaviour
     [SerializeField] private Player_Sound _soundCS;
     [SerializeField] private Player_Stemina _steminaCS;
     [SerializeField] private Player_Attack _attackCS;
+    [SerializeField] private Player_Throwing _throwingCS;
     [SerializeField] private Player_LoockMousePointer _rotateCS;
     [SerializeField] private Player_InteractFinder _finderCS;
     [SerializeField] private Player_Interact _interactCS;
@@ -159,7 +160,7 @@ public class Player_Controller : MonoBehaviour
         GUtill.TryGetCS(this, ref _moveCS);     GUtill.TryGetCS(this, ref _animCS);     GUtill.TryGetCS(this, ref _soundCS);
         GUtill.TryGetCS(this, ref _steminaCS);  GUtill.TryGetCS(this, ref _attackCS);   GUtill.TryGetCS(this, ref _interactCS);
         GUtill.TryGetCS(this, ref _rotateCS);   GUtill.TryGetCS(this, ref _finderCS);   GUtill.TryGetCS(this, ref _healthCS);
-        GUtill.TryGetCS(this, ref _itemEquipCS);
+        GUtill.TryGetCS(this, ref _itemEquipCS);GUtill.TryGetCS(this, ref _throwingCS); 
     }
 
     private void Update()
