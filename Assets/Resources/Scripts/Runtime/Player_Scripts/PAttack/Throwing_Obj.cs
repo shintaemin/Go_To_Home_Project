@@ -12,7 +12,6 @@ public class Throwing_Obj : MonoBehaviour
     [SerializeField] private float _decalRange;
     [SerializeField] private float _throwForce = 5f;
     [SerializeField] private float _upwardAngle = 45f;
-    [SerializeField] private float _throwingSpeed = 10f;
     #endregion
 
     #region 내부변수
