@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -225,10 +226,30 @@ public class Inventory_Manager : MonoBehaviour
         HealItemSO healItem = slot.GetItem as HealItemSO;
         if (healItem == null) { return; }
 
-        if (_player != null) { healItem.Use(_player); }
-        slot.DecreseCount(1);
+        if (_player != null && Player_DataManager.Instance != null)
+        {
+            Player_DataSO dataSO = Player_DataManager.Instance.GetDataSO;
+            bool success = false;
+            if (healItem.HealType == EHealingType.HP && dataSO.HP < dataSO.GetMaxHP)
+            {
+                success = true;
+            }
+            else if (healItem.HealType == EHealingType.Stemina && dataSO.Stemina < dataSO.GetMaxStemina)
+            {
+                success = true;
+            }
 
+            if (!success) { return; }
+        }
+
+        healItem.Use(_player);
+        slot.DecreseCount(1);
         int usedItemId = healItem.ID;
+        int index = slot.Index;
+        if (UI_Manager.Instance != null)
+        {
+            UI_Manager.Instance.InventorySlotUpdate(index, slot);
+        }
 
         foreach (SlotData iteSlot in _itemList)
         {
