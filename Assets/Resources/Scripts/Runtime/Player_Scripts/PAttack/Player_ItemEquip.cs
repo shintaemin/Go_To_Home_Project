@@ -148,12 +148,14 @@ public class Player_ItemEquip : MonoBehaviour
     }
 
     #region 외부 호출 함수
-    public void SetBackUpItem(SlotData item)
+    public void SetBackUpItem(SlotData slot)
     {
-        if (item == null) { return; }
-        if (!item.GetItem.IsEquipable) { return; }
+        if (slot == null) { return; }
 
-        _backupItem = item;
+        if (slot.GetItem.IsEquipable || slot.GetItem is HealItemSO)
+        {
+            _backupItem = slot;
+        }
     }
     public void ButtonEvent_EquipItem()
     {
@@ -190,6 +192,19 @@ public class Player_ItemEquip : MonoBehaviour
             OnItemEquip?.Invoke(_currentSlotItem);
         }
     }
+
+    public void ButtonEvent_UseItem()
+    {
+        if (_backupItem == null) { return; }
+        if (_backupItem.GetItem == null || _backupItem.GetItem is not AvailableDataSO useItem) { return; }
+        if (Inventory_Manager.Instance == null) { return; }
+
+        if (_backupItem.GetItem is HealItemSO)
+        {
+            Inventory_Manager.Instance.UseHealItem(_backupItem);
+        }
+    }
+
     public void ReleaseItem()
     {
         Destroy(_currentItem);

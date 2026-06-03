@@ -18,6 +18,7 @@ public class Inventory_Manager : MonoBehaviour
     #region 인스펙터
     [SerializeField] private List<SlotData> _itemList;
     [SerializeField] private Player_InventoryAnim _inventoryAnim;
+    [SerializeField] private GameObject _player;
 
     [Header("옵션")]
     [SerializeField] private int _maxStorege = 24;
@@ -45,7 +46,7 @@ public class Inventory_Manager : MonoBehaviour
         for (int i = 0; i < _maxStorege; i++)
         {
             _itemList.Add(new SlotData()); // 미리 리스트 채워듬
-            _itemList[i].SetItem(null, i, 0);
+            _itemList[i].SetItem(null, i, 0, 0);
         }
     }
 
@@ -55,6 +56,10 @@ public class Inventory_Manager : MonoBehaviour
         {
             UI_Manager.Instance.InitInventoryUI(_itemList);
             GUtill.Log($"[{this.name}] : 인벤토리 초기업데이트 수행");
+        }
+        if (_player == null)
+        {
+            _player = GameObject.FindWithTag("Player");
         }
     }
 
@@ -93,6 +98,7 @@ public class Inventory_Manager : MonoBehaviour
         int amount = slot.Count;         // 추가할 슬롯의 아이템 갯수
         bool isStack = item.IsStackable; // 아이템 스택유무
         int dur = slot.Dur;
+        float coolEndTime = slot.GetCoolEndTime;
 
         if (isStack)
         {
@@ -134,7 +140,7 @@ public class Inventory_Manager : MonoBehaviour
             if (index == -1) { return false; }
         }
 
-        _itemList[index].SetItem(item, index, amount, dur); // 데이터 할당
+        _itemList[index].SetItem(item, index, amount, dur, coolEndTime); // 데이터 할당
 
         if (UI_Manager.Instance != null)
         {
@@ -206,7 +212,34 @@ public class Inventory_Manager : MonoBehaviour
         _inventoryAnim.TryInventoryOpen();
     }
 
+    public void UseHealItem(SlotData slot)
+    {
+        if (slot == null || slot.GetItem == null) { return; }
+        
+        if (slot.IsCooldown) 
+        {
+            GUtill.Log($"[{this.name}] : {slot.GetItem.name} 이 이미 쿨타임중 {slot.GetCoolEndTime - Time.time}");
+            return; 
+        }
+
+        HealItemSO healItem = slot.GetItem as HealItemSO;
+        if (healItem == null) { return; }
+
+        if (_player != null) { healItem.Use(_player); }
+        slot.DecreseCount(1);
+
+        int usedItemId = healItem.ID;
+
+        foreach (SlotData iteSlot in _itemList)
+        {
+            if (iteSlot != null && iteSlot.GetItem != null && iteSlot.GetItem.ID == usedItemId)
+            {
+                iteSlot.SetCooldown();
+            }
+        }
+    }
+
     public int GetInventoryCount() => _itemList.Count;
-    public List<SlotData> GetInventoryItems() => _itemList;
+    public List<SlotData> GetInventoryItemList() => _itemList;
     #endregion
 }

@@ -6628,6 +6628,7 @@ MonoBehaviour:
     _slotIndex: 0
     _curentDur: 0
     _count: 0
+    _coolEndTime: 0
   _dragSlot: {fileID: 0}
   _drageImage: {fileID: 1626126912}
 --- !u!4 &49639980
@@ -88315,6 +88316,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _itemList: []
   _inventoryAnim: {fileID: 250154238}
+  _player: {fileID: 250154234}
   _maxStorege: 35
   _capacityOverlab: 1
 --- !u!1001 &1518363370
@@ -112769,7 +112771,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1842840403}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 250154280}
+        m_TargetAssemblyTypeName: Player_ItemEquip, Assembly-CSharp
+        m_MethodName: ButtonEvent_UseItem
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &1842840403
 MonoBehaviour:
   m_ObjectHideFlags: 0

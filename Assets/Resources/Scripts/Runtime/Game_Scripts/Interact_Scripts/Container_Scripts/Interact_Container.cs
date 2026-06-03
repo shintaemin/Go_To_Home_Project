@@ -119,6 +119,7 @@ public class Interact_Container : MonoBehaviour, IInteract
         int amount = slot.Count;     // 추가할 슬롯의 아이템 갯수
         bool isStack = item.IsStackable; // 아이템 스택유무
         int dur = slot.Dur;
+        float coolEndTime = slot.GetCoolEndTime;
 
         if (isStack)
         {
@@ -151,7 +152,7 @@ public class Interact_Container : MonoBehaviour, IInteract
             if (index == -1) { return false; }
         }
 
-        _itemList[index].SetItem(item, index, amount, dur); // 데이터 할당
+        _itemList[index].SetItem(item, index, amount, dur, coolEndTime); // 데이터 할당
 
         _containerUI.AllUpdata(_itemList);
         return true;

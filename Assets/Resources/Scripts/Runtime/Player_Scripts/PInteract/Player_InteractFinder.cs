@@ -78,10 +78,6 @@ public class Player_InteractFinder : MonoBehaviour
                 }
             }
         }
-        if (target != null)
-        {
-            GUtill.Log($"[{this.name}] : 타겟 지정 완료 : {target}");
-        }
         // 최종 타겟 지정 + 다음 검사시간 업데이트
         _interact?.SetTarget(target);
         _nextFindTime = Time.time + _findInterval;

@@ -15,6 +15,7 @@ public class SlotData
     [SerializeField] private int _slotIndex;
     [SerializeField] private int _curentDur;
     [SerializeField] private int _count;
+    [SerializeField] private float _coolEndTime;
     #endregion
 
     #region 프로퍼티
@@ -39,6 +40,29 @@ public class SlotData
 
     #region 외부 호출 함수
     public ItemDataSO GetItem => _item;
+
+    public bool IsCooldown => Time.time < _coolEndTime;
+
+    public float GetCoolEndTime => _coolEndTime;
+
+    public void SetCooldown()
+    {
+        if (_item == null) return;
+        if (_item is not HealItemSO heal) { return; }
+
+        float cool = heal.Cooldown;
+        _coolEndTime = Time.time + cool;
+    }
+
+    public float GetCooldownProgress()
+    {
+        if (_item != null && _item is HealItemSO heal && heal.Cooldown > 0)
+        {
+            float timeLeft = _coolEndTime - Time.time;
+            return Mathf.Max(0f, timeLeft / heal.Cooldown);
+        }
+        return -1f;
+    }
 
     public int AddCount(int value = 1)
     {
@@ -85,7 +109,7 @@ public class SlotData
         if (Count < 0) { Count = 0; }
     }
 
-    public void SetItem(ItemDataSO item, int index, int count = 0, int dur = -1)
+    public void SetItem(ItemDataSO item, int index, int count = 0, int dur = -1, float coolEndTime = 0f)
     {
         if (item is WeaponDataSO weapon)
         {
@@ -95,6 +119,7 @@ public class SlotData
         _item = item;
         _count = count > 0 ? count : 0;
         _slotIndex = index;
+        _coolEndTime = coolEndTime;
     }
 
     public void DecreaseDur()
