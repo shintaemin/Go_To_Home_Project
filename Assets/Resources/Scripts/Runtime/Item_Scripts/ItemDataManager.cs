@@ -54,6 +54,10 @@ public class ItemDataManager : MonoBehaviour
     {
         return _registrySO?.GetItemData(name);
     }
+    public ItemDataSO GetItem(GameObject obj)
+    {
+        return _registrySO.GetItemData(obj);
+    }
 
     public ItemDataSO GetRandomItem()
     {

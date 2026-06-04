@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 2397761830153092658}
   - component: {fileID: -957226346239037722}
   - component: {fileID: -2583765495336069466}
+  - component: {fileID: 1313928545555433905}
   m_Layer: 0
   m_Name: Brick_01
   m_TagString: Untagged
@@ -101,7 +102,6 @@ MonoBehaviour:
   _decalRange: 0
   _throwForce: 5
   _upwardAngle: 45
-  _throwingSpeed: 10
 --- !u!54 &-2583765495336069466
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -129,3 +129,24 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
+--- !u!114 &1313928545555433905
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4199171100039208935}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 44d191f43d7e7204e89636a5495a6d95, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _item: {fileID: 0}
+  _slot:
+    _item: {fileID: 0}
+    _slotIndex: 0
+    _curentDur: 0
+    _count: 0
+    _coolEndTime: 0
+  _viewText: "[F] \uD68D \uB4DD"
+  _interactLayerNum: 30

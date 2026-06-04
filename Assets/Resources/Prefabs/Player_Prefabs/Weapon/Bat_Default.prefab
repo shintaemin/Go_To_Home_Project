@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 7168507104642970599}
   - component: {fileID: 7168507104641872167}
   - component: {fileID: 2387839466061075249}
+  - component: {fileID: 7641896228506496701}
   m_Layer: 0
   m_Name: Bat_Default
   m_TagString: Untagged
@@ -106,3 +107,22 @@ MeshCollider:
   m_Convex: 1
   m_CookingOptions: 30
   m_Mesh: {fileID: 4300000, guid: ca445f21e73d06a4c83556f03018ab9e, type: 3}
+--- !u!114 &7641896228506496701
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7168507104643805159}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 44d191f43d7e7204e89636a5495a6d95, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _slot:
+    _item: {fileID: 0}
+    _slotIndex: 0
+    _curentDur: 0
+    _count: 0
+    _coolEndTime: 0
+  _viewText: "[F] \uD68D \uB4DD"

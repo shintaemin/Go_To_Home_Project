@@ -64,20 +64,6 @@ public class Inventory_Manager : MonoBehaviour
         }
     }
 
-    // 아이템 리스트 안 빈공간을 찾아 리턴
-    private int ProvidedID()
-    {
-        for (int i = 0; i < _itemList.Count; i++)
-        {
-            if (_itemList[i].GetItem == null) { return i; }
-        }
-
-        if (_itemList.Count < _maxStorege) { return _itemList.Count; }
-
-        GUtill.Log($"[{this.name}] : 인벤토리 가득참", EDebugType.Warn);
-        return -1;
-    }
-
     private void RemoveSlot(int index) // 슬롯 삭제
     {
         if (_itemList[index].GetItem == null) { return; }
@@ -149,6 +135,20 @@ public class Inventory_Manager : MonoBehaviour
         }
         return true;
     } // <- AddItem End
+
+    // 아이템 리스트 안 빈공간을 찾아 리턴
+    public int ProvidedID()
+    {
+        for (int i = 0; i < _itemList.Count; i++)
+        {
+            if (_itemList[i].GetItem == null) { return i; }
+        }
+
+        if (_itemList.Count < _maxStorege) { return _itemList.Count; }
+
+        GUtill.Log($"[{this.name}] : 인벤토리 가득참", EDebugType.Warn);
+        return -1;
+    }
 
     public SlotData GetSlotData(int index) // 인덱스 를 통해 슬롯데이터 획득
     {

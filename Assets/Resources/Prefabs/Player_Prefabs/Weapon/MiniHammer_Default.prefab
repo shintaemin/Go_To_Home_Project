@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 8480965457686275170}
   - component: {fileID: 8480965457685178018}
   - component: {fileID: 4784459401587771603}
+  - component: {fileID: 6156534137842701977}
   m_Layer: 0
   m_Name: MiniHammer_Default
   m_TagString: Untagged
@@ -106,3 +107,22 @@ MeshCollider:
   m_Convex: 1
   m_CookingOptions: 30
   m_Mesh: {fileID: 4300000, guid: bd911a37209ade94a9aa5592caa7b512, type: 3}
+--- !u!114 &6156534137842701977
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8480965457682921570}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 44d191f43d7e7204e89636a5495a6d95, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _slot:
+    _item: {fileID: 0}
+    _slotIndex: 0
+    _curentDur: 0
+    _count: 0
+    _coolEndTime: 0
+  _viewText: "[F] \uD68D \uB4DD"

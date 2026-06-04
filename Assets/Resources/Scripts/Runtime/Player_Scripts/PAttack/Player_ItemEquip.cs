@@ -178,6 +178,15 @@ public class Player_ItemEquip : MonoBehaviour
             go.transform.localRotation = Quaternion.identity;
             _currentItem = go;
             _currentSlotIndex = _currentSlotItem.Index;
+            if (item.IsInteractable)
+            {
+                Item_Interact itemInterackt = null;
+                GUtill.TryGetCS(go, ref itemInterackt);
+                if (itemInterackt != null)
+                {
+                    itemInterackt.SetSlotData(_currentSlotItem, false);
+                }
+            }
             if (item is WeaponDataSO weapon && Player_DataManager.Instance != null)
             {
                 int attackSteminaCost = weapon.AttackSteminaCost;

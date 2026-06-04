@@ -105,6 +105,27 @@ public class ItemDataRegistrySO : ScriptableObject
         return _itemList[index];
     }
 
+    public ItemDataSO GetItemData(GameObject fieldObj)
+    {
+        if (fieldObj == null) { return null; }
+        if (_itemsDic.Count == 0) { InitDataList(); }
+    
+        string fieldName = fieldObj.name.Replace("(Clone)", "").Trim();
+
+        ItemDataSO item = null;
+
+        for (int i = 0; i < _itemsDic.Count; i++)
+        {
+            if (_itemList[i].Prefab == null) { continue; }
+            if (_itemList[i].Prefab.name != fieldName) { continue; }
+
+            item = _itemList[i];
+        }
+
+        return item;
+    }
+        
+
     public int GetLength => _length;
 
     // 시작시 업데이트를 진행할 진입점
