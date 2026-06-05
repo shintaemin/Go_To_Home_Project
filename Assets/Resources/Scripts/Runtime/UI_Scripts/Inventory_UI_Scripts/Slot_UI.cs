@@ -16,7 +16,7 @@ public enum ESlotPathType
     None,
     Inventory,
     Container,
-    Field
+    Field,
 }
 
 public class Slot_UI : MonoBehaviour, IPointerClickHandler, IBeginDragHandler, IDragHandler, IEndDragHandler, IDropHandler
@@ -78,7 +78,7 @@ public class Slot_UI : MonoBehaviour, IPointerClickHandler, IBeginDragHandler, I
             return;
         }
 
-        _textRoot.SetActive(true);
+        _textRoot.SetActive(data.IsStackable);
         int max = data.MaxStack;
         Sprite icon = data.Icon;
 
@@ -146,6 +146,10 @@ public class Slot_UI : MonoBehaviour, IPointerClickHandler, IBeginDragHandler, I
         Slot_UI slotUI = _uiSlotManager.GetDragUI;
 
         if (dropData == null || slotUI == null) { return; }
+        if (PathType == slotUI.PathType && _slotData.Index == dropData.Index)
+        {
+            return;
+        }
 
         GUtill.Log($"[{this.name}] : 드롭 성공 {PathType} 로 이동", EDebugType.Warn);
         // Drop 한 슬롯의 type 을 확인
@@ -195,7 +199,7 @@ public class Slot_UI : MonoBehaviour, IPointerClickHandler, IBeginDragHandler, I
         get { return _index; }
         set { _index = value; }
     }
-    public ESlotPathType PathType // 현재 창고 (인벤토리, 루팅상자, 필드)
+    public ESlotPathType PathType // 현재 창고 (인벤토리, 루팅상자, 필드, 퀵슬롯)
     {
         get { return _pathType; }
         set { _pathType = value; }
