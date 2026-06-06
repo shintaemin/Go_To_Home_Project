@@ -109,9 +109,13 @@ public class Interact_Container : MonoBehaviour, IInteract
         _containerUI.AllUpdata(_itemList);
     }
 
+    public string NameText()
+    {
+        return "전리품 상자";
+    }
     public string ViewText()
     {
-        return "전리품 상자 : 열기 [F]";
+        return "[F] : 열기 ";
     }
     public bool AddItem(SlotData slot, int index)
     {

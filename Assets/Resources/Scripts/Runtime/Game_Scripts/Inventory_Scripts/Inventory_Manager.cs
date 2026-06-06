@@ -246,6 +246,10 @@ public class Inventory_Manager : MonoBehaviour
         slot.DecreseCount(1);
         int usedItemId = healItem.ID;
         int index = slot.Index;
+        if (slot.Count <= 0)
+        {
+            slot.RemoveItemData();
+        }
         if (UI_Manager.Instance != null)
         {
             UI_Manager.Instance.InventorySlotUpdate(index, slot);
@@ -256,6 +260,10 @@ public class Inventory_Manager : MonoBehaviour
             if (iteSlot != null && iteSlot.GetItem != null && iteSlot.GetItem.ID == usedItemId)
             {
                 iteSlot.SetCooldown();
+            }
+            if (UI_Manager.Instance != null)
+            {
+                UI_Manager.Instance.InventorySlotUpdate(iteSlot.Index, iteSlot);
             }
         }
     }

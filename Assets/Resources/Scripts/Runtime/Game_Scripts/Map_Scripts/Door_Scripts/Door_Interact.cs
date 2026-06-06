@@ -70,6 +70,10 @@ public class Door_Interact : MonoBehaviour, IInteract
         }
     }
 
+    public string NameText()
+    {
+        return "¹®";
+    }
     public string ViewText()
     {
         return _isOpen ? "´Ý±â [F]" : "¿­±â [F]";

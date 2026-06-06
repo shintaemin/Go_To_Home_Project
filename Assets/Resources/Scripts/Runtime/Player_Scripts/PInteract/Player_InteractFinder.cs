@@ -81,6 +81,23 @@ public class Player_InteractFinder : MonoBehaviour
         // 최종 타겟 지정 + 다음 검사시간 업데이트
         _interact?.SetTarget(target);
         _nextFindTime = Time.time + _findInterval;
+
+        InteractUIUpdate(target);
+    }
+
+    private void InteractUIUpdate(IInteract target)
+    {
+        if (UI_Manager.Instance == null) { return; }
+
+        MonoBehaviour targetMono = target as MonoBehaviour;
+        if (targetMono != null)
+        {
+            UI_Manager.Instance.OpenInteractUI(targetMono.transform, target.NameText(), target.ViewText());
+        }
+        else
+        {
+            UI_Manager.Instance.CloseInteractUI();
+        }
     }
 
     private float Distance(Vector3 target)

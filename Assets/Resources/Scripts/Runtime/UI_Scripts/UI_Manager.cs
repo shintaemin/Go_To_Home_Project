@@ -8,6 +8,7 @@ public class UI_Manager : MonoBehaviour
     #region 인스펙터
     [SerializeField] private Inventory_UI _invenUI;
     [SerializeField] private Comtainer_UI _containerUI;
+    [SerializeField] private Interact_UI _interactUI;
     #endregion
 
     #region 내부 변수
@@ -80,6 +81,28 @@ public class UI_Manager : MonoBehaviour
         if (_invenUI == null || _containerUI == null) { return; }
 
         _containerUI.Active(active);
+    }
+
+    public void OpenInteractUI(Transform tr, string name, string viewStr)
+    {
+        if (_interactUI == null) { return; }
+
+        _interactUI.SetActiveInteractView(true, name, viewStr);
+        _interactUI.SetTarget(tr);
+    }
+    public void CloseInteractUI()
+    {
+        if (_interactUI == null) { return; }
+
+        _interactUI.SetTarget(null);
+        _interactUI.SetActiveInteractView(false);
+    }
+
+    public void InteractBoolActive(bool active, string name, string viewStr)
+    {
+        if (_interactUI == null) { return; }
+
+        _interactUI.SetActiveInteractView(active, name, viewStr);
     }
 
     public bool ContainerIsActive => _containerUI.IsActive;

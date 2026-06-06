@@ -28,8 +28,10 @@ public class Slot_UI : MonoBehaviour, IPointerClickHandler, IBeginDragHandler, I
 
 	[Header("표시할 데이터")]
 	[SerializeField] private Image _image;
+    [SerializeField] private Image _coolImage;
     [SerializeField] private GameObject _textRoot;
 	[SerializeField] private TextMeshProUGUI _countText;
+    [SerializeField] private Slider _durSlider;
     [SerializeField] private string _countStr;
     #endregion
 
@@ -37,6 +39,7 @@ public class Slot_UI : MonoBehaviour, IPointerClickHandler, IBeginDragHandler, I
     private Sprite _nullIcon;
     private UI_SlotMove_Manager _uiSlotManager;
     private UI_Manager _uiManger;
+    private bool _isCoolDown;
     #endregion
     private void Awake()
     {
@@ -51,6 +54,7 @@ public class Slot_UI : MonoBehaviour, IPointerClickHandler, IBeginDragHandler, I
         }
 
         _nullIcon = _image.sprite;
+        _durSlider.gameObject.SetActive(false);
     }
     private void Start()
     {
@@ -61,6 +65,24 @@ public class Slot_UI : MonoBehaviour, IPointerClickHandler, IBeginDragHandler, I
         if (UI_Manager.Instance != null)
         {
             _uiManger = UI_Manager.Instance;
+        }
+    }
+
+    private void Update()
+    {
+        if (!_isCoolDown || _slotData == null || _coolImage == null) return;
+
+        float progress = _slotData.GetCooldownProgress();
+
+        if (progress > 0f)
+        {
+            _coolImage.fillAmount = progress;
+        }
+        else
+        {
+            _isCoolDown = false;
+            _coolImage.fillAmount = 0f;
+            _coolImage.gameObject.SetActive(false);
         }
     }
 
@@ -76,6 +98,31 @@ public class Slot_UI : MonoBehaviour, IPointerClickHandler, IBeginDragHandler, I
             _image.sprite = _nullIcon;
             _textRoot.SetActive(false);
             return;
+        }
+
+        _durSlider.gameObject.SetActive(data is WeaponDataSO);
+
+        if (data is WeaponDataSO weapon && _slotData.Dur > 0)
+        {
+            float maxDur = weapon.MaxDur;
+            _durSlider.value = (float)_slotData.Dur / maxDur;
+        }
+
+        if (_coolImage != null)
+        {
+            if (_slotData.IsCooldown)
+            {
+                _isCoolDown = true;
+                _coolImage.gameObject.SetActive(true);
+
+                _coolImage.fillAmount = _slotData.GetCooldownProgress();
+            }
+            else
+            {
+                _isCoolDown = false;
+                _coolImage.fillAmount = 0f;
+                _coolImage.gameObject.SetActive(false);
+            }
         }
 
         _textRoot.SetActive(data.IsStackable);

@@ -48,6 +48,7 @@ public class Player_Controller : MonoBehaviour
     [SerializeField] private Player_InteractFinder _finderCS;
     [SerializeField] private Player_Interact _interactCS;
     [SerializeField] private Player_ItemEquip _itemEquipCS;
+    [SerializeField] private Player_QuickSlot _quickSlotCS;
     [SerializeField] private Inventory_Manager _inventoryCS;
     #endregion
 
@@ -103,6 +104,8 @@ public class Player_Controller : MonoBehaviour
         _im.OnAttack += AttackInput;
         _im.OnInventory += InventoryInput;
         _im.OnInteract += InteractInput;
+        _im.OnWeaponEquip += WeaponEquip;
+        _im.OnThrowingEquip += ThrowingEquip;
     }
     #endregion
     private void OnDisable()
@@ -112,7 +115,22 @@ public class Player_Controller : MonoBehaviour
             _im.OnAttack -= AttackInput;
             _im.OnInventory -= InventoryInput;
             _im.OnInteract -= InteractInput;
+            _im.OnWeaponEquip += WeaponEquip;
+            _im.OnThrowingEquip += ThrowingEquip;
         }
+    }
+
+    private void WeaponEquip()
+    {
+        if (_quickSlotCS == null || _controlMode != EControllMode.Playing) { return; }
+
+        _quickSlotCS.WeaponQuickSlotEquip();
+    }
+    private void ThrowingEquip()
+    {
+        if (_quickSlotCS == null || _controlMode != EControllMode.Playing) { return; }
+
+        _quickSlotCS.ThrowingQuickSlotEquip();
     }
 
     private void AttackInput()
@@ -170,7 +188,7 @@ public class Player_Controller : MonoBehaviour
         GUtill.TryGetCS(this, ref _moveCS);     GUtill.TryGetCS(this, ref _animCS);     GUtill.TryGetCS(this, ref _soundCS);
         GUtill.TryGetCS(this, ref _steminaCS);  GUtill.TryGetCS(this, ref _attackCS);   GUtill.TryGetCS(this, ref _interactCS);
         GUtill.TryGetCS(this, ref _rotateCS);   GUtill.TryGetCS(this, ref _finderCS);   GUtill.TryGetCS(this, ref _healthCS);
-        GUtill.TryGetCS(this, ref _itemEquipCS);GUtill.TryGetCS(this, ref _throwingCS); 
+        GUtill.TryGetCS(this, ref _itemEquipCS);GUtill.TryGetCS(this, ref _throwingCS); GUtill.TryGetCS(this, ref _quickSlotCS); 
     }
 
     private void Update()

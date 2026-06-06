@@ -12,7 +12,6 @@ public class Item_Interact : MonoBehaviour, IInteract
     #region ¿ŒΩ∫∆Â≈Õ
     [SerializeField] private ItemDataSO _item;
     [SerializeField] private SlotData _slot;
-    [SerializeField] private string _viewText = "[F] »π µÊ";
     [SerializeField] private int _interactLayerNum = 30;
     #endregion
 
@@ -68,9 +67,13 @@ public class Item_Interact : MonoBehaviour, IInteract
         }
     }
 
+    public string NameText()
+    {
+        return _slot.GetItem.Name;
+    }
     public string ViewText()
     {
-        return _viewText;
+        return "[F] : ¡› ±‚";
     }
     #endregion
 }

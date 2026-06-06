@@ -37,7 +37,9 @@ public class Player_ItemEquip : MonoBehaviour
     #endregion
 
     #region 이벤트
-    public event Action<SlotData> OnItemEquip; 
+    public event Action<SlotData> OnItemEquip;
+    public event Action<SlotData> OnSlotUpdate;
+    public event Action OnReleaseItem;
     #endregion
     private void Start()
     {
@@ -110,7 +112,11 @@ public class Player_ItemEquip : MonoBehaviour
         {
             ReleaseItem();
         }
-
+        if (UI_Manager.Instance != null)
+        {
+            UI_Manager.Instance.InventorySlotUpdate(_currentSlotIndex, _currentSlotItem);
+        }
+        OnSlotUpdate?.Invoke(_currentSlotItem);
         GUtill.Log($"[{this.name}] : 내구도 감소 완료 : [{_currentSlotItem.Dur}]");
     }
 
@@ -134,6 +140,8 @@ public class Player_ItemEquip : MonoBehaviour
         _equipItem = _currentSlotItem.GetItem;
         _equipItemCount = _currentSlotItem.Count;
 
+        GUtill.Log($"[{this.name}] : 갯수 감소 완료 : [{_currentSlotItem.Count}]");
+        
         if (_currentSlotItem.Count <= 0)
         {
             _currentSlotItem.RemoveItemData();
@@ -143,8 +151,7 @@ public class Player_ItemEquip : MonoBehaviour
         {
             UI_Manager.Instance.InventorySlotUpdate(_currentSlotItem.Index, _currentSlotItem);
         }
-
-        GUtill.Log($"[{this.name}] : 갯수 감소 완료 : [{_currentSlotItem.Count}]");
+        OnSlotUpdate?.Invoke(_currentSlotItem);
     }
 
     #region 외부 호출 함수
@@ -221,6 +228,7 @@ public class Player_ItemEquip : MonoBehaviour
         _equipItem = null;
         _equipItemDur = 0;
         _equipItemCount = 0;
+        OnReleaseItem?.Invoke();
     }
     public bool IsAttackable()
     {
@@ -232,8 +240,6 @@ public class Player_ItemEquip : MonoBehaviour
     }
     public SlotData GetEqupiSlot()
     {
-        if (_currentSlotItem == null) { return null; }
-
         return _currentSlotItem;
     }
     #endregion

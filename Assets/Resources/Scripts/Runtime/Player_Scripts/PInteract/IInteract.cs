@@ -6,9 +6,12 @@
 */
 #endregion
 
+using UnityEngine;
+
 public interface IInteract
 {
     void Interact();
     // 무언가 추가 되거나 매개변수가 바뀔 수 있음
+    string NameText();
     string ViewText();
 }

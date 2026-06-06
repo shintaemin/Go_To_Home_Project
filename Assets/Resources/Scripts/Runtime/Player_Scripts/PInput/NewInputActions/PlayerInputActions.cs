@@ -163,6 +163,24 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""WeaponQuickSlot"",
+                    ""type"": ""Button"",
+                    ""id"": ""0c3ff333-7ddf-4311-8b0b-cd7b2e54e084"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""ThrowingQuickSlot"",
+                    ""type"": ""Button"",
+                    ""id"": ""42939612-aca0-4124-99cc-b5dcc7b0a84f"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -297,6 +315,28 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                     ""action"": ""Throwing"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""0eaa73ab-a37d-4ead-a614-926a760ba20a"",
+                    ""path"": ""<Keyboard>/1"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""WeaponQuickSlot"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""194adc2b-63bd-44f2-a36b-039b1a84774d"",
+                    ""path"": ""<Keyboard>/2"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""ThrowingQuickSlot"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -313,6 +353,8 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
         m_Player_Inventory = m_Player.FindAction("Inventory", throwIfNotFound: true);
         m_Player_Interact = m_Player.FindAction("Interact", throwIfNotFound: true);
         m_Player_Throwing = m_Player.FindAction("Throwing", throwIfNotFound: true);
+        m_Player_WeaponQuickSlot = m_Player.FindAction("WeaponQuickSlot", throwIfNotFound: true);
+        m_Player_ThrowingQuickSlot = m_Player.FindAction("ThrowingQuickSlot", throwIfNotFound: true);
     }
 
     ~@PlayerInputActions()
@@ -401,6 +443,8 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
     private readonly InputAction m_Player_Inventory;
     private readonly InputAction m_Player_Interact;
     private readonly InputAction m_Player_Throwing;
+    private readonly InputAction m_Player_WeaponQuickSlot;
+    private readonly InputAction m_Player_ThrowingQuickSlot;
     /// <summary>
     /// Provides access to input actions defined in input action map "Player".
     /// </summary>
@@ -444,6 +488,14 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
         /// Provides access to the underlying input action "Player/Throwing".
         /// </summary>
         public InputAction @Throwing => m_Wrapper.m_Player_Throwing;
+        /// <summary>
+        /// Provides access to the underlying input action "Player/WeaponQuickSlot".
+        /// </summary>
+        public InputAction @WeaponQuickSlot => m_Wrapper.m_Player_WeaponQuickSlot;
+        /// <summary>
+        /// Provides access to the underlying input action "Player/ThrowingQuickSlot".
+        /// </summary>
+        public InputAction @ThrowingQuickSlot => m_Wrapper.m_Player_ThrowingQuickSlot;
         /// <summary>
         /// Provides access to the underlying input action map instance.
         /// </summary>
@@ -494,6 +546,12 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
             @Throwing.started += instance.OnThrowing;
             @Throwing.performed += instance.OnThrowing;
             @Throwing.canceled += instance.OnThrowing;
+            @WeaponQuickSlot.started += instance.OnWeaponQuickSlot;
+            @WeaponQuickSlot.performed += instance.OnWeaponQuickSlot;
+            @WeaponQuickSlot.canceled += instance.OnWeaponQuickSlot;
+            @ThrowingQuickSlot.started += instance.OnThrowingQuickSlot;
+            @ThrowingQuickSlot.performed += instance.OnThrowingQuickSlot;
+            @ThrowingQuickSlot.canceled += instance.OnThrowingQuickSlot;
         }
 
         /// <summary>
@@ -529,6 +587,12 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
             @Throwing.started -= instance.OnThrowing;
             @Throwing.performed -= instance.OnThrowing;
             @Throwing.canceled -= instance.OnThrowing;
+            @WeaponQuickSlot.started -= instance.OnWeaponQuickSlot;
+            @WeaponQuickSlot.performed -= instance.OnWeaponQuickSlot;
+            @WeaponQuickSlot.canceled -= instance.OnWeaponQuickSlot;
+            @ThrowingQuickSlot.started -= instance.OnThrowingQuickSlot;
+            @ThrowingQuickSlot.performed -= instance.OnThrowingQuickSlot;
+            @ThrowingQuickSlot.canceled -= instance.OnThrowingQuickSlot;
         }
 
         /// <summary>
@@ -625,5 +689,19 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
         /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
         void OnThrowing(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "WeaponQuickSlot" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnWeaponQuickSlot(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "ThrowingQuickSlot" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnThrowingQuickSlot(InputAction.CallbackContext context);
     }
 }
