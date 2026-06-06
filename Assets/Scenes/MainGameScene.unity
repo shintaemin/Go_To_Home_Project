@@ -5427,6 +5427,16 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8871696689900817243, guid: ed4b7eb6080d7504da19d900be229dee,
         type: 3}
+      propertyPath: _attackDepth
+      value: 1.85
+      objectReference: {fileID: 0}
+    - target: {fileID: 8871696689900817243, guid: ed4b7eb6080d7504da19d900be229dee,
+        type: 3}
+      propertyPath: _attackWidth
+      value: 1.54
+      objectReference: {fileID: 0}
+    - target: {fileID: 8871696689900817243, guid: ed4b7eb6080d7504da19d900be229dee,
+        type: 3}
       propertyPath: _targetLayer.m_Bits
       value: 1024
       objectReference: {fileID: 0}
