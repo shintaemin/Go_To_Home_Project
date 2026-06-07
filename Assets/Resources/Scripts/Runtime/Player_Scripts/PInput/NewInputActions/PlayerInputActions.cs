@@ -181,6 +181,15 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""HeadLight"",
+                    ""type"": ""Button"",
+                    ""id"": ""0d69a881-8e8c-4463-ab4d-8e025920a9d0"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -337,6 +346,17 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                     ""action"": ""ThrowingQuickSlot"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""f07c100a-870f-4a1d-9175-0b0383f14641"",
+                    ""path"": ""<Keyboard>/h"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""HeadLight"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -355,6 +375,7 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
         m_Player_Throwing = m_Player.FindAction("Throwing", throwIfNotFound: true);
         m_Player_WeaponQuickSlot = m_Player.FindAction("WeaponQuickSlot", throwIfNotFound: true);
         m_Player_ThrowingQuickSlot = m_Player.FindAction("ThrowingQuickSlot", throwIfNotFound: true);
+        m_Player_HeadLight = m_Player.FindAction("HeadLight", throwIfNotFound: true);
     }
 
     ~@PlayerInputActions()
@@ -445,6 +466,7 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
     private readonly InputAction m_Player_Throwing;
     private readonly InputAction m_Player_WeaponQuickSlot;
     private readonly InputAction m_Player_ThrowingQuickSlot;
+    private readonly InputAction m_Player_HeadLight;
     /// <summary>
     /// Provides access to input actions defined in input action map "Player".
     /// </summary>
@@ -496,6 +518,10 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
         /// Provides access to the underlying input action "Player/ThrowingQuickSlot".
         /// </summary>
         public InputAction @ThrowingQuickSlot => m_Wrapper.m_Player_ThrowingQuickSlot;
+        /// <summary>
+        /// Provides access to the underlying input action "Player/HeadLight".
+        /// </summary>
+        public InputAction @HeadLight => m_Wrapper.m_Player_HeadLight;
         /// <summary>
         /// Provides access to the underlying input action map instance.
         /// </summary>
@@ -552,6 +578,9 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
             @ThrowingQuickSlot.started += instance.OnThrowingQuickSlot;
             @ThrowingQuickSlot.performed += instance.OnThrowingQuickSlot;
             @ThrowingQuickSlot.canceled += instance.OnThrowingQuickSlot;
+            @HeadLight.started += instance.OnHeadLight;
+            @HeadLight.performed += instance.OnHeadLight;
+            @HeadLight.canceled += instance.OnHeadLight;
         }
 
         /// <summary>
@@ -593,6 +622,9 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
             @ThrowingQuickSlot.started -= instance.OnThrowingQuickSlot;
             @ThrowingQuickSlot.performed -= instance.OnThrowingQuickSlot;
             @ThrowingQuickSlot.canceled -= instance.OnThrowingQuickSlot;
+            @HeadLight.started -= instance.OnHeadLight;
+            @HeadLight.performed -= instance.OnHeadLight;
+            @HeadLight.canceled -= instance.OnHeadLight;
         }
 
         /// <summary>
@@ -703,5 +735,12 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
         /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
         void OnThrowingQuickSlot(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "HeadLight" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnHeadLight(InputAction.CallbackContext context);
     }
 }

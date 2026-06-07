@@ -39,11 +39,6 @@ public class UI_SlotMove_Manager : MonoBehaviour
 
     }
 
-    private void Start()
-    {
-        _dragObj.SetActive(false);
-    }
-
     private void OnDestroy()
     {
         if (Instance == this)

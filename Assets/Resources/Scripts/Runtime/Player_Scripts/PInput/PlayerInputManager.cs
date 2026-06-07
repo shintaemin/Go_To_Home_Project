@@ -53,6 +53,7 @@ public class PlayerInputManager : MonoBehaviour
     public event Action OnInteract;
     public event Action OnWeaponEquip;
     public event Action OnThrowingEquip;
+    public event Action OnHeadLight;
     #endregion
 
     private void Awake()
@@ -106,6 +107,7 @@ public class PlayerInputManager : MonoBehaviour
         _actions.Player.Interact.performed += OnInteractInput; // 상호작용 구독
         _actions.Player.WeaponQuickSlot.performed += OnWeaponEquipInput;
         _actions.Player.ThrowingQuickSlot.performed += OnThrowingEquipInput;
+        _actions.Player.HeadLight.performed += OnHeadLightInput;
     }
 
     private void AllDiscription()
@@ -126,6 +128,7 @@ public class PlayerInputManager : MonoBehaviour
         _actions.Player.Interact.performed -= OnInteractInput;
         _actions.Player.WeaponQuickSlot.performed -= OnWeaponEquipInput;
         _actions.Player.ThrowingQuickSlot.performed -= OnThrowingEquipInput;
+        _actions.Player.HeadLight.performed -= OnHeadLightInput;
     }
 
     // 플레이어 셋팅이 변경되면 호출될 함수 (오버로딩)
@@ -196,6 +199,7 @@ public class PlayerInputManager : MonoBehaviour
     private void OnInteractInput(InputAction.CallbackContext ctx) => OnInteract?.Invoke();
     private void OnWeaponEquipInput(InputAction.CallbackContext ctx) => OnWeaponEquip?.Invoke();
     private void OnThrowingEquipInput(InputAction.CallbackContext ctx) => OnThrowingEquip?.Invoke();
+    private void OnHeadLightInput(InputAction.CallbackContext ctx) => OnHeadLight?.Invoke();
     #endregion
 
     #region 외부 호출 함수
