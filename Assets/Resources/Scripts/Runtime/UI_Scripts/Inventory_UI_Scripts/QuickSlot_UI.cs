@@ -78,6 +78,7 @@ public class QuickSlot_UI : MonoBehaviour
         _image.color = _nullColor;
         _countText.text = string.Empty;
         _textRoot.SetActive(false);
+        _durSlider.gameObject.SetActive(false);
     }
     private void HandleItemReleased()
     {

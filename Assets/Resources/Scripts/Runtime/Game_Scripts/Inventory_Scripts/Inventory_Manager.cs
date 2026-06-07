@@ -35,7 +35,6 @@ public class Inventory_Manager : MonoBehaviour
             return;
         }
         Instance = this;
-        DontDestroyOnLoad(this.gameObject);
 
         if (_inventoryAnim == null)
         {

@@ -17,6 +17,8 @@ public class Player_Anim : MonoBehaviour
     [Header("파라미터")]
 	[SerializeField] private string _speedParam = "fSpeed";
 	[SerializeField] private string _attackParam = "tAttack";
+    [SerializeField] private string _hitParam = "tHit";
+    [SerializeField] private string _deathParam = "tDeath";
 	[SerializeField] private string _inventoryParam = "bInventory";
 	[SerializeField] private string _attackSpeedParam = "fAttackSpeed";
 
@@ -27,6 +29,8 @@ public class Player_Anim : MonoBehaviour
 	#region 내부 변수
 	private int _hashSpeed;
 	private int _hashAttack;
+    private int _hashHit;
+    private int _hashDeath;
 	private int _hashInventory;
 	private int _hashAttackSpeedParam;
     private float _targerSpeed;
@@ -40,6 +44,8 @@ public class Player_Anim : MonoBehaviour
 
         _hashSpeed = Animator.StringToHash(_speedParam);
         _hashAttack = Animator.StringToHash(_attackParam);
+        _hashHit = Animator.StringToHash(_hitParam);
+        _hashDeath = Animator.StringToHash(_deathParam);
         _hashInventory = Animator.StringToHash(_inventoryParam);
         _hashAttackSpeedParam = Animator.StringToHash(_attackSpeedParam);
     }
@@ -96,6 +102,7 @@ public class Player_Anim : MonoBehaviour
             case EMovementState.Walk: _targerSpeed = 0.66f; break;
 			case EMovementState.Crouch: _targerSpeed = 0.33f; break;
 			case EMovementState.Run: _targerSpeed = 1.00f; break;
+            case EMovementState.End: _targerSpeed = 0.00f; break;
 		}
     }
 
@@ -104,6 +111,8 @@ public class Player_Anim : MonoBehaviour
 		switch (state)
 		{
 			case EMovementState.Attack: _anim.SetTrigger(_hashAttack); break;
+            case EMovementState.Hit: _anim.SetTrigger(_hashHit); break;
+            case EMovementState.Dead: _anim.SetTrigger(_hashDeath); break;
 				// 상호 작용 사망 등을 여기서 처리
         }
 	}

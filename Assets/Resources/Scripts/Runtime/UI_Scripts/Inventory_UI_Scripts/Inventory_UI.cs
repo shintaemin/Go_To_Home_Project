@@ -149,5 +149,6 @@ public class Inventory_UI : MonoBehaviour
         _currentSlotUICS.SetInfo(info);
         _equipCS.SetBackUpItem(slot);
     }
+    public bool IsInvenActive => _inventoryRoot.activeSelf;
     #endregion
 }

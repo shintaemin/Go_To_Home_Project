@@ -17,6 +17,9 @@ public enum EMovementState
     Attack,
     Throwing,
     Interact,
+    Hit,
+    Dead,
+    End,
 }
 
 // 상태에 따른 입력 제어를 위한 열거형
@@ -107,7 +110,8 @@ public class Player_Controller : MonoBehaviour
         _im.OnInteract += InteractInput;
         _im.OnWeaponEquip += WeaponEquip;
         _im.OnThrowingEquip += ThrowingEquip;
-        _im.OnHeadLight += HeadLight;
+        _im.OnHeadLight += HeadLightInput;
+        _im.OnEsc += EscInput;
     }
     #endregion
     private void OnDisable()
@@ -119,7 +123,13 @@ public class Player_Controller : MonoBehaviour
             _im.OnInteract -= InteractInput;
             _im.OnWeaponEquip -= WeaponEquip;
             _im.OnThrowingEquip -= ThrowingEquip;
-            _im.OnHeadLight -= HeadLight;
+            _im.OnHeadLight -= HeadLightInput;
+            _im.OnEsc -= EscInput;
+        }
+        if (_healthCS != null)
+        {
+            _healthCS.OnHit += OnHitHandle;
+            _healthCS.OnDead += OnDeadHandle;
         }
     }
 
@@ -136,11 +146,18 @@ public class Player_Controller : MonoBehaviour
         _quickSlotCS.ThrowingQuickSlotEquip();
     }
 
-    private void HeadLight()
+    private void HeadLightInput()
     {
         if (_headLightCS == null || _controlMode != EControllMode.Playing) { return; }
 
         _headLightCS.SetToogleHeadLight();
+    }
+
+    private void EscInput()
+    {
+        if (UI_Manager.Instance == null) { return; }
+
+        UI_Manager.Instance.EscInputActive();
     }
 
     private void AttackInput()
@@ -162,7 +179,7 @@ public class Player_Controller : MonoBehaviour
 
     private void InventoryInput()
     {
-        if (MovementState == EMovementState.Attack) { return; }
+        if (MovementState is EMovementState.Attack or EMovementState.Dead) { return; }
         if (_inventoryCS == null)
         {
             if (Inventory_Manager.Instance == null)
@@ -180,7 +197,7 @@ public class Player_Controller : MonoBehaviour
 
     private void InteractInput()
     {
-        if (MovementState == EMovementState.Attack) { return; }
+        if (MovementState is EMovementState.Attack or EMovementState.Dead) { return; }
         if (_controlMode == EControllMode.Inventory) { return; }
         if (_interactCS == null)
         {
@@ -191,19 +208,52 @@ public class Player_Controller : MonoBehaviour
         GUtill.Log($"[{this.name}] : 상호작용 시작");
         _interactCS.TryInteract();
     }
+    private void OnHitHandle()
+    {
+        MovementState = EMovementState.Hit;
+        _animCS.SetTreggerAnim(MovementState);
+    }
+    private void OnDeadHandle()
+    {
+        CanMove = false;
+        CanRotate = false;
+        CanAttack = false;
+        MovementState = EMovementState.Dead;
+        _animCS.SetTreggerAnim(MovementState);
+    }
     #endregion
 
     private void Awake()
     {
-        GUtill.TryGetCS(this, ref _moveCS);     GUtill.TryGetCS(this, ref _animCS);     GUtill.TryGetCS(this, ref _soundCS);
-        GUtill.TryGetCS(this, ref _steminaCS);  GUtill.TryGetCS(this, ref _attackCS);   GUtill.TryGetCS(this, ref _interactCS);
-        GUtill.TryGetCS(this, ref _rotateCS);   GUtill.TryGetCS(this, ref _finderCS);   GUtill.TryGetCS(this, ref _healthCS);
-        GUtill.TryGetCS(this, ref _itemEquipCS);GUtill.TryGetCS(this, ref _throwingCS); GUtill.TryGetCS(this, ref _quickSlotCS);
-        GUtill.TryGetCS(this, ref _headLightCS); 
+        if (_moveCS == null) { GUtill.TryGetCS(this, ref _moveCS); }
+        if (_animCS == null) { GUtill.TryGetCS(this, ref _animCS); }
+        if (_soundCS == null) { GUtill.TryGetCS(this, ref _soundCS); }
+        if (_steminaCS == null) { GUtill.TryGetCS(this, ref _steminaCS); }
+        if (_attackCS == null) { GUtill.TryGetCS(this, ref _attackCS); }
+        if (_interactCS == null) { GUtill.TryGetCS(this, ref _interactCS); }
+        if (_rotateCS == null) { GUtill.TryGetCS(this, ref _rotateCS); }
+        if (_finderCS == null) { GUtill.TryGetCS(this, ref _finderCS); }
+        if (_healthCS == null) { GUtill.TryGetCS(this, ref _healthCS); }
+        if (_itemEquipCS == null) { GUtill.TryGetCS(this, ref _itemEquipCS); }
+        if (_throwingCS == null) { GUtill.TryGetCS(this, ref _throwingCS); }
+        if (_quickSlotCS == null) { GUtill.TryGetCS(this, ref _quickSlotCS); }
+        if (_headLightCS == null) { GUtill.TryGetCS(this, ref _headLightCS); }
+    }
+
+    private void Start()
+    {
+        if (_healthCS != null)
+        {
+            _healthCS.OnHit += OnHitHandle;
+            _healthCS.OnDead += OnDeadHandle;
+        }
     }
 
     private void Update()
     {
+        if (MovementState == EMovementState.Dead) { return; }
+        if (_controlMode == EControllMode.AllLock) { return; }
+
         ThrowingUpdate();
         MoveUpdate(); // 이동 업데이트
         RotateUpdate(); // 회전 업데이트
@@ -238,6 +288,7 @@ public class Player_Controller : MonoBehaviour
     }
     private void MoveUpdate()
     {
+        if (MovementState == EMovementState.Dead) { return; }
         if (!CanMove || _im == null) { return; }
 
         Vector2 move = _im.GetMoveInput;
@@ -249,6 +300,7 @@ public class Player_Controller : MonoBehaviour
     }
     private void RotateUpdate()
     {
+        if (MovementState == EMovementState.Dead) { return; }
         if (!CanRotate || _im == null) { return; }
 
         _rotateCS?.SetTarget(_im.GetMousePos);
@@ -271,6 +323,14 @@ public class Player_Controller : MonoBehaviour
                 mode = EControllMode.Run; break;
             case EMovementState.Throwing: 
                 mode = EControllMode.Throwing; break;
+            case EMovementState.Dead: mode = EControllMode.AllLock; break;
+            case EMovementState.End: 
+                mode = EControllMode.AllLock; 
+                if (_animCS != null)
+                {
+                    _animCS.MoveAnimUpdate(_state);
+                }
+                break;
             case EMovementState.Idle: case EMovementState.Crouch: case EMovementState.Walk: 
                 mode = EControllMode.Playing; break;
         }

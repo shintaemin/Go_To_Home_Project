@@ -9,6 +9,7 @@ public class UI_Manager : MonoBehaviour
     [SerializeField] private Inventory_UI _invenUI;
     [SerializeField] private Comtainer_UI _containerUI;
     [SerializeField] private Interact_UI _interactUI;
+    [SerializeField] private ESC_UI _escUI;
     #endregion
 
     #region 내부 변수
@@ -23,12 +24,11 @@ public class UI_Manager : MonoBehaviour
             return;
         }
         Instance = this;
-        DontDestroyOnLoad(this.gameObject);
 
-        if (_invenUI == null)
-        {
-            _invenUI = FindFirstObjectByType<Inventory_UI>();
-        }
+        if (_invenUI == null) { _invenUI = GetComponentInChildren<Inventory_UI>(); }
+        if (_containerUI == null) { _containerUI = GetComponentInChildren<Comtainer_UI>(); }
+        if (_interactUI == null) { _interactUI = GetComponentInChildren<Interact_UI>(); }
+        if (_escUI == null) { _escUI = GetComponentInChildren<ESC_UI>(); }
     }
 
     private void OnDestroy()
@@ -103,6 +103,20 @@ public class UI_Manager : MonoBehaviour
         if (_interactUI == null) { return; }
 
         _interactUI.SetActiveInteractView(active, name, viewStr);
+    }
+
+    public void EscInputActive(bool ending = false)
+    {
+        if (_invenUI == null || _escUI == null) { return; }
+        CloseInteractUI();
+
+        if (_invenUI.IsInvenActive)
+        {
+            _invenUI.OnClickCloseButton();
+            return;
+        }
+
+        _escUI.ActiveESCUI(!_escUI.IsActiveESCUI, ending);
     }
 
     public bool ContainerIsActive => _containerUI.IsActive;

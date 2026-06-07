@@ -97,6 +97,7 @@ public class Slot_UI : MonoBehaviour, IPointerClickHandler, IBeginDragHandler, I
         {
             _image.sprite = _nullIcon;
             _textRoot.SetActive(false);
+            _durSlider.gameObject.SetActive(false);
             return;
         }
 
