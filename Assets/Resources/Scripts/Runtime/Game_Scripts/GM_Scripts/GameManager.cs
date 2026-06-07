@@ -72,6 +72,10 @@ public class GameManager : MonoBehaviour
         // 자연스럽게 어두워지며 로비로 씬전환
         GUtill.Log($"[{this.name}] : 성공!!!");
         _controllerCS.MovementState = EMovementState.End;
+        if (SceneLoadManager.Instance != null)
+        {
+            SceneLoadManager.Instance.GoToLobby(3f);
+        }    
     }
     private void EndingFail()
     {
