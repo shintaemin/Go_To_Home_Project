@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 
 #region
@@ -9,6 +10,8 @@ public class Throwing_Obj : MonoBehaviour
 {
     #region 인스펙터
     [SerializeField] private Vector3 _target;
+    [SerializeField] private AudioSource _audio;
+    [SerializeField] private ClipList _clipList;
     [SerializeField] private float _decalRange;
     [SerializeField] private float _throwForce = 5f;
     [SerializeField] private float _upwardAngle = 45f;
@@ -17,6 +20,7 @@ public class Throwing_Obj : MonoBehaviour
     #region 내부변수
     private Rigidbody _rb;
     private bool _isThrowing;
+    private Coroutine _throwingObjDestroyCo;
     #endregion
 
     private void Awake()
@@ -29,13 +33,18 @@ public class Throwing_Obj : MonoBehaviour
             _rb.useGravity = false;
         }
         _isThrowing = false;
+
+        if (_audio == null)
+        {
+            GUtill.TryGetCS(this, ref _audio);
+        }
+        _clipList.InitClipList();
     }
 
     private void Update()
     {
         if (!_isThrowing) { return; }
 
-        // [실시간 거리 체크] 내 현재 3D 위치가 마우스 목적지 좌표와 충분히 가까워졌는가?
         if (Vector3.Distance(transform.position, _target) <= 0.2f)
         {
             OnArrival();
@@ -60,7 +69,6 @@ public class Throwing_Obj : MonoBehaviour
         return requiredSpeed * _rb.mass;
     }
 
-    // 목적지 근접 감지 시 실행될 착지 함수
     private void OnArrival()
     {
         _isThrowing = false;
@@ -72,6 +80,31 @@ public class Throwing_Obj : MonoBehaviour
             pos.y += 0.1f;
             SoundEffect_PoolManager.Instance.SpawnEffect(pos, _decalRange);
         }
+        if (SoundManager.Instance != null)
+        {
+            if (_audio == null)
+            {
+                GUtill.TryGetCS(this, ref _audio);
+            }
+            ClipData clip = _clipList.GetClipData(EClipPlayType.Throwing);
+            SoundManager.Instance.SfxPlay(_audio, clip);
+            float clipLength = clip.GetClip.length;
+            _throwingObjDestroyCo = StartCoroutine(CoThrowingObjDestroy(clipLength));
+        }
+    }
+
+    private IEnumerator CoThrowingObjDestroy(float clipLength)
+    {
+        if (!gameObject.activeSelf) { yield break; }
+
+        float t = 0;
+        while (t < clipLength)
+        {
+            t += Time.deltaTime;
+            yield return null;
+        }
+
+        _throwingObjDestroyCo = null;
         Destroy(gameObject);
     }
 
@@ -109,7 +142,7 @@ public class Throwing_Obj : MonoBehaviour
         transform.Rotate(Vector3.left, _upwardAngle);
 
         float requiredForce = CalculateForceForDistance(directionXZ.magnitude, _target.y - transform.position.y);
-        _throwForce = requiredForce; // 인스펙터 실시간 확인용 동기화
+        _throwForce = requiredForce; // 인스펙터 실시간 확인용
 
         _rb.AddForce(transform.forward * _throwForce, ForceMode.Impulse);
     }

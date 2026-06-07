@@ -22,15 +22,10 @@ public class SceneLoadManager : MonoBehaviour
         if (Instance != null && Instance != this)
         {
             Destroy(this.gameObject);
-            enabled = false;
+            return;
         }
-        Instance = this;
         DontDestroyOnLoad(this.gameObject);
-    }
-
-    private void Start()
-    {
-        _maxSceneIndex = SceneManager.sceneCountInBuildSettings;
+        Instance = this;
     }
 
     private void OnDestroy()
@@ -43,6 +38,7 @@ public class SceneLoadManager : MonoBehaviour
     
     private void SetSceneLoad(int index)
     {
+        _maxSceneIndex = SceneManager.sceneCountInBuildSettings;
         if (index >= 0 && index < _maxSceneIndex)
         {
             SceneManager.LoadScene(index);
@@ -72,12 +68,20 @@ public class SceneLoadManager : MonoBehaviour
     {
         Time.timeScale = 1.0f;
         SetSceneLoad(0);
+        if (SoundManager.Instance != null)
+        {
+            SoundManager.Instance.OnLobbyBgmPlay();
+        }
     }
 
     public void MainGame()
     {
         Time.timeScale = 1.0f;
         SetSceneLoad(1);
+        if (SoundManager.Instance != null)
+        {
+            SoundManager.Instance.OnInGameBgmPlay();
+        }
     }
 
     public void RestartScene()

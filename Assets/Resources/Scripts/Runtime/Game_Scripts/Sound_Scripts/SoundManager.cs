@@ -24,6 +24,7 @@ public class SoundManager : MonoBehaviour
 
     #region 인스펙터
     [SerializeField] private AudioSource _bgmAudio;
+    [SerializeField] private ClipList _clipList;
     [SerializeField] private ESountPlayType _playType;
 
     [Header("옵션")]
@@ -62,6 +63,17 @@ public class SoundManager : MonoBehaviour
         DontDestroyOnLoad(this.gameObject);
 
         SoundPlayType = ESountPlayType.Play;
+        _clipList.InitClipList();
+        if (_bgmAudio == null)
+        {
+            GUtill.TryGetCS(this, ref _bgmAudio);
+        }
+        _bgmAudio.playOnAwake = false;
+    }
+
+    private void Start()
+    {
+        OnLobbyBgmPlay();
     }
 
     private void OnDestroy()
@@ -78,10 +90,28 @@ public class SoundManager : MonoBehaviour
     }
 
     #region 외부 호출 함수
-    public void BgmPlay()
+    public void BgmPlay(ClipData data)
     {
+        if (_bgmAudio == null) { return; }
+
+        _bgmAudio.loop = true;
+        _bgmAudio.clip = data.GetClip;
+        _bgmAudio.pitch = 1;
+        _bgmAudio.volume = BgmVolume;
+        _bgmAudio.spatialBlend = 0;
 
         _bgmAudio.Play();
+    }
+    public void OnLobbyBgmPlay()
+    {
+        ClipData clip = _clipList.GetClipData(EClipPlayType.BGM_Lobby);
+        BgmPlay(clip);
+    }
+
+    public void OnInGameBgmPlay()
+    {
+        ClipData clip = _clipList.GetClipData(EClipPlayType.BGM_InGame);
+        BgmPlay(clip);
     }
 
     public void SfxPlay(AudioSource source, ClipData data, float volume = -1)

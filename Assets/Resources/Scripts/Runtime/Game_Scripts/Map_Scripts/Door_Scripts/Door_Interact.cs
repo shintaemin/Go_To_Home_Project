@@ -11,6 +11,8 @@ using UnityEngine;
 public class Door_Interact : MonoBehaviour, IInteract
 {
     #region 인스펙터
+    [SerializeField] private AudioSource _audio;
+    [SerializeField] private ClipList _clipList;
     [SerializeField] private Animator _anim;
     [SerializeField] private string _openParam = "tOpening";
     [SerializeField] private string _closeParam = "tClosing";
@@ -30,6 +32,10 @@ public class Door_Interact : MonoBehaviour, IInteract
         {
             GUtill.TryGetCS(this, ref _anim);
         }
+        if (_audio == null)
+        {
+            GUtill.TryGetCS(this, ref _audio);
+        }
         _openHash = Animator.StringToHash(_openParam);
         _closeHash = Animator.StringToHash(_closeParam);
 
@@ -37,6 +43,7 @@ public class Door_Interact : MonoBehaviour, IInteract
         {
             Opening();
         }
+        _clipList.InitClipList();
     }
 
     private void Opening()
@@ -44,7 +51,7 @@ public class Door_Interact : MonoBehaviour, IInteract
         if (_anim == null) { return; }
 
         _anim.SetTrigger(_openHash);
-        // 사운드 클립 찾아서 여기서 DoorOpenSound 넣어주기
+        SoundPlay(EClipPlayType.Door_Open);
         _isOpen = true;
     }
 
@@ -53,8 +60,16 @@ public class Door_Interact : MonoBehaviour, IInteract
         if (_anim == null) { return; }
 
         _anim.SetTrigger(_closeHash);
-        // 사운드 클립 찾아서 여기서 DoorCloseSound 넣어주기
+        SoundPlay(EClipPlayType.Door_Close);
         _isOpen = false;
+    }
+
+    private void SoundPlay(EClipPlayType type)
+    {
+        if (_audio == null || SoundManager.Instance == null) { return; }
+
+        ClipData clip = _clipList.GetClipData(type);
+        SoundManager.Instance.SfxPlay(_audio, clip);
     }
 
     #region 외부 호출 함수

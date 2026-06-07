@@ -221,6 +221,15 @@ public class Player_ItemEquip : MonoBehaviour
         }
     }
 
+    public void ButtonEvent_DumpItem()
+    {
+        if (_backupItem == null) { return; }
+        if (_backupItem.GetItem == null) { return; }
+        if (Inventory_Manager.Instance == null) { return; }
+
+        Inventory_Manager.Instance.DumpItem(_backupItem);
+    }
+
     public void ReleaseItem()
     {
         Destroy(_currentItem);

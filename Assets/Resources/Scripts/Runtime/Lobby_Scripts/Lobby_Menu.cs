@@ -22,6 +22,7 @@ public class Lobby_Menu : MonoBehaviour
     {
         if (SceneLoadManager.Instance != null)
         {
+            GUtill.Log($"[{this.name}] : 게임종료");
             SceneLoadManager.Instance.GameEnd();
         }
     }
@@ -30,6 +31,7 @@ public class Lobby_Menu : MonoBehaviour
     {
         if (SceneLoadManager.Instance != null)
         {
+            GUtill.Log($"[{this.name}] : 게임시작");
             SceneLoadManager.Instance.MainGame();
         }
     }

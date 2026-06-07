@@ -29,6 +29,7 @@ public class Enemy_Controller : MonoBehaviour
     private Enemy_Tracking _trackingCS;
     private Enemy_Combat _combatCS;
     private Enemy_Health _healthCS;
+    private Enemy_Sound _soundCS;
     private Vector3 _lastPatrollPos;
     #endregion
 
@@ -45,6 +46,7 @@ public class Enemy_Controller : MonoBehaviour
         GUtill.TryGetCS(this, ref _patrollCS); GUtill.TryGetCS(this, ref _agentCS); 
         GUtill.TryGetCS(this, ref _animCS);    GUtill.TryGetCS(this, ref _trackingCS); 
         GUtill.TryGetCS(this, ref _combatCS);  GUtill.TryGetCS(this, ref _healthCS);
+        GUtill.TryGetCS(this, ref _soundCS);
     }
     #region 각 이벤트 구독
     private void OnEnable()
@@ -116,6 +118,7 @@ public class Enemy_Controller : MonoBehaviour
         if (EnemyMoveState == EEnemyMoveState.Dead) return;
 
         _animCS.TriggerAnim(EEnemyAnimTrigger.Attack);
+        _soundCS.OnAttackSoundPlay();
     }
     private void HandleOnHit()
     {
@@ -125,6 +128,7 @@ public class Enemy_Controller : MonoBehaviour
         _combatCS.CombatActive(false);
         _animCS.TriggerAnim(EEnemyAnimTrigger.Hit);
         SetMoveState(EEnemyMoveState.Tracking);
+        _soundCS.OnHitSoundPlay();
     }
     private void HandleOnDead()
     {
@@ -135,6 +139,7 @@ public class Enemy_Controller : MonoBehaviour
         _combatCS.CombatActive(false);
         _patrollCS.PatrollMoveActive(false);
         SetMoveState(EEnemyMoveState.Dead);
+        _soundCS.OnDeathSoundPlay();
         DiscriptEvent();
 
         _agentCS.enabled = false;
@@ -142,6 +147,7 @@ public class Enemy_Controller : MonoBehaviour
         _combatCS.enabled = false;
         _patrollCS.enabled = false;
         _healthCS.enabled = false;
+        _soundCS.enabled = false;
         _animCS.TriggerAnim(EEnemyAnimTrigger.Death);
     }
     #endregion

@@ -151,6 +151,7 @@ public class Player_Controller : MonoBehaviour
         if (_headLightCS == null || _controlMode != EControllMode.Playing) { return; }
 
         _headLightCS.SetToogleHeadLight();
+        _soundCS.OnHeadLightSoundPlay();
     }
 
     private void EscInput()
@@ -192,6 +193,7 @@ public class Player_Controller : MonoBehaviour
         }
 
         _inventoryCS.TryInventoryOpen();
+        _soundCS.OnInventorySoundPlay();
         GUtill.Log($"[{this.name}] : 인벤토리 열림");
     }
 
@@ -220,6 +222,7 @@ public class Player_Controller : MonoBehaviour
         CanAttack = false;
         MovementState = EMovementState.Dead;
         _animCS.SetTreggerAnim(MovementState);
+        _soundCS.OnDeathSoundPlay();
     }
     #endregion
 

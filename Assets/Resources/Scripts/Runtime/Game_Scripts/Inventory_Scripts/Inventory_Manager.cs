@@ -267,6 +267,42 @@ public class Inventory_Manager : MonoBehaviour
         }
     }
 
+    public void DumpItem(SlotData slot)
+    {
+        if (slot == null || slot.GetItem == null) { return; }
+
+        ItemDataSO item = slot.GetItem;
+        int index = slot.Index;
+        int count = slot.Count;
+
+        if (item.Prefab != null && _player != null)
+        {
+            Vector3 spawnPosition = _player.transform.position + (_player.transform.forward * 1f);
+
+            spawnPosition.y = _player.transform.position.y + 0.1f;
+
+            GameObject droppedItem = Instantiate(item.Prefab, spawnPosition, Quaternion.identity);
+            droppedItem.transform.SetParent(null);
+            if (droppedItem.TryGetComponent<Item_Interact>(out var dropInteract))
+            {
+                dropInteract.SetSlotData(slot, true);
+            }
+
+            GUtill.Log($"[{this.name}] : {item.Name} ({count}개) 바닥에 버림");
+        }
+        else
+        {
+            GUtill.Log($"[{this.name}] : 버릴 프리팹이 없거나 플레이어를 찾을 수 없어 데이터만 파괴합니다.", EDebugType.Warn);
+        }
+
+        slot.RemoveItemData();
+
+        if (UI_Manager.Instance != null)
+        {
+            UI_Manager.Instance.InventorySlotUpdate(index, slot);
+        }
+    }
+
     public int GetInventoryCount() => _itemList.Count;
     public List<SlotData> GetInventoryItemList() => _itemList;
     #endregion

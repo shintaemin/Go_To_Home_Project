@@ -12,10 +12,21 @@ public enum EClipPlayType
 {
     None = 0,
     Attack,
+    Death,
+    HeadLight,
+    Inventory,
     FootStep_Grass,
     FootStep_Road,
     UI_Button,
-
+    Door_Open,
+    Door_Close,
+    Z_Attack,
+    Z_Idle,
+    Z_Death,
+    Z_Hit,
+    BGM_Lobby,
+    BGM_InGame,
+    Throwing,
 }
 
 [System.Serializable]

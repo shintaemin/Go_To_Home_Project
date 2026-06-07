@@ -46,6 +46,14 @@ public class Player_Sound : MonoBehaviour
         _audio.playOnAwake = false; // 시작 사운드 재생 X
     }
 
+    private void SoundManagerPlay(EClipPlayType type)
+    {
+        if (SoundManager.Instance == null) { return; }
+
+        ClipData clip = _clipList.GetClipData(type);
+        SoundManager.Instance.SfxPlay(_audio, clip);
+    }
+
     #region 외부 호출 함수
     public float GetPlayerSoundRange => _currentRange; // 외부에서 사운드 범위를 확인하기 위함
 
@@ -91,14 +99,27 @@ public class Player_Sound : MonoBehaviour
     {
         if (Time.time - _lastSoundPlayTime < _soundPlayCool) { return; }
         if (SoundEffect_PoolManager.Instance == null) { return; }
-        if (SoundManager.Instance == null) { return; }
 
         _lastSoundPlayTime = Time.time;
 
         SoundEffect_PoolManager.Instance.SpawnEffect(transform.position, _currentRange);
 
-        ClipData clip = _clipList.GetClipData(EClipPlayType.Attack);
-        SoundManager.Instance.SfxPlay(_audio, clip);
+        SoundManagerPlay(EClipPlayType.Attack);
+    }
+
+    public void OnDeathSoundPlay()
+    {
+        SoundManagerPlay(EClipPlayType.Death);
+    }
+
+    public void OnHeadLightSoundPlay()
+    {
+        SoundManagerPlay(EClipPlayType.HeadLight);
+    }
+
+    public void OnInventorySoundPlay()
+    {
+        SoundManagerPlay(EClipPlayType.Inventory);
     }
 
     // 외부 사용을 위해 (추후 SoundManager 작업시 필요할 수 있어 미리 작업)
