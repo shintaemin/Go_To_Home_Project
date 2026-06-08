@@ -23,7 +23,7 @@ MonoBehaviour:
   _info: "\uCC0D\uB294 \uB9DB\uC774 \uC788\uC9C0"
   _prefab: {fileID: 1033934270185748612, guid: 89da96ae9dba1f34db77fdd2ecf9d965, type: 3}
   _weapontype: 2
-  _damage: 50
+  _damage: 45
   _attackSpeedRatio: 1.5
   _maxDurability: 100
   _attackDurabilityCost: 10

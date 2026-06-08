@@ -23,9 +23,9 @@ MonoBehaviour:
   _info: "\uBABB \uB9CC \uCE58\uAE30\uC5D4 \uC7AC\uBBF8\uAC00 \uC5C6\uACA0\uC9C0?"
   _prefab: {fileID: 8480965457682921570, guid: f00054a20092ae74eaf907e3b182fbd7, type: 3}
   _weapontype: 3
-  _damage: 20
+  _damage: 30
   _attackSpeedRatio: 2.5
   _maxDurability: 100
   _attackDurabilityCost: 3
-  _attackSteminaCost: 5
+  _attackSteminaCost: 3
   _attackSoundType: 3

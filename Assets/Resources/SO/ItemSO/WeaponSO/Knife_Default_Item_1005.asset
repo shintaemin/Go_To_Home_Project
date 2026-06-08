@@ -23,9 +23,9 @@ MonoBehaviour:
   _info: "\uD478\uC289"
   _prefab: {fileID: 1162350040268033467, guid: cbbeb3ee79441ab49a9177a25bd71e10, type: 3}
   _weapontype: 3
-  _damage: 30
+  _damage: 35
   _attackSpeedRatio: 2.5
   _maxDurability: 100
   _attackDurabilityCost: 3
-  _attackSteminaCost: 10
+  _attackSteminaCost: 3
   _attackSoundType: 2

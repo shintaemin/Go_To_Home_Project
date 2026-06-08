@@ -56,8 +56,10 @@ public class Player_InteractFinder : MonoBehaviour
             0.5초마다 검사할떄 이는 좋지않을거같아 NonAlloc 을 사용해 약간의 부하를 줄이기 위해 사용
         */
         #endregion
+        Vector3 pos = transform.position;
+        pos.y = transform.position.y + 0.5f;
         // 오버랩 검사후 대상 의 갯수                  위치, 범위, 담을 Collider[], 레이어
-        int search = Physics.OverlapSphereNonAlloc(transform.position, _range, _reserver, _interactLayer);
+        int search = Physics.OverlapSphereNonAlloc(pos, _range, _reserver, _interactLayer);
 
         for (int i = search - 1; i >= 0; i--)
         {

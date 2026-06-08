@@ -24,6 +24,6 @@ MonoBehaviour:
   _prefab: {fileID: 6875719410914992735, guid: cf51069a536f3b94e8fe704bb71592b7, type: 3}
   _availableType: 1
   _healType: 1
-  _value: 40
+  _value: 25
   _duration: 1
   _cooldown: 60
