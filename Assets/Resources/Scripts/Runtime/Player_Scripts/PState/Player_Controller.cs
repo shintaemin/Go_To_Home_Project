@@ -20,6 +20,7 @@ public enum EMovementState
     Hit,
     Dead,
     End,
+    CutScene,
 }
 
 // 상태에 따른 입력 제어를 위한 열거형
@@ -84,8 +85,6 @@ public class Player_Controller : MonoBehaviour
         {
             StartCoroutine(CoWaitInputManager()); // 인풋매니저를 못찾을 경우를 대비한 안전장치
         }
-
-        MovementState = EMovementState.Idle;
     }
     #region 인풋 매니저 생성 대기 코루틴
     private IEnumerator CoWaitInputManager()
@@ -157,6 +156,7 @@ public class Player_Controller : MonoBehaviour
     private void EscInput()
     {
         if (UI_Manager.Instance == null) { return; }
+        if (MovementState is EMovementState.Dead or EMovementState.CutScene) { return; }
 
         UI_Manager.Instance.EscInputActive();
     }
@@ -180,7 +180,7 @@ public class Player_Controller : MonoBehaviour
 
     private void InventoryInput()
     {
-        if (MovementState is EMovementState.Attack or EMovementState.Dead) { return; }
+        if (MovementState is EMovementState.Attack or EMovementState.Dead or EMovementState.CutScene) { return; }
         if (_inventoryCS == null)
         {
             if (Inventory_Manager.Instance == null)
@@ -327,7 +327,7 @@ public class Player_Controller : MonoBehaviour
             case EMovementState.Throwing: 
                 mode = EControllMode.Throwing; break;
             case EMovementState.Dead: mode = EControllMode.AllLock; break;
-            case EMovementState.End: 
+            case EMovementState.End: case EMovementState.CutScene: 
                 mode = EControllMode.AllLock; 
                 if (_animCS != null)
                 {

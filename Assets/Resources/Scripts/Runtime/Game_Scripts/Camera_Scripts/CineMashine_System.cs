@@ -26,6 +26,7 @@ public enum EVirtualCamType
     None = 0,
     Main,
     Inventory,
+    CutScene,
 }
 
 public class CineMashine_System : MonoBehaviour
@@ -42,6 +43,8 @@ public class CineMashine_System : MonoBehaviour
 
     #region 내부 변수
     private readonly Dictionary<EVirtualCamType, CinemachineVirtualCamera> _camDic = new Dictionary<EVirtualCamType, CinemachineVirtualCamera>();
+    private Player_Controller _controllerCS;
+    private bool _isCutScene = false;
     #endregion
 
     private void Awake()
@@ -53,6 +56,10 @@ public class CineMashine_System : MonoBehaviour
             return; 
         }
 
+        if (_controllerCS == null)
+        {
+            _controllerCS = FindFirstObjectByType<Player_Controller>();
+        }
         InitListToDic();
     }
 
@@ -79,7 +86,9 @@ public class CineMashine_System : MonoBehaviour
         if (_camDic.TryGetValue(EVirtualCamType.Main, out var mainCam))
         {
             mainCam.Priority = _defaultPri;
-            _currentCam = EVirtualCamType.Main;
+            _isCutScene = true;
+            _currentCam = EVirtualCamType.CutScene;
+            _controllerCS.MovementState = EMovementState.CutScene;
         }
         else
         {
@@ -108,6 +117,12 @@ public class CineMashine_System : MonoBehaviour
             _camDic[type].Priority = _hidePri;
             _currentCam = EVirtualCamType.Main;
         }
+    }
+    public void CutSceneEnd()
+    {
+        _isCutScene = false;
+        _controllerCS.MovementState = EMovementState.Idle;
+        SetVirtualCamViewer(EVirtualCamType.Main, true); ;
     }
     #endregion
 }

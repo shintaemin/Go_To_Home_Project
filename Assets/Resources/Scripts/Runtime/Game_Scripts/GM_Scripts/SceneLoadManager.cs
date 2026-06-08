@@ -32,12 +32,13 @@ public class SceneLoadManager : MonoBehaviour
         DontDestroyOnLoad(this.gameObject);
         Instance = this;
 
-        if (_fadeGroup != null)
+        if (_fadeGroup == null)
         {
-            _fadeGroup.alpha = 1.0f;
-            _fadeGroup.blocksRaycasts = false;
-            StartCoroutine(FadeInRoutine(_defaultFadeTime));
+            _fadeGroup = transform.GetChild(0).GetComponent<CanvasGroup>();
         }
+        _fadeGroup.alpha = 1.0f;
+        _fadeGroup.blocksRaycasts = false;
+        StartCoroutine(FadeInRoutine(_defaultFadeTime));
     }
 
     private void OnDestroy()
@@ -50,6 +51,8 @@ public class SceneLoadManager : MonoBehaviour
 
     private IEnumerator FadeAndLoadSceneRoutine(int index, float fadeTime)
     {
+        if (_fadeGroup == null) { yield break; }
+
         _isFading = true;
         _fadeGroup.blocksRaycasts = true;
 
@@ -95,6 +98,8 @@ public class SceneLoadManager : MonoBehaviour
 
     private IEnumerator FadeInRoutine(float fadeTime)
     {
+        if (_fadeGroup == null) { yield break; }
+
         float t = 0f;
         float start = 1f;
         float end = 0f;
