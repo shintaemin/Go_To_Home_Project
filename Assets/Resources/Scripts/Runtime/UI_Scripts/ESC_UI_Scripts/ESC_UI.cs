@@ -9,7 +9,6 @@ public class ESC_UI : MonoBehaviour
 {
     #region 인스펙터
     [SerializeField] private GameObject _escObj;
-    [SerializeField] private GameObject _failText;
     #endregion
 
     #region 내부변수
@@ -32,8 +31,6 @@ public class ESC_UI : MonoBehaviour
 
         _isEnding = ending;
         if (_isEnding) { active = true; }
-
-        _failText.SetActive(_isEnding);
 
         _escObj.SetActive(active);
 

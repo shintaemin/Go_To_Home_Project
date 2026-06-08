@@ -19,7 +19,7 @@ public enum EDebugType
 
 public static class GUtill
 {
-    public static bool IsLogView = true;
+    public static bool IsLogView = false;
 
     [Conditional("UNITY_EDITOR")]
     public static void Log(string str, EDebugType type = EDebugType.Log)

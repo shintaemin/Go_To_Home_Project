@@ -41,6 +41,8 @@ public class Player_Hud : MonoBehaviour
                 _data.OnSteminaUpdate += OnSteminaUpdate;
             }
         }
+        _hp.gameObject.SetActive(false);
+        _stemina.gameObject.SetActive(false);
     }
 
     private void OnHpUpdate(int value)
@@ -63,5 +65,14 @@ public class Player_Hud : MonoBehaviour
         float view = (float)current / max;
 
         _stemina.value = view;
+    }
+
+    public void ActivePlayerHud(bool active)
+    {
+        if (_stemina != null && _hp != null)
+        {
+            _hp.gameObject.SetActive(active);
+            _stemina.gameObject.SetActive(active);
+        }
     }
 }

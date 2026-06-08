@@ -6,10 +6,13 @@ public class UI_Manager : MonoBehaviour
     public static UI_Manager Instance { get; private set; }
 
     #region 인스펙터
+    [SerializeField] private Player_Hud _playerHud;
     [SerializeField] private Inventory_UI _invenUI;
     [SerializeField] private Comtainer_UI _containerUI;
     [SerializeField] private Interact_UI _interactUI;
     [SerializeField] private ESC_UI _escUI;
+    [SerializeField] private Ending_UI _endingUI;
+    [SerializeField] private QuickSlot_UI_Root _quickSlotUIRoot;
     #endregion
 
     #region 내부 변수
@@ -25,9 +28,12 @@ public class UI_Manager : MonoBehaviour
         }
         Instance = this;
 
-        if (_invenUI == null) { _invenUI = GetComponentInChildren<Inventory_UI>(); }
+        if (_quickSlotUIRoot == null) { _quickSlotUIRoot = GetComponentInChildren<QuickSlot_UI_Root>(); }
         if (_containerUI == null) { _containerUI = GetComponentInChildren<Comtainer_UI>(); }
         if (_interactUI == null) { _interactUI = GetComponentInChildren<Interact_UI>(); }
+        if (_playerHud == null) { _playerHud = GetComponentInChildren<Player_Hud>(); }
+        if (_invenUI == null) { _invenUI = GetComponentInChildren<Inventory_UI>(); }
+        if (_endingUI == null) { _endingUI = GetComponentInChildren<Ending_UI>(); }
         if (_escUI == null) { _escUI = GetComponentInChildren<ESC_UI>(); }
     }
 
@@ -117,6 +123,27 @@ public class UI_Manager : MonoBehaviour
         }
 
         _escUI.ActiveESCUI(!_escUI.IsActiveESCUI, ending);
+    }
+
+    public void EndingUISetActive(bool isSuccess)
+    {
+        if (_endingUI == null) { return; }
+
+        _endingUI.EndingUIActive(isSuccess);
+    }
+
+    public void PlayerHudSetActive(bool active)
+    {
+        if (_playerHud == null) { return; }
+
+        _playerHud.ActivePlayerHud(active);
+    }
+
+    public void QuickSlotUISetActive(bool active)
+    {
+        if (_quickSlotUIRoot == null) { return; }
+
+        _quickSlotUIRoot.SetActiveQuickSlotRoot(active);
     }
 
     public bool ContainerIsActive => _containerUI.IsActive;

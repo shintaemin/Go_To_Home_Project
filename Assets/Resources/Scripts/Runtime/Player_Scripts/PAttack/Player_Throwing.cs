@@ -112,7 +112,6 @@ public class Player_Throwing : MonoBehaviour
                 GameObject go = FindThrowingItem();
                 if (go != null)
                 {
-                    Debug.Log($"[{this.name}] : 너 들어오냐?");
                     Throwing_Obj throwingObj = null;
                     GUtill.TryGetCS(go, ref throwingObj);
 

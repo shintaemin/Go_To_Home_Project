@@ -33,7 +33,7 @@ public class QuickSlot_UI : MonoBehaviour
     private int _trackedIndex = -1;
     #endregion
 
-    private void Awake()
+    private void OnEnable()
     {
         if (_image == null)
         {
@@ -51,17 +51,16 @@ public class QuickSlot_UI : MonoBehaviour
         _nullIcon = _image.sprite;
         _nullColor = _image.color;
         ClearSlot();
-    }
-    private void Start()
-    {
+
         if (_equipCS != null)
         {
             _equipCS.OnItemEquip += SetQuickSlotEquipItem;
             _equipCS.OnSlotUpdate += UpdateSlot;
             _equipCS.OnReleaseItem += HandleItemReleased;
         }
+        
     }
-    private void OnDestroy()
+    private void OnDisable()
     {
         if (_equipCS != null)
         {
